@@ -144,6 +144,16 @@
         }
       }
     },
+    "Datum": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Date"
+          }
+        }
+      }
+    },
     "Datum izdaje": {
       "localizations": {
         "en": {
@@ -154,12 +164,32 @@
         }
       }
     },
+    "Datum opravljene storitve": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Date of service"
+          }
+        }
+      }
+    },
     "Datum storitve": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Service date"
+          }
+        }
+      }
+    },
+    "Davčna št.: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tax number: %@"
           }
         }
       }
@@ -280,6 +310,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "VAT ID"
+          }
+        }
+      }
+    },
+    "IZDANI RAČUNI ZA LETO %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "INVOICES ISSUED IN %@"
           }
         }
       }
@@ -434,6 +474,16 @@
         }
       }
     },
+    "Izvozi XLSX": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export XLSX"
+          }
+        }
+      }
+    },
     "Jezik": {
       "localizations": {
         "en": {
@@ -490,6 +540,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Place of issue"
+          }
+        }
+      }
+    },
+    "Leto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Year"
           }
         }
       }
@@ -594,12 +654,32 @@
         }
       }
     },
+    "Neplačano": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unpaid"
+          }
+        }
+      }
+    },
     "Neto": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Net"
+          }
+        }
+      }
+    },
+    "Ni izdanih računov": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No invoices issued"
           }
         }
       }
@@ -650,6 +730,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "New client"
+          }
+        }
+      }
+    },
+    "Odprto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Outstanding"
           }
         }
       }
@@ -784,6 +874,16 @@
         }
       }
     },
+    "Plačano": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paid"
+          }
+        }
+      }
+    },
     "Podatki": {
       "localizations": {
         "en": {
@@ -904,6 +1004,36 @@
         }
       }
     },
+    "Pregled": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Overview"
+          }
+        }
+      }
+    },
+    "Pregled pokaže račune, ko je prvi od njih izdan.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The overview lists invoices once the first one has been issued."
+          }
+        }
+      }
+    },
+    "Prejem plačila": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Payment received"
+          }
+        }
+      }
+    },
     "Prekliči": {
       "localizations": {
         "en": {
@@ -930,6 +1060,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Invoice"
+          }
+        }
+      }
+    },
+    "Račun št.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invoice no."
           }
         }
       }
@@ -1000,6 +1140,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Payment term: %lld days"
+          }
+        }
+      }
+    },
+    "SKUPAJ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TOTAL"
+          }
+        }
+      }
+    },
+    "Shrani pregled kot Excelovo preglednico": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save the overview as an Excel spreadsheet"
           }
         }
       }
@@ -1174,12 +1334,32 @@
         }
       }
     },
+    "Valuta": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Due date"
+          }
+        }
+      }
+    },
     "Velja za vmesnik aplikacije. Računi so vedno v slovenščini.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Applies to the app interface. Invoices are always in Slovenian."
+          }
+        }
+      }
+    },
+    "Vrednost v %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Amount in %@"
           }
         }
       }

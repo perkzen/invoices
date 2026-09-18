@@ -7,7 +7,9 @@ import Foundation
 /// built and tested without a `ModelContainer`.
 nonisolated struct YearOverviewRow: Identifiable, Sendable, Equatable {
     var number: String
-    var clientName: String
+    /// `nil` when the invoice has no client. Each surface words that case for
+    /// itself — the screen follows the app language, the .xlsx stays Slovenian.
+    var clientName: String?
     var issueDate: Date
     /// Valuta — the date the payment is due.
     var dueDate: Date
@@ -21,6 +23,9 @@ nonisolated struct YearOverviewRow: Identifiable, Sendable, Equatable {
     /// Numbers are unique within a year, which is what this table covers.
     var id: String { number }
 
+    /// The name as the screen shows it.
+    var clientLabel: String { clientName ?? String(localized: "Brez stranke") }
+
     /// "1. 8. 2026 – 31. 8. 2026", or the single date when the service did
     /// not span a period.
     var servicePeriod: String {
@@ -29,7 +34,8 @@ nonisolated struct YearOverviewRow: Identifiable, Sendable, Equatable {
     }
 
     /// A cancelled invoice keeps its number so the sequence stays unbroken;
-    /// the payment column says why no money arrived.
+    /// the payment column says why no money arrived. On screen only — the
+    /// spreadsheet words its own cell, in Slovenian.
     var paymentNote: String {
         if isCancelled { return String(localized: "Storniran") }
         guard let paidDate else { return "" }
@@ -88,7 +94,7 @@ extension YearOverview {
             .map { invoice in
                 YearOverviewRow(
                     number: invoice.number,
-                    clientName: invoice.client?.displayName ?? String(localized: "Brez stranke"),
+                    clientName: invoice.client?.displayName,
                     issueDate: invoice.issueDate,
                     dueDate: invoice.dueDate,
                     serviceDate: invoice.serviceDate,

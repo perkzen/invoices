@@ -111,7 +111,7 @@ private struct IssuerHeader: View {
                 Text(line)
             }
             if !overview.issuer.taxNumber.isEmpty {
-                Text("Davčna številka: \(overview.issuer.taxNumber)")
+                Text("Davčna št.: \(overview.issuer.taxNumber)")
             }
         }
         .font(.callout)
@@ -129,7 +129,7 @@ private struct OverviewTable: View {
     var body: some View {
         Table(rows) {
             TableColumn("Stranka") { row in
-                Text(row.clientName).strikethrough(row.isCancelled)
+                Text(row.clientLabel).strikethrough(row.isCancelled)
             }
             .width(min: 160, ideal: 240)
 

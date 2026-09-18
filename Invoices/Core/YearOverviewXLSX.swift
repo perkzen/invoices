@@ -8,14 +8,16 @@ import Foundation
 /// not counted — a formula over the column would silently disagree with the
 /// app.
 nonisolated enum YearOverviewXLSX {
+    /// Verbatim Slovenian, like the printed invoice — the sheet goes to a
+    /// Slovenian accountant whatever language the app is running in.
     static let columnHeaders: [String] = [
-        String(localized: "Stranka"),
-        String(localized: "Račun št."),
-        String(localized: "Datum"),
-        String(localized: "Valuta"),
-        String(localized: "Datum opravljene storitve"),
-        String(localized: "Vrednost"),
-        String(localized: "Prejem plačila"),
+        "Stranka",
+        "Račun št.",
+        "Datum",
+        "Valuta",
+        "Datum opravljene storitve",
+        "Vrednost",
+        "Prejem plačila",
     ]
 
     private static let columnWidths: [Double] = [34, 12, 12, 12, 28, 16, 16]
@@ -30,7 +32,7 @@ nonisolated enum YearOverviewXLSX {
 
     static func sheet(for overview: YearOverview) -> XLSXWriter.Sheet {
         var rows: [[XLSXWriter.Cell]] = [
-            [.text(overview.title, style: .bold)],
+            [.text("IZDANI RAČUNI ZA LETO \(overview.year)", style: .bold)],
             [],
         ]
 
@@ -42,7 +44,7 @@ nonisolated enum YearOverviewXLSX {
             rows.append([.text(line)])
         }
         if !issuer.taxNumber.isEmpty {
-            rows.append([.text(String(localized: "Davčna številka: \(issuer.taxNumber)"))])
+            rows.append([.text("Davčna številka: \(issuer.taxNumber)")])
         }
         rows.append([])
 
@@ -53,7 +55,7 @@ nonisolated enum YearOverviewXLSX {
 
         for row in overview.rows {
             rows.append([
-                .text(row.clientName, style: .cell),
+                .text(row.clientName ?? "Brez stranke", style: .cell),
                 .text(row.number, style: .cell),
                 XLSXWriter.Cell(.date(row.issueDate), style: .cellDate),
                 XLSXWriter.Cell(.date(row.dueDate), style: .cellDate),
@@ -67,12 +69,12 @@ nonisolated enum YearOverviewXLSX {
         var total: [XLSXWriter.Cell] = Array(
             repeating: XLSXWriter.Cell(.empty, style: .totalText), count: columnHeaders.count
         )
-        total[0] = .text(String(localized: "SKUPAJ"), style: .totalText)
+        total[0] = .text("SKUPAJ", style: .totalText)
         total[5] = XLSXWriter.Cell(.number(overview.total), style: .totalMoney)
         rows.append(total)
 
         return XLSXWriter.Sheet(
-            name: String(localized: "Računi \(String(overview.year))"),
+            name: "Računi \(overview.year)",
             rows: rows,
             columnWidths: columnWidths,
             frozenRows: frozenRows
@@ -82,9 +84,10 @@ nonisolated enum YearOverviewXLSX {
     /// A real date when the invoice was paid, so the column stays sortable;
     /// otherwise the reason there is no date, or nothing at all.
     private static func paymentCell(for row: YearOverviewRow) -> XLSXWriter.Cell {
-        if let paidDate = row.paidDate, !row.isCancelled {
+        if row.isCancelled { return .text("Storniran", style: .cell) }
+        if let paidDate = row.paidDate {
             return XLSXWriter.Cell(.date(paidDate), style: .cellDate)
         }
-        return .text(row.paymentNote, style: .cell)
+        return .text("", style: .cell)
     }
 }

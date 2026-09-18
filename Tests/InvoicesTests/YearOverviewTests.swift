@@ -101,7 +101,11 @@ struct YearOverviewTests {
         let overview = YearOverview.make(
             year: 2026, invoices: try context.fetch(FetchDescriptor<Invoice>()), profile: nil
         )
-        #expect(overview.rows.first?.clientName == "Brez stranke")
+        // The row itself holds no name; the screen and the sheet each word
+        // the empty case, and the sheet words it in Slovenian.
+        #expect(overview.rows.first?.clientName == nil)
+        let sheet = YearOverviewXLSX.sheet(for: overview)
+        #expect(sheet.rows[sheet.frozenRows].first?.value == .text("Brez stranke"))
     }
 
     @Test func `the years offered are those that have issued invoices, newest first`() throws {
@@ -130,7 +134,9 @@ struct YearOverviewTests {
         #expect(overview.rows.count == 2)
         #expect(overview.total == 100)
         #expect(overview.countedRows.count == 1)
-        #expect(overview.rows.last?.paymentNote == "Storniran")
+        // The payment column of the cancelled row, as the accountant reads it.
+        let sheet = YearOverviewXLSX.sheet(for: overview)
+        #expect(sheet.rows[sheet.frozenRows + 1][6].value == .text("Storniran"))
     }
 
     @Test func `paid and outstanding split the total`() throws {
