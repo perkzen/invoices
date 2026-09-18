@@ -26,6 +26,18 @@ nonisolated enum Formatting {
         number(value, fractionDigits: 1) + " %"
     }
 
+    /// Slovenian counts in four forms — 1 račun, 2 računa, 3 računi,
+    /// 5 računov — and the dual is not optional in writing.
+    static func invoiceCount(_ count: Int) -> String {
+        let noun = switch abs(count) % 100 {
+        case 1: String(localized: "račun")
+        case 2: String(localized: "računa")
+        case 3, 4: String(localized: "računi")
+        default: String(localized: "računov")
+        }
+        return "\(count) \(noun)"
+    }
+
     static func date(_ date: Date) -> String {
         date.formatted(Date.FormatStyle(date: .numeric, time: .omitted).locale(locale))
     }

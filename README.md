@@ -15,6 +15,11 @@ v0 scaffold. It builds, runs, and persists data. What works today:
   invoices; drafts carry an OSNUTEK watermark so one cannot be mistaken for a real invoice
 - **Predogled** — the invoice editor shows the PDF live in a trailing inspector, re-rendered
   as you type; Nastavitve shows the same preview on a sample invoice
+- **Pregled** — every issued invoice of one calendar year in one table (stranka,
+  številka, datum, valuta, obdobje storitve, vrednost, prejem plačila) with a year
+  picker and the SKUPAJ line, and **Izvoz XLSX** writing the same table as a real
+  Excel workbook — dates and amounts as values, not text, so the accountant can sort
+  and sum them
 - **Predloga računa** — logo, tagline, signature and the three sentences (intro, payment
   instruction, closing) live in Nastavitve › Predloga računa. Sentences take placeholders
   such as `{MESEC}`, `{leto}`, `{trr}`, `{sklic}`; see `Core/InvoiceTemplate.swift`
@@ -25,7 +30,7 @@ v0 scaffold. It builds, runs, and persists data. What works today:
   the source language. The printed invoice is always Slovenian; wrap any new string on
   the PDF page in `Text(verbatim:)` so it never lands in the catalog
 
-Not built yet: printing, e-računi, expenses, reports, search and filtering.
+Not built yet: printing, e-računi, expenses, search and filtering.
 
 ## Requirements
 
@@ -76,6 +81,13 @@ Invoices/
 Tests/InvoicesTests/     Swift Testing, covers the money arithmetic
 Scripts/                 app icon renderer (not part of any target)
 ```
+
+`Core/XLSXWriter.swift` writes the .xlsx by hand — the OOXML parts plus a stored
+(uncompressed) ZIP in `Core/ZIPArchive.swift` — so the app stays dependency-free. The
+sheet a year overview fills is laid out in `Core/YearOverviewXLSX.swift`. The SKUPAJ
+line is a value rather than a `=SUM()` formula, because cancelled invoices are listed
+(their numbers belong to the sequence) but not counted, and a formula over the column
+would quietly disagree with the app.
 
 The money arithmetic lives in `Core/InvoiceMath.swift` as plain `Decimal` functions
 rather than on the `@Model` classes, so it is testable without a `ModelContainer`.
