@@ -1,0 +1,57 @@
+Invoices/Models/Client.swift
+  s_e11f69f25076d3::t_728708096132cb 34
+.gitignore
+  s_86806673564944::t_599f76e79677d3 10
+Invoices/Resources/Localizable.xcstrings
+  s_5a704645268a9d::t_5980fd10de4ff7 2-826,837-1256,1258-1259
+  s_e11f69f25076d3::t_728708096132cb 1,1257
+  s_86806673564944::t_b219c8479494b3 827-836
+Invoices/Views/InvoiceListView.swift
+  s_e11f69f25076d3::t_728708096132cb 74,76
+Tests/InvoicesTests/LocalizationTests.swift
+  s_5a704645268a9d::t_5980fd10de4ff7 1-19,30-38
+  s_86806673564944::t_599f76e79677d3 20-29
+Invoices/Models/VatRate.swift
+  s_e11f69f25076d3::t_728708096132cb 26-30
+Invoices/Models/InvoiceStatus.swift
+  s_e11f69f25076d3::t_728708096132cb 15-18
+project.yml
+  s_86806673564944::t_3e2950d26aad9b 25-27
+  s_e11f69f25076d3::t_728708096132cb 16-17
+README.md
+  s_86806673564944::t_b219c8479494b3 21-26
+Invoices/Views/InvoiceDetailView.swift
+  s_86806673564944::t_b219c8479494b3 182
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "a3424c7934474a759b71d2d45f01624a683ab8b5",
+  "prompts": {},
+  "sessions": {
+    "s_5a704645268a9d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fe83bd16-db62-46c1-a16a-a64911575637",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    },
+    "s_86806673564944": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fd864dbb-cd3f-4447-9bbe-145843a980fb",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    },
+    "s_e11f69f25076d3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6df2c34a-bdf5-4feb-a4c2-b88123b530d4",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
