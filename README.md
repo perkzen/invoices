@@ -41,6 +41,23 @@ From the command line:
 xcodebuild -project Invoices.xcodeproj -scheme Invoices -destination 'platform=macOS' test
 ```
 
+## App icon
+
+The icon is drawn in code, not painted — `Scripts/render-app-icon.swift` renders every
+PNG in `AppIcon.appiconset` with CoreGraphics. Each pixel size is rendered natively and
+drops detail as it shrinks: the right-hand amounts and the third line item go below 128px,
+the remaining rules below 48px, and at 16px only the sheet and the amber total are left.
+macOS does not mask a PNG app icon, so the script also draws the squircle, its inset and
+its drop shadow — with a tighter inset at small sizes, where a proportional margin would
+cost more pixels than the artwork can spare.
+
+```bash
+swift Scripts/render-app-icon.swift
+```
+
+The PNGs are committed, so a normal build needs none of this — rerun it only after
+changing the artwork.
+
 ## Layout
 
 ```
@@ -51,6 +68,7 @@ Invoices/
   Core/                  pure value logic: totals, rounding, numbering, sl_SI formatting
   Views/                 NavigationSplitView shell, lists, editors
 Tests/InvoicesTests/     Swift Testing, covers the money arithmetic
+Scripts/                 app icon renderer (not part of any target)
 ```
 
 The money arithmetic lives in `Core/InvoiceMath.swift` as plain `Decimal` functions
