@@ -1,0 +1,31 @@
+import Foundation
+import SwiftData
+
+/// Slovenian rules require invoice numbers to run in an unbroken sequence
+/// within a numbering period (here: the calendar year). Gaps have to be
+/// explainable, so numbers are only assigned when an invoice is issued.
+enum InvoiceNumbering {
+    static func format(year: Int, sequence: Int) -> String {
+        String(format: "%d-%03d", year, sequence)
+    }
+
+    static func nextSequence(for year: Int, in context: ModelContext) -> Int {
+        var descriptor = FetchDescriptor<Invoice>(
+            predicate: #Predicate { $0.year == year },
+            sortBy: [SortDescriptor(\.sequence, order: .reverse)]
+        )
+        descriptor.fetchLimit = 1
+        let highest = (try? context.fetch(descriptor))?.first?.sequence ?? 0
+        return highest + 1
+    }
+
+    /// Assigns the next number in the year of `issueDate`. A draft keeps an
+    /// empty number until this runs.
+    static func assign(to invoice: Invoice, in context: ModelContext) {
+        let year = Calendar.current.component(.year, from: invoice.issueDate)
+        let sequence = nextSequence(for: year, in: context)
+        invoice.year = year
+        invoice.sequence = sequence
+        invoice.number = format(year: year, sequence: sequence)
+    }
+}
