@@ -1,0 +1,22 @@
+Scripts/render-app-icon.swift
+  s_e11f69f25076d3::t_18d483152ac801 112-124,127-134,139-141,152-167,177-178,189-190,194-196,198,203-204,207,210,212,214
+  s_e11f69f25076d3::t_13dcf118f9ace5 1-111,125-126,135-138,142-151,168-176,179-188,191-193,197,199-202,205-206,208-209,211,213,215-268
+Invoices/Resources/Assets.xcassets/AppIcon.appiconset/Contents.json
+  s_e11f69f25076d3::t_0f7cf3bacd3a23 2-62,64-67
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "5ad9e1da588167140addedce455eb6e8ad9c98bf",
+  "prompts": {},
+  "sessions": {
+    "s_e11f69f25076d3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6df2c34a-bdf5-4feb-a4c2-b88123b530d4",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
