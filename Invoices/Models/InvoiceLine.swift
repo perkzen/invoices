@@ -5,8 +5,9 @@ import SwiftData
 final class InvoiceLine {
     var itemDescription: String = ""
     var quantity: Decimal = 1
-    /// Unit of measure — "ura", "kos", "dan", "mesec".
-    var unit: String = "ura"
+    /// Unit of measure — "ura", "kos", "dan", "mesec". Empty hides the
+    /// column on the printed invoice.
+    var unit: String = ""
     var unitPrice: Decimal = 0
     var discountPercent: Decimal = 0
     var vatRate: VatRate = VatRate.exempt
@@ -17,7 +18,7 @@ final class InvoiceLine {
     init(
         itemDescription: String = "",
         quantity: Decimal = 1,
-        unit: String = "ura",
+        unit: String = "",
         unitPrice: Decimal = 0,
         discountPercent: Decimal = 0,
         vatRate: VatRate = .exempt,

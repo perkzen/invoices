@@ -14,6 +14,9 @@ final class Invoice {
     /// Datum opravljene storitve — mandatory on a Slovenian invoice and
     /// often different from the issue date.
     var serviceDate: Date = Date()
+    /// Set when the service spans a period — the invoice then prints
+    /// "1. 8. 2026 – 31. 8. 2026" instead of a single date.
+    var serviceDateEnd: Date?
     var dueDate: Date = Date()
     var paidDate: Date?
 
@@ -21,6 +24,9 @@ final class Invoice {
     var placeOfIssue: String = ""
     var paymentReference: String = ""
     var notes: String = ""
+    /// Overrides the profile's intro template for this invoice; empty means
+    /// use the template.
+    var introOverride: String = ""
 
     var client: Client?
 

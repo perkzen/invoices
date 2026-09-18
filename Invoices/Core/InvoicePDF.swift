@@ -14,13 +14,24 @@ enum InvoicePDF {
     static var maxDescriptionLinesForLayout: Int { maxDescriptionLines }
     private static let charactersPerDescriptionLine = 40
 
-    private static func capacity(isFirstPage: Bool, withSummary: Bool) -> Int {
+    private static func capacity(isFirstPage: Bool, withSummary: Bool, summaryExtra: Int) -> Int {
+        // Sized for a first page with a logo and the intro sentence, and a
+        // last page with the total, three clause lines and the signature
+        // block. Checked by rendering, not derived — see the README.
         switch (isFirstPage, withSummary) {
-        case (true, true): 38    // the header, client and dates eat the top third
-        case (true, false): 48
-        case (false, true): 60
+        case (true, true): 22 - summaryExtra
+        case (true, false): 40
+        case (false, true): 54 - summaryExtra
         case (false, false): 72
         }
+    }
+
+    /// Units the last page loses to text the budget cannot assume: the
+    /// invoice's own notes and the profile's footer line.
+    static func summaryExtra(notes: String, footer: String) -> Int {
+        let noteLines = notes.isEmpty ? 0 : notes.split(omittingEmptySubsequences: false, whereSeparator: \.isNewline)
+            .reduce(0) { $0 + max(1, ($1.count + 89) / 90) }
+        return noteLines + (footer.isEmpty ? 0 : 2)
     }
 
     /// What one item costs against a page budget.
@@ -30,7 +41,7 @@ enum InvoicePDF {
         return 2 + min(maxDescriptionLines, max(1, wrapped))
     }
 
-    static func paginate(_ lines: [InvoiceLine]) -> [[InvoiceLine]] {
+    static func paginate(_ lines: [InvoiceLine], summaryExtra: Int = 0) -> [[InvoiceLine]] {
         var pages: [[InvoiceLine]] = []
         var remaining = lines[...]
         var isFirst = true
@@ -38,12 +49,12 @@ enum InvoicePDF {
         while true {
             // The last page carries the summary, so it gets the smaller budget.
             if remaining.reduce(0, { $0 + cost(of: $1) })
-                <= capacity(isFirstPage: isFirst, withSummary: true) {
+                <= capacity(isFirstPage: isFirst, withSummary: true, summaryExtra: summaryExtra) {
                 pages.append(Array(remaining))
                 return pages
             }
 
-            let budget = capacity(isFirstPage: isFirst, withSummary: false)
+            let budget = capacity(isFirstPage: isFirst, withSummary: false, summaryExtra: summaryExtra)
             var used = 0
             var taken = 0
             for line in remaining {
@@ -71,7 +82,10 @@ enum InvoicePDF {
 
     @MainActor
     static func render(invoice: Invoice, profile: BusinessProfile) -> Data? {
-        let chunks = paginate(invoice.sortedLines)
+        let chunks = paginate(
+            invoice.sortedLines,
+            summaryExtra: summaryExtra(notes: invoice.notes, footer: profile.invoiceFooter)
+        )
         let data = NSMutableData()
         var box = CGRect(origin: .zero, size: pageSize)
 

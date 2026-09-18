@@ -13,6 +13,11 @@ v0 scaffold. It builds, runs, and persists data. What works today:
 - **Izdaja** — issuing a draft assigns the next sequential number (`2026-001`) and locks the invoice
 - **Izvoz PDF** — A4 invoice with the mandatory Slovenian fields, paginated for long
   invoices; drafts carry an OSNUTEK watermark so one cannot be mistaken for a real invoice
+- **Predogled** — the invoice editor shows the PDF live in a trailing inspector, re-rendered
+  as you type; Nastavitve shows the same preview on a sample invoice
+- **Predloga računa** — logo, tagline, signature and the three sentences (intro, payment
+  instruction, closing) live in Nastavitve › Predloga računa. Sentences take placeholders
+  such as `{MESEC}`, `{leto}`, `{trr}`, `{sklic}`; see `Core/InvoiceTemplate.swift`
 
 Not built yet: printing, e-računi, expenses, reports, search and filtering.
 

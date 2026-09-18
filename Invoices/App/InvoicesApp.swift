@@ -20,7 +20,7 @@ struct InvoicesApp: App {
             ContentView()
         }
         .modelContainer(container)
-        .defaultSize(width: 1120, height: 820)
+        .defaultSize(width: 1400, height: 860)
         .commands {
             CommandGroup(replacing: .newItem) {}
         }

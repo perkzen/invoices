@@ -23,6 +23,20 @@ final class BusinessProfile {
     var defaultPaymentTermDays: Int = 8
     var invoiceFooter: String = ""
 
+    // MARK: Predloga računa — the parts of the printed invoice that are yours
+    // to shape: logo, tagline, wording, signature. Placeholders in the text
+    // templates are resolved by `InvoiceTemplate`.
+
+    /// Line under the name, e.g. "IT STORITVE IN SVETOVANJE".
+    var activityLine: String = ""
+    @Attribute(.externalStorage) var logoData: Data?
+    @Attribute(.externalStorage) var signatureData: Data?
+    /// Printed under "Račun izdal:". Falls back to `name`.
+    var signerName: String = ""
+    var introTemplate: String = InvoiceTemplate.defaultIntro
+    var paymentNoteTemplate: String = InvoiceTemplate.defaultPaymentNote
+    var closingNote: String = InvoiceTemplate.defaultClosingNote
+
     init() {}
 
     var defaultVatRate: VatRate { isVatRegistered ? .standard : .exempt }

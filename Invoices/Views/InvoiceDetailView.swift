@@ -17,12 +17,26 @@ struct InvoiceDetailView: View {
     @State private var exportedPDF: PDFFile?
     @State private var isExporting = false
     @State private var exportError: String?
+    @State private var showsPreview = true
+
+    /// `serviceDateEnd` as a toggle: on means the service spans a period.
+    private var isPeriod: Binding<Bool> {
+        Binding(
+            get: { invoice.serviceDateEnd != nil },
+            set: { on in
+                invoice.serviceDateEnd = on
+                    ? Calendar.current.date(byAdding: .month, value: 1, to: invoice.serviceDate)
+                        .flatMap { Calendar.current.date(byAdding: .day, value: -1, to: $0) }
+                    : nil
+            }
+        )
+    }
 
     var body: some View {
         Form {
             Section("Račun") {
                 LabeledContent("Številka") {
-                    Text(invoice.number.isEmpty ? "dodeljena ob izdaji" : invoice.number)
+                    Text(invoice.number.isEmpty ? String(localized: "dodeljena ob izdaji") : invoice.number)
                         .foregroundStyle(invoice.number.isEmpty ? .secondary : .primary)
                 }
                 Picker("Stranka", selection: $invoice.client) {
@@ -32,10 +46,24 @@ struct InvoiceDetailView: View {
                     }
                 }
                 DatePicker("Datum izdaje", selection: $invoice.issueDate, displayedComponents: .date)
-                DatePicker("Datum storitve", selection: $invoice.serviceDate, displayedComponents: .date)
+                DatePicker(isPeriod.wrappedValue ? "Storitev od" : "Datum storitve",
+                           selection: $invoice.serviceDate, displayedComponents: .date)
+                Toggle("Storitev za obdobje", isOn: isPeriod)
+                if invoice.serviceDateEnd != nil {
+                    DatePicker(
+                        "Storitev do",
+                        selection: Binding(
+                            get: { invoice.serviceDateEnd ?? invoice.serviceDate },
+                            set: { invoice.serviceDateEnd = $0 }
+                        ),
+                        in: invoice.serviceDate...,
+                        displayedComponents: .date
+                    )
+                }
                 DatePicker("Rok plačila", selection: $invoice.dueDate, displayedComponents: .date)
                 TextField("Kraj izdaje", text: $invoice.placeOfIssue)
-                TextField("Sklic", text: $invoice.paymentReference)
+                TextField("Sklic", text: $invoice.paymentReference,
+                          prompt: Text(verbatim: InvoiceTemplate.defaultReference(for: invoice)))
             }
             .disabled(isLocked)
 
@@ -68,14 +96,41 @@ struct InvoiceDetailView: View {
                 }
             }
 
-            Section("Opombe") {
+            Section {
+                TextField(
+                    "Uvodni stavek",
+                    text: $invoice.introOverride,
+                    prompt: Text(profiles.first.map { InvoiceTemplate.intro(for: invoice, profile: $0) } ?? ""),
+                    axis: .vertical
+                )
+                .lineLimit(1...3)
                 TextField("Opombe", text: $invoice.notes, axis: .vertical)
                     .lineLimit(3...8)
+            } header: {
+                Text("Besedilo")
+            } footer: {
+                Text("Prazen uvodni stavek uporabi predlogo iz Nastavitev. Opombe se natisnejo pod klavzulami.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
             .disabled(isLocked)
         }
         .formStyle(.grouped)
-        .navigationTitle(invoice.number.isEmpty ? "Osnutek računa" : invoice.number)
+        .inspector(isPresented: $showsPreview) {
+            Group {
+                if let profile = profiles.first {
+                    InvoicePreview(invoice: invoice, profile: profile)
+                } else {
+                    ProgressView()
+                }
+            }
+            .inspectorColumnWidth(min: 340, ideal: 440, max: 760)
+        }
+        .task {
+            // Guarantees the preview has a profile on a fresh install.
+            _ = BusinessProfile.current(in: context)
+        }
+        .navigationTitle(invoice.number.isEmpty ? String(localized: "Osnutek računa") : invoice.number)
         .toolbar {
             ToolbarItem(placement: .status) {
                 Label(invoice.status.label, systemImage: invoice.status.symbol)
@@ -83,6 +138,10 @@ struct InvoiceDetailView: View {
             }
             ToolbarItem(placement: .primaryAction) {
                 Button("Izvozi PDF", systemImage: "square.and.arrow.down", action: exportPDF)
+            }
+            ToolbarItem(placement: .primaryAction) {
+                Toggle("Predogled", systemImage: "sidebar.trailing", isOn: $showsPreview)
+                    .help("Pokaži ali skrij predogled računa")
             }
             ToolbarItemGroup(placement: .primaryAction) {
                 switch invoice.status {
@@ -149,6 +208,11 @@ struct InvoiceDetailView: View {
 
     private func issue() {
         InvoiceNumbering.assign(to: invoice, in: context)
+        // The bank reference most s.p. use is the invoice number under the
+        // SI00 model; only fill it in when nothing was typed by hand.
+        if invoice.paymentReference.isEmpty {
+            invoice.paymentReference = InvoiceTemplate.defaultReference(for: invoice)
+        }
         invoice.status = .issued
     }
 
@@ -207,11 +271,11 @@ private struct InvoiceLineEditor: View {
     /// A caption above the control, so the column stays readable instead of
     /// wrapping an inline Form label into two lines.
     private struct Field<Content: View>: View {
-        let title: String
+        let title: LocalizedStringKey
         let width: CGFloat
         @ViewBuilder let content: Content
 
-        init(_ title: String, width: CGFloat, @ViewBuilder content: () -> Content) {
+        init(_ title: LocalizedStringKey, width: CGFloat, @ViewBuilder content: () -> Content) {
             self.title = title
             self.width = width
             self.content = content()

@@ -4,13 +4,15 @@ import SwiftUI
 enum AppSection: String, CaseIterable, Identifiable, Hashable {
     case invoices
     case clients
+    case settings
 
     var id: String { rawValue }
 
     var title: String {
         switch self {
-        case .invoices: "Računi"
-        case .clients: "Stranke"
+        case .invoices: String(localized: "Računi")
+        case .clients: String(localized: "Stranke")
+        case .settings: String(localized: "Nastavitve")
         }
     }
 
@@ -18,6 +20,7 @@ enum AppSection: String, CaseIterable, Identifiable, Hashable {
         switch self {
         case .invoices: "doc.text"
         case .clients: "person.2"
+        case .settings: "gearshape"
         }
     }
 }
@@ -40,10 +43,15 @@ struct ContentView: View {
                 NavigationStack { InvoiceListView() }
             case .clients:
                 NavigationStack { ClientListView() }
+            case .settings:
+                NavigationStack {
+                    SettingsContent()
+                        .navigationTitle(AppSection.settings.title)
+                }
             case nil:
                 ContentUnavailableView("Izberi razdelek", systemImage: "sidebar.left")
             }
         }
-        .frame(minWidth: 900, minHeight: 560)
+        .frame(minWidth: 1100, minHeight: 600)
     }
 }
