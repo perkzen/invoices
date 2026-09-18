@@ -1,0 +1,98 @@
+Invoices/Views/ContentView.swift
+  s_321217107e08b7::t_b77333c99284b4 1-29,32-39,41-46,48-49
+.gitignore
+  s_321217107e08b7::t_d3c6e9bc3b1400 9
+  s_321217107e08b7::t_7622850e5cf649 1-8
+Invoices/Resources/Assets.xcassets/AccentColor.colorset/Contents.json
+  s_321217107e08b7::t_7622850e5cf649 1-4
+Tests/InvoicesTests/InvoicePDFTests.swift
+  s_321217107e08b7::t_6c0659cef476ff 1-78,80-112
+Invoices/Core/Decimal+Rounding.swift
+  s_321217107e08b7::t_5f52d5db7a2335 1-5,7-12
+  s_321217107e08b7::t_6df9a78a3c2fe9 6
+project.yml
+  s_321217107e08b7::t_7622850e5cf649 1-69
+Invoices/App/Invoices.entitlements
+  s_321217107e08b7::t_7622850e5cf649 1-12
+Invoices/Models/Client.swift
+  s_321217107e08b7::t_0ef13eb72cd56c 29-30
+  s_321217107e08b7::t_fcb3ab279cff43 1-28,31-35
+Invoices/Models/InvoiceStatus.swift
+  s_321217107e08b7::t_6df9a78a3c2fe9 5
+  s_321217107e08b7::t_fcb3ab279cff43 1-4,6-32
+Invoices/Core/InvoiceMath.swift
+  s_321217107e08b7::t_5f52d5db7a2335 1-4,6-15,17-46
+  s_321217107e08b7::t_6df9a78a3c2fe9 5,16
+Invoices/Models/BusinessProfile.swift
+  s_321217107e08b7::t_fcb3ab279cff43 1-43
+Invoices/Core/InvoiceNumbering.swift
+  s_321217107e08b7::t_acb4db8cb9bbb3 1-31
+Invoices/Resources/Assets.xcassets/Contents.json
+  s_321217107e08b7::t_7622850e5cf649 1
+Invoices/Views/SettingsView.swift
+  s_321217107e08b7::t_e413c39f38ab2a 1-35,37-42,51-70
+  s_321217107e08b7::t_7a4148332118d7 36,43-50
+Tests/InvoicesTests/InvoiceMathTests.swift
+  s_321217107e08b7::t_91a9b752285a27 1-73
+Invoices/Models/VatRate.swift
+  s_321217107e08b7::t_6df9a78a3c2fe9 6
+  s_321217107e08b7::t_fcb3ab279cff43 1-5,7-45
+Invoices/Resources/Assets.xcassets/AppIcon.appiconset/Contents.json
+  s_321217107e08b7::t_7622850e5cf649 1-15
+Invoices/Models/Invoice.swift
+  s_321217107e08b7::t_acb4db8cb9bbb3 1-66
+Invoices/Views/InvoiceListView.swift
+  s_321217107e08b7::t_b77333c99284b4 1-56,59,61-91
+  s_321217107e08b7::t_b1cbce1340502f 57-58,60
+Invoices/Core/Formatting.swift
+  s_321217107e08b7::t_6df9a78a3c2fe9 5
+  s_321217107e08b7::t_5f52d5db7a2335 1-4,6-19,25-32
+  s_321217107e08b7::t_0ef13eb72cd56c 20-24
+Invoices/Models/InvoiceLine.swift
+  s_321217107e08b7::t_acb4db8cb9bbb3 1-43
+Invoices/App/InvoicesApp.swift
+  s_321217107e08b7::t_b77333c99284b4 1-33
+Invoices/Views/InvoiceDetailView.swift
+  s_321217107e08b7::t_e649cda893eda3 3,17-20,84-86,98-107,109-124,126
+  s_321217107e08b7::t_b1cbce1340502f 40,50,75,143
+  s_321217107e08b7::t_ff7c6bcb28ad74 166-182,184-188,191-199,201,205-228
+  s_321217107e08b7::t_93e82d5ec21d87 127-129
+  s_321217107e08b7::t_19ef7d98d8e300 1-2,4-9,11-12,16,21-39,41-43,45-49,51-52,58-74,76-83,87-97,108,125,130-142,144-162,164-165,190,200,202-204,229-230
+  s_321217107e08b7::t_775ed901abd6dc 10,13-15,44,53-57,163,183,189
+Invoices/Core/InvoicePDF.swift
+  s_321217107e08b7::t_3fd845f8d19d68 9-11,26,30,38-41,43,45-56,59-65
+  s_321217107e08b7::t_0ef13eb72cd56c 12-16,24-25,27-29,35,37,42,58
+  s_321217107e08b7::t_54d1dc6c61af65 1-8,17-18,23,31-34,36,44,57,66-104
+Invoices/Views/InvoicePDFPage.swift
+  s_321217107e08b7::t_0ef13eb72cd56c 137,140,155
+  s_321217107e08b7::t_c4b36f2915c742 1-23,25-49,64-136,138-139,141-154,159-194,201-218,229-243
+  s_321217107e08b7::t_ccdf33748df5d0 219-228
+  s_321217107e08b7::t_93e82d5ec21d87 195-200
+Invoices/Views/ClientListView.swift
+  s_321217107e08b7::t_e413c39f38ab2a 1-86
+README.md
+  s_321217107e08b7::t_a8d167dce7ae43 10-11
+  s_321217107e08b7::t_134f11c3030041 81-88,90-94,96,98-99
+  s_321217107e08b7::t_8ff233210f4774 1-9,12-13,16,18-52,61-72,78-80,89,95,97
+  s_321217107e08b7::t_1aa1ca4cca71ca 14-15,17,53-57
+  s_321217107e08b7::t_93e82d5ec21d87 58-60
+  s_321217107e08b7::t_a29d68b6743bbd 73-77
+Invoices/Core/PDFFile.swift
+  s_321217107e08b7::t_54d1dc6c61af65 1-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "dd0f58218545559dfd031a8ce153d13abf460c7d",
+  "prompts": {},
+  "sessions": {
+    "s_321217107e08b7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "640b6f91-64b7-45d5-b846-714a51284cc9",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
