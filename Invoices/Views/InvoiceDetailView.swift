@@ -69,7 +69,9 @@ struct InvoiceDetailView: View {
 
             Section("Postavke") {
                 ForEach(invoice.sortedLines) { line in
-                    InvoiceLineEditor(line: line, showsVatRate: chargesVat)
+                    InvoiceLineEditor(line: line, showsVatRate: chargesVat) {
+                        delete(line)
+                    }
                 }
                 .onDelete(perform: deleteLines)
 
@@ -198,11 +200,19 @@ struct InvoiceDetailView: View {
         context.insert(line)
     }
 
+    /// Detach before deleting: the ForEach above is driven by `invoice.lines`,
+    /// and it must not re-render an editor bound to a deleted model.
+    private func delete(_ line: InvoiceLine) {
+        guard !isLocked else { return }
+        line.invoice = nil
+        context.delete(line)
+    }
+
     private func deleteLines(at offsets: IndexSet) {
         guard !isLocked else { return }
         let sorted = invoice.sortedLines
         for index in offsets {
-            context.delete(sorted[index])
+            delete(sorted[index])
         }
     }
 
@@ -225,6 +235,7 @@ struct InvoiceDetailView: View {
 private struct InvoiceLineEditor: View {
     @Bindable var line: InvoiceLine
     let showsVatRate: Bool
+    let remove: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -261,6 +272,10 @@ private struct InvoiceLineEditor: View {
                     Text(Formatting.money(line.amounts.gross))
                         .monospacedDigit()
                 }
+                Button("Odstrani postavko", systemImage: "trash", action: remove)
+                    .labelStyle(.iconOnly)
+                    .buttonStyle(.borderless)
+                    .foregroundStyle(.secondary)
             }
             .labelsHidden()
             .textFieldStyle(.roundedBorder)

@@ -5,6 +5,7 @@ struct InvoiceListView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: [SortDescriptor(\Invoice.issueDate, order: .reverse)])
     private var invoices: [Invoice]
+    @State private var pendingDelete: Invoice?
 
     var body: some View {
         Group {
@@ -22,6 +23,7 @@ struct InvoiceListView: View {
                         NavigationLink(value: invoice) {
                             InvoiceRow(invoice: invoice)
                         }
+                        .contextMenu { deleteMenu(for: invoice) }
                     }
                     .onDelete(perform: delete)
                 }
@@ -29,6 +31,16 @@ struct InvoiceListView: View {
         }
         .navigationTitle("Računi")
         .navigationDestination(for: Invoice.self) { InvoiceDetailView(invoice: $0) }
+        .confirmationDialog(
+            "Izbrišem osnutek?",
+            isPresented: isConfirming,
+            presenting: pendingDelete
+        ) { invoice in
+            Button("Izbriši", role: .destructive) { delete(invoice) }
+            Button("Prekliči", role: .cancel) {}
+        } message: { _ in
+            Text("Osnutek in vse njegove postavke bodo trajno izbrisani.")
+        }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: newInvoice) {
@@ -52,6 +64,28 @@ struct InvoiceListView: View {
         let line = InvoiceLine(vatRate: profile.defaultVatRate)
         line.invoice = invoice
         context.insert(line)
+    }
+
+    private var isConfirming: Binding<Bool> {
+        Binding(get: { pendingDelete != nil }, set: { if !$0 { pendingDelete = nil } })
+    }
+
+    @ViewBuilder
+    private func deleteMenu(for invoice: Invoice) -> some View {
+        if invoice.status.isEditable {
+            Button("Izbriši osnutek", systemImage: "trash", role: .destructive) {
+                pendingDelete = invoice
+            }
+        } else {
+            Text("Izdanega računa ni mogoče izbrisati")
+        }
+    }
+
+    private func delete(_ invoice: Invoice) {
+        pendingDelete = nil
+        if invoice.status.isEditable {
+            context.delete(invoice)
+        }
     }
 
     /// Only drafts may be deleted. An issued number has to stay in the

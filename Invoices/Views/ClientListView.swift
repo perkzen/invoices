@@ -4,6 +4,7 @@ import SwiftUI
 struct ClientListView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: [SortDescriptor(\Client.name)]) private var clients: [Client]
+    @State private var pendingDelete: Client?
 
     var body: some View {
         Group {
@@ -26,6 +27,7 @@ struct ClientListView: View {
                                     .foregroundStyle(.secondary)
                             }
                         }
+                        .contextMenu { deleteMenu(for: client) }
                     }
                     .onDelete(perform: delete)
                 }
@@ -33,6 +35,16 @@ struct ClientListView: View {
         }
         .navigationTitle("Stranke")
         .navigationDestination(for: Client.self) { ClientDetailView(client: $0) }
+        .confirmationDialog(
+            "Izbrišem stranko?",
+            isPresented: isConfirming,
+            presenting: pendingDelete
+        ) { client in
+            Button("Izbriši", role: .destructive) { delete(client) }
+            Button("Prekliči", role: .cancel) {}
+        } message: { client in
+            Text("\(client.displayName) bo trajno izbrisana.")
+        }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: newClient) {
@@ -44,6 +56,29 @@ struct ClientListView: View {
 
     private func newClient() {
         context.insert(Client())
+    }
+
+    private var isConfirming: Binding<Bool> {
+        Binding(get: { pendingDelete != nil }, set: { if !$0 { pendingDelete = nil } })
+    }
+
+    /// An invoice keeps no copy of its counterparty — name, address and tax
+    /// number live only on the Client — so deleting one would strip a
+    /// mandatory field off a document that has already been sent out.
+    @ViewBuilder
+    private func deleteMenu(for client: Client) -> some View {
+        if client.invoices.contains(where: { $0.status != .draft }) {
+            Text("Ima izdane račune in je ni mogoče izbrisati")
+        } else {
+            Button("Izbriši stranko", systemImage: "trash", role: .destructive) {
+                pendingDelete = client
+            }
+        }
+    }
+
+    private func delete(_ client: Client) {
+        pendingDelete = nil
+        context.delete(client)
     }
 
     private func delete(at offsets: IndexSet) {

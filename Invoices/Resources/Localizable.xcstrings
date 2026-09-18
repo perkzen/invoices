@@ -4,6 +4,16 @@
     "": {
       "shouldTranslate": false
     },
+    "%@ bo trajno izbrisana.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ will be permanently deleted."
+          }
+        }
+      }
+    },
     "0 %": {
       "localizations": {
         "en": {
@@ -274,6 +284,16 @@
         }
       }
     },
+    "Ima izdane račune in je ni mogoče izbrisati": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Has issued invoices and cannot be deleted"
+          }
+        }
+      }
+    },
     "Ime in priimek": {
       "localizations": {
         "en": {
@@ -314,6 +334,56 @@
         }
       }
     },
+    "Izbrišem osnutek?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete draft?"
+          }
+        }
+      }
+    },
+    "Izbrišem stranko?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete client?"
+          }
+        }
+      }
+    },
+    "Izbriši": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        }
+      }
+    },
+    "Izbriši osnutek": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete draft"
+          }
+        }
+      }
+    },
+    "Izbriši stranko": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete client"
+          }
+        }
+      }
+    },
     "Izdaj račun": {
       "localizations": {
         "en": {
@@ -330,6 +400,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Issued"
+          }
+        }
+      }
+    },
+    "Izdanega računa ni mogoče izbrisati": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An issued invoice cannot be deleted"
           }
         }
       }
@@ -584,6 +664,16 @@
         }
       }
     },
+    "Odstrani postavko": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove line item"
+          }
+        }
+      }
+    },
     "Opis storitve": {
       "localizations": {
         "en": {
@@ -630,6 +720,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Draft"
+          }
+        }
+      }
+    },
+    "Osnutek in vse njegove postavke bodo trajno izbrisani.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The draft and all of its line items will be permanently deleted."
           }
         }
       }
@@ -800,6 +900,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Preview on a sample invoice"
+          }
+        }
+      }
+    },
+    "Prekliči": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
           }
         }
       }
