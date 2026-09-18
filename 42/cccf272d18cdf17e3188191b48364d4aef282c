@@ -1,0 +1,21 @@
+README.md
+  s_e11f69f25076d3::t_ac3b8a17c079d7 49-52
+  s_e11f69f25076d3::t_c7b21d692bf187 44-47,53-60,71
+  s_e11f69f25076d3::t_9386279c2f0a61 48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "42cccf272d18cdf17e3188191b48364d4aef282c",
+  "prompts": {},
+  "sessions": {
+    "s_e11f69f25076d3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6df2c34a-bdf5-4feb-a4c2-b88123b530d4",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
