@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Build and test
+    runs-on: macos-26
+
+    steps:
+      - uses: actions/checkout@v5
+
+      # Pinned to the version used for development. The macos-26 image also
+      # defaults to 26.6; bump both together when moving to a newer Xcode.
+      - name: Select Xcode
+        run: sudo xcode-select -switch /Applications/Xcode_26.6.app
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      # project.yml is the source of truth — the .xcodeproj and the app's
+      # Info.plist are generated and not committed.
+      - name: Generate project
+        run: xcodegen generate
+
+      # Signing is off: the runner has no identity, and an unsigned test host
+      # avoids hardened-runtime restrictions on injecting the test bundle.
+      - name: Test
+        run: |
+          xcodebuild test \
+            -project Invoices.xcodeproj \
+            -scheme Invoices \
+            -destination 'platform=macOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
