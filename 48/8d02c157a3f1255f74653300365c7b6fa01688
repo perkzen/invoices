@@ -1,0 +1,44 @@
+Invoices/Views/ContentView.swift
+  s_3d5420b78d9147::t_318aa4900f57f8 7,16,25,49-50
+Tests/InvoicesTests/XLSXWriterTests.swift
+  s_3d5420b78d9147::t_e477ec16ed6d78 1-114
+Invoices/Views/YearOverviewView.swift
+  s_3d5420b78d9147::t_6c48c0ef0b4303 182
+  s_3d5420b78d9147::t_6119ab4f432cd4 1-181,183-205
+Invoices/Core/Formatting.swift
+  s_3d5420b78d9147::t_6c48c0ef0b4303 29-40
+Invoices/Core/YearOverview.swift
+  s_3d5420b78d9147::t_d8088102088f7f 79-118
+  s_3d5420b78d9147::t_6e62a1d14fbffe 1-78
+Invoices/Core/YearOverviewXLSX.swift
+  s_3d5420b78d9147::t_98ffd7e19eb465 1-90
+Invoices/Core/XLSXWriter.swift
+  s_3d5420b78d9147::t_294a0a547d1c11 1-116,120-266
+  s_3d5420b78d9147::t_422ce42ec54b9f 117-119
+Tests/InvoicesTests/YearOverviewTests.swift
+  s_3d5420b78d9147::t_790e0cab06a1f8 1-156,168-223
+  s_3d5420b78d9147::t_69befbc9d98279 157-167
+Invoices/Core/ZIPArchive.swift
+  s_3d5420b78d9147::t_8f5caa6f6bcb51 1-85,87-94
+  s_3d5420b78d9147::t_b7047cd8733814 86
+Invoices/Core/XLSXFile.swift
+  s_3d5420b78d9147::t_d345a67e07f6a6 1-32
+README.md
+  s_3d5420b78d9147::t_69befbc9d98279 18-22,27,61-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "488d02c157a3f1255f74653300365c7b6fa01688",
+  "prompts": {},
+  "sessions": {
+    "s_3d5420b78d9147": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2c056d63-a5f3-4a72-aa0c-b59fa9ec0e25",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
