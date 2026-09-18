@@ -23,11 +23,11 @@ nonisolated enum VatRate: String, Codable, CaseIterable, Identifiable, Sendable 
 
     var label: String {
         switch self {
-        case .standard: "22 % (splošna)"
-        case .reduced: "9,5 % (nižja)"
-        case .superReduced: "5 % (posebna nižja)"
-        case .zero: "0 %"
-        case .exempt: "Oproščeno / ni zavezanec"
+        case .standard: String(localized: "22 % (splošna)")
+        case .reduced: String(localized: "9,5 % (nižja)")
+        case .superReduced: String(localized: "5 % (posebna nižja)")
+        case .zero: String(localized: "0 %")
+        case .exempt: String(localized: "Oproščeno / ni zavezanec")
         }
     }
 

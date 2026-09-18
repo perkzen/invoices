@@ -18,6 +18,12 @@ v0 scaffold. It builds, runs, and persists data. What works today:
 - **Predloga računa** — logo, tagline, signature and the three sentences (intro, payment
   instruction, closing) live in Nastavitve › Predloga računa. Sentences take placeholders
   such as `{MESEC}`, `{leto}`, `{trr}`, `{sklic}`; see `Core/InvoiceTemplate.swift`
+- **Nastavitve** — your own details (name, address, bank account, tax status) are in the
+  sidebar and under ⌘,
+- **Slovenščina / English** — the interface follows the Mac's language, or the picker in
+  Nastavitve › Jezik. Strings live in `Resources/Localizable.xcstrings` with Slovenian as
+  the source language. The printed invoice is always Slovenian; wrap any new string on
+  the PDF page in `Text(verbatim:)` so it never lands in the catalog
 
 Not built yet: printing, e-računi, expenses, reports, search and filtering.
 

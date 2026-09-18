@@ -12,10 +12,10 @@ nonisolated enum InvoiceStatus: String, Codable, CaseIterable, Identifiable, Sen
 
     var label: String {
         switch self {
-        case .draft: "Osnutek"
-        case .issued: "Izdan"
-        case .paid: "Plačan"
-        case .cancelled: "Storniran"
+        case .draft: String(localized: "Osnutek")
+        case .issued: String(localized: "Izdan")
+        case .paid: String(localized: "Plačan")
+        case .cancelled: String(localized: "Storniran")
         }
     }
 

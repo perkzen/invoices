@@ -7,3 +7,4 @@ xcuserdata/
 *.xcuserstate
 .swiftpm/
 Invoices/App/Info.plist
+**/.claude/worktrees/

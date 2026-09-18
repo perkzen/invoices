@@ -71,9 +71,9 @@ private struct InvoiceRow: View {
             Image(systemName: invoice.status.symbol)
                 .foregroundStyle(invoice.isOverdue ? .red : .secondary)
             VStack(alignment: .leading, spacing: 2) {
-                Text(invoice.number.isEmpty ? "Osnutek" : invoice.number)
+                Text(invoice.number.isEmpty ? String(localized: "Osnutek") : invoice.number)
                     .font(.headline)
-                Text(invoice.client?.displayName ?? "Brez stranke")
+                Text(invoice.client?.displayName ?? String(localized: "Brez stranke"))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }

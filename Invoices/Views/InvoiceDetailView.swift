@@ -179,7 +179,7 @@ struct InvoiceDetailView: View {
     private func exportPDF() {
         let profile = BusinessProfile.current(in: context)
         guard let data = InvoicePDF.render(invoice: invoice, profile: profile) else {
-            exportError = "Računa ni bilo mogoče upodobiti."
+            exportError = String(localized: "Računa ni bilo mogoče upodobiti.")
             return
         }
         exportedPDF = PDFFile(data: data)

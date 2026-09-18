@@ -31,5 +31,5 @@ final class Client {
             .filter { !$0.isEmpty }
     }
 
-    var displayName: String { name.isEmpty ? "Neimenovana stranka" : name }
+    var displayName: String { name.isEmpty ? String(localized: "Neimenovana stranka") : name }
 }
