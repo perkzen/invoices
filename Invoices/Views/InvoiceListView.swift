@@ -20,8 +20,8 @@ struct InvoiceListView: View {
             } else {
                 List {
                     ForEach(invoices) { invoice in
-                        NavigationLink(value: invoice) {
-                            InvoiceRow(invoice: invoice)
+                        InvoiceRow(invoice: invoice) {
+                            pendingDelete = invoice
                         }
                         .contextMenu { deleteMenu(for: invoice) }
                     }
@@ -97,10 +97,32 @@ struct InvoiceListView: View {
     }
 }
 
+/// The trash only appears under the pointer — a permanently visible destructive
+/// control on every row is louder than the action deserves.
 private struct InvoiceRow: View {
     let invoice: Invoice
+    let onDelete: () -> Void
+
+    @State private var isHovering = false
 
     var body: some View {
+        HStack(spacing: 8) {
+            NavigationLink(value: invoice) { content }
+
+            Button("Izbriši osnutek", systemImage: "trash", action: onDelete)
+                .labelStyle(.iconOnly)
+                .buttonStyle(.borderless)
+                .tint(.red)
+                .disabled(!invoice.status.isEditable)
+                .help(invoice.status.isEditable
+                      ? "Izbriši osnutek"
+                      : "Izdanega računa ni mogoče izbrisati")
+                .opacity(isHovering ? 1 : 0)
+        }
+        .onHover { isHovering = $0 }
+    }
+
+    private var content: some View {
         HStack(alignment: .firstTextBaseline) {
             Image(systemName: invoice.status.symbol)
                 .foregroundStyle(invoice.isOverdue ? .red : .secondary)

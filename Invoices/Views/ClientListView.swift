@@ -19,13 +19,8 @@ struct ClientListView: View {
             } else {
                 List {
                     ForEach(clients) { client in
-                        NavigationLink(value: client) {
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(client.displayName).font(.headline)
-                                Text(client.addressLines.joined(separator: ", "))
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                            }
+                        ClientRow(client: client, isBlocked: hasRecords(client)) {
+                            pendingDelete = client
                         }
                         .contextMenu { deleteMenu(for: client) }
                     }
@@ -65,9 +60,13 @@ struct ClientListView: View {
     /// An invoice keeps no copy of its counterparty — name, address and tax
     /// number live only on the Client — so deleting one would strip a
     /// mandatory field off a document that has already been sent out.
+    private func hasRecords(_ client: Client) -> Bool {
+        client.invoices.contains { $0.status != .draft }
+    }
+
     @ViewBuilder
     private func deleteMenu(for client: Client) -> some View {
-        if client.invoices.contains(where: { $0.status != .draft }) {
+        if hasRecords(client) {
             Text("Ima izdane račune in je ni mogoče izbrisati")
         } else {
             Button("Izbriši stranko", systemImage: "trash", role: .destructive) {
@@ -85,6 +84,41 @@ struct ClientListView: View {
         for index in offsets {
             context.delete(clients[index])
         }
+    }
+}
+
+/// The trash only appears under the pointer — a permanently visible destructive
+/// control on every row is louder than the action deserves.
+private struct ClientRow: View {
+    let client: Client
+    let isBlocked: Bool
+    let onDelete: () -> Void
+
+    @State private var isHovering = false
+
+    var body: some View {
+        HStack(spacing: 8) {
+            NavigationLink(value: client) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(client.displayName).font(.headline)
+                        Text(client.addressLines.joined(separator: ", "))
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer(minLength: 0)
+                }
+            }
+
+            Button("Izbriši stranko", systemImage: "trash", action: onDelete)
+                .labelStyle(.iconOnly)
+                .buttonStyle(.borderless)
+                .tint(.red)
+                .disabled(isBlocked)
+                .help(isBlocked ? "Ima izdane račune in je ni mogoče izbrisati" : "Izbriši stranko")
+                .opacity(isHovering ? 1 : 0)
+        }
+        .onHover { isHovering = $0 }
     }
 }
 
