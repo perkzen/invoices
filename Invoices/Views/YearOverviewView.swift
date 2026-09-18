@@ -5,7 +5,6 @@ import SwiftUI
 /// bookkeeper keeps it in a spreadsheet, and the same table exported as
 /// .xlsx for the accountant.
 struct YearOverviewView: View {
-    @Environment(\.modelContext) private var context
     @Query(sort: [SortDescriptor(\Invoice.sequence)]) private var invoices: [Invoice]
     @Query private var profiles: [BusinessProfile]
 
