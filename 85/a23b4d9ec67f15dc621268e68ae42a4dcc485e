@@ -1,0 +1,25 @@
+Invoices/Views/InvoiceDetailView.swift
+  s_5d14d9a29f7b8e::t_471d9b85229e16 72-74,203-210,215,238,275-278
+Invoices/Resources/Localizable.xcstrings
+  s_5d14d9a29f7b8e::t_f31d3cec7249a1 7-16,287-296,337-386,407-416,667-676,727-736,907-916,1369
+Invoices/Views/ClientListView.swift
+  s_5d14d9a29f7b8e::t_471d9b85229e16 7,30,38-47,61-81
+Invoices/Views/InvoiceListView.swift
+  s_5d14d9a29f7b8e::t_471d9b85229e16 8,26,34-43,69-88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "85a23b4d9ec67f15dc621268e68ae42a4dcc485e",
+  "prompts": {},
+  "sessions": {
+    "s_5d14d9a29f7b8e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "06d4127d-cf45-45ac-967b-14d85e06897c",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
