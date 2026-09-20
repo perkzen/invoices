@@ -1,0 +1,49 @@
+Invoices/Views/ClientListView.swift
+  s_ed137e6e2b8efe::t_e95b21c6889bba 138-139
+Invoices/Views/PrivacyMode.swift
+  s_ed137e6e2b8efe::t_e95b21c6889bba 37-57
+  s_ed137e6e2b8efe::t_48821326016b28 1-36,58-70
+Invoices/Views/InvoiceDetailView.swift
+  s_ed137e6e2b8efe::t_7651ddfe547a8c 84-87,89-92,99,261,282
+Invoices/Views/InvoicePreview.swift
+  s_ed137e6e2b8efe::t_f820ce8ae22a8c 10-14,19-30
+Invoices/Views/SettingsView.swift
+  s_ed137e6e2b8efe::t_e95b21c6889bba 89,92,105,107
+  s_ed137e6e2b8efe::t_abb1352059ff0e 119,126-140
+Invoices/App/InvoicesApp.swift
+  s_ed137e6e2b8efe::t_0416b071000072 21,27,33
+Invoices/Resources/Localizable.xcstrings
+  s_ed137e6e2b8efe::t_ff56872a359547 187,192,997-1006,1187-1196,1407-1416,1437-1442
+Tests/InvoicesTests/LocalizationTests.swift
+  s_ed137e6e2b8efe::t_ea5051de4c4d57 18-19
+README.md
+  s_7465894342ffbe::t_7b5c1110f9aebc 28-32
+Invoices/Views/InvoiceListView.swift
+  s_ed137e6e2b8efe::t_20beb87bb0111c 140
+Invoices/Views/YearOverviewView.swift
+  s_ed137e6e2b8efe::t_7651ddfe547a8c 114-117,164,206
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "07f4a3e91af11066fecad5eb1f139fb6ced7142d",
+  "prompts": {},
+  "sessions": {
+    "s_7465894342ffbe": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a0552250-6281-45d8-a3eb-14184e0e6b40",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    },
+    "s_ed137e6e2b8efe": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60497683-4e1f-49ce-94e2-57700e7426d3",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
