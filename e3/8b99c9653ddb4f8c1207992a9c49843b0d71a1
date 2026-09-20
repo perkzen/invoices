@@ -1,0 +1,27 @@
+Tests/InvoicesTests/LocalizationTests.swift
+  s_ed137e6e2b8efe::t_fe31e08c61eec1 51-69
+README.md
+  s_ed137e6e2b8efe::t_805ef7b4e86abd 44,46-50
+Invoices/Core/Formatting.swift
+  s_ed137e6e2b8efe::t_abc0895b8c849d 30-32,34
+Invoices/Resources/Localizable.xcstrings
+  s_ed137e6e2b8efe::t_abc0895b8c849d 17-70
+Tests/InvoicesTests/YearOverviewTests.swift
+  s_ed137e6e2b8efe::t_fe31e08c61eec1 163-169
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "e38b99c9653ddb4f8c1207992a9c49843b0d71a1",
+  "prompts": {},
+  "sessions": {
+    "s_ed137e6e2b8efe": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60497683-4e1f-49ce-94e2-57700e7426d3",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
