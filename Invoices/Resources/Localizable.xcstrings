@@ -99,6 +99,18 @@
       }
     },
     "0 %": {},
+    "1 Sample Street": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slovenska cesta 55B"
+          }
+        }
+      }
+    },
     "22 % (standard)": {
       "localizations": {
         "sl": {
@@ -155,6 +167,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Naslov"
+          }
+        }
+      }
+    },
+    "Amount": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vrednost"
           }
         }
       }
@@ -236,6 +260,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bančni račun"
+          }
+        }
+      }
+    },
+    "Bank account: %@": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TRR: %@"
           }
         }
       }
@@ -360,6 +396,18 @@
         }
       }
     },
+    "Consulting and support": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Svetovanje in podpora"
+          }
+        }
+      }
+    },
     "Country (ISO code)": {
       "localizations": {
         "sl": {
@@ -380,6 +428,18 @@
         }
       }
     },
+    "DRAFT": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OSNUTEK"
+          }
+        }
+      }
+    },
     "Date": {
       "localizations": {
         "sl": {
@@ -396,6 +456,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Datum opravljene storitve"
+          }
+        }
+      }
+    },
+    "Date of service, abbreviated": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datum opr. storitve"
           }
         }
       }
@@ -470,12 +542,36 @@
         }
       }
     },
+    "Description of goods or services": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opis blaga ali storitev"
+          }
+        }
+      }
+    },
     "Details": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "Podatki"
+          }
+        }
+      }
+    },
+    "Discount": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Popust"
           }
         }
       }
@@ -506,6 +602,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Osnutek računa"
+          }
+        }
+      }
+    },
+    "Draft-invoice": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Osnutek-racuna"
           }
         }
       }
@@ -570,7 +678,7 @@
         }
       }
     },
-    "Flat-rate expenses (normiranec)": {
+    "Flat-rate expenses": {
       "localizations": {
         "sl": {
           "stringUnit": {
@@ -630,6 +738,18 @@
         }
       }
     },
+    "I am invoicing you for services in the month of {MONTH} {year}:": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaračunavam vam storitev za mesec {MONTH} {year}:"
+          }
+        }
+      }
+    },
     "IBAN": {
       "localizations": {
         "sl": {
@@ -680,12 +800,48 @@
         }
       }
     },
+    "Invoice no. %@ – continued": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Račun št. %@ – nadaljevanje"
+          }
+        }
+      }
+    },
     "Invoice template": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "Predloga računa"
+          }
+        }
+      }
+    },
+    "Invoice – continued": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Račun – nadaljevanje"
+          }
+        }
+      }
+    },
+    "Invoice-%@": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Racun-%@"
           }
         }
       }
@@ -700,7 +856,19 @@
         }
       }
     },
-    "Invoices charge no VAT and carry the exemption clause under 94. člen ZDDV-1. Turn this on once you register for VAT.": {
+    "Invoices %@": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Računi %@"
+          }
+        }
+      }
+    },
+    "Invoices charge no VAT and carry the exemption clause under Article 94 of the VAT Act (ZDDV-1). Turn this on once you register for VAT.": {
       "localizations": {
         "sl": {
           "stringUnit": {
@@ -746,6 +914,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "Izdan"
+          }
+        }
+      }
+    },
+    "Issued by:": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Račun izdal:"
+          }
+        }
+      }
+    },
+    "Issued-invoices-%@": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izdani-racuni-%@"
           }
         }
       }
@@ -810,7 +1002,7 @@
         }
       }
     },
-    "My s.p.": {
+    "My business": {
       "localizations": {
         "sl": {
           "stringUnit": {
@@ -900,6 +1092,18 @@
         }
       }
     },
+    "No.": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Z. št."
+          }
+        }
+      }
+    },
     "Notes": {
       "localizations": {
         "sl": {
@@ -966,6 +1170,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pregled"
+          }
+        }
+      }
+    },
+    "Page %lld / %lld": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stran %lld / %lld"
           }
         }
       }
@@ -1060,6 +1276,18 @@
         }
       }
     },
+    "Please settle the invoice by the due date.": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prosim, da račun poravnate do valute plačila!"
+          }
+        }
+      }
+    },
     "Postal code": {
       "localizations": {
         "sl": {
@@ -1150,6 +1378,18 @@
         }
       }
     },
+    "Reference number": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Referenčna številka"
+          }
+        }
+      }
+    },
     "Registration (e.g. AJPES)": {
       "localizations": {
         "sl": {
@@ -1180,12 +1420,48 @@
         }
       }
     },
+    "Reverse charge / exempt under the VAT Act (ZDDV-1).": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obrnjena davčna obveznost / oproščeno po ZDDV-1."
+          }
+        }
+      }
+    },
+    "SI00 (invoice number)": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SI00 (št. računa)"
+          }
+        }
+      }
+    },
     "Same as system": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "Kot sistem"
+          }
+        }
+      }
+    },
+    "Sample Company Ltd.": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vzorčno podjetje d.o.o."
           }
         }
       }
@@ -1270,12 +1546,36 @@
         }
       }
     },
+    "Software development": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Računalniško programiranje"
+          }
+        }
+      }
+    },
     "Street and number": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "Ulica in hišna številka"
+          }
+        }
+      }
+    },
+    "Subtotal excl. VAT:": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skupaj brez DDV:"
           }
         }
       }
@@ -1300,6 +1600,18 @@
         }
       }
     },
+    "TOTAL DUE %@:": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SKUPAJ ZA PLAČILO %@:"
+          }
+        }
+      }
+    },
     "Tax details": {
       "localizations": {
         "sl": {
@@ -1310,7 +1622,7 @@
         }
       }
     },
-    "Tax number (davčna številka)": {
+    "Tax number": {
       "localizations": {
         "sl": {
           "stringUnit": {
@@ -1326,6 +1638,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Davčna št.:"
+          }
+        }
+      }
+    },
+    "Tax number: %@": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Davčna številka: %@"
           }
         }
       }
@@ -1350,7 +1674,7 @@
         }
       }
     },
-    "The business name is printed in the invoice header, the full name under “Račun izdal” (issued by).": {
+    "The business name is printed in the invoice header, the full name under “Issued by”.": {
       "localizations": {
         "sl": {
           "stringUnit": {
@@ -1420,7 +1744,7 @@
         }
       }
     },
-    "The name under the signature is “Full name” from the My s.p. tab.": {
+    "The name under the signature is “Full name” from the My business tab.": {
       "localizations": {
         "sl": {
           "stringUnit": {
@@ -1500,6 +1824,18 @@
         }
       }
     },
+    "VAT %@:": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DDV %@:"
+          }
+        }
+      }
+    },
     "VAT ID": {
       "localizations": {
         "sl": {
@@ -1510,12 +1846,48 @@
         }
       }
     },
+    "VAT ID: %@": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ID za DDV: %@"
+          }
+        }
+      }
+    },
+    "VAT not charged under Article 94(1) of the VAT Act (ZDDV-1).": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DDV ni obračunan na podlagi 1. odstavka 94. člena ZDDV-1."
+          }
+        }
+      }
+    },
     "VAT registered": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "Zavezanec za DDV"
+          }
+        }
+      }
+    },
+    "When paying to bank account {iban}, quote the reference {reference}.": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pri plačilu na TRR: {iban} navedite sklic: {reference}."
           }
         }
       }
@@ -1550,6 +1922,18 @@
         }
       }
     },
+    "draft": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "osnutek"
+          }
+        }
+      }
+    },
     "due date": {
       "localizations": {
         "sl": {
@@ -1560,7 +1944,7 @@
         }
       }
     },
-    "e.g. Domen Perko, s.p.": {
+    "e.g. Domen Perko, sole trader": {
       "localizations": {
         "sl": {
           "stringUnit": {
@@ -1570,7 +1954,7 @@
         }
       }
     },
-    "e.g. IT STORITVE IN SVETOVANJE": {
+    "e.g. IT SERVICES AND CONSULTING": {
       "localizations": {
         "sl": {
           "stringUnit": {
@@ -1608,22 +1992,22 @@
       "comment": "Status of a single invoice. Slovenian declines it as \"Plačan\", unlike the year overview total.",
       "extractionState": "manual"
     },
-    "month of service, in Slovenian (AVGUST)": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "mesec storitve (AVGUST)"
-          }
-        }
-      }
-    },
-    "month of service, in Slovenian (avgust)": {
+    "month of service (august)": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "mesec storitve (avgust)"
+          }
+        }
+      }
+    },
+    "month of service, in capitals (AUGUST)": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mesec storitve (AVGUST)"
           }
         }
       }

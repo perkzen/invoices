@@ -3,9 +3,10 @@ import Testing
 @testable import Invoices
 
 @MainActor
-@Suite("Izvoz PDF")
+@Suite("PDF export")
 struct InvoicePDFTests {
     /// A printed invoice with `lineCount` rows — no store, no models.
+    /// Diacritics on purpose: the page has to render them intact.
     private func printed(lineCount: Int = 1, isDraft: Bool = true) -> PrintedInvoice {
         PrintedInvoice(
             number: isDraft ? "" : "2026-001",
@@ -15,26 +16,26 @@ struct InvoicePDFTests {
             dueDate: .now,
             placeOfIssue: "Ljubljana",
             issuer: .init(
-                name: "Domen Perko s.p.",
-                addressLines: ["Trg svobode 4", "1000 Ljubljana"],
+                name: "Domen Perko",
+                addressLines: ["Rue de la Paix 4", "1000 Ljubljana"],
                 taxNumber: "12345678",
                 iban: "SI56 1910 0000 1234 567",
-                bankName: "Deželna banka"
+                bankName: "Banque Générale"
             ),
             customer: .init(
-                name: "Čevljarstvo Žnidaršič d.o.o.",
-                addressLines: ["Šmartinska cesta 152", "1000 Ljubljana"],
+                name: "Müller & Søn ApS",
+                addressLines: ["Ærøvej 152", "1000 Ljubljana"],
                 taxNumber: "87654321"
             ),
             lines: (0..<lineCount).map { index in
                 PrintedInvoice.Line(
                     index: index + 1,
-                    description: "Razvoj programske opreme – šifra \(index + 1)",
-                    quantity: 40, unit: "ura", unitPrice: 55, vatRate: .exempt
+                    description: "Software development – item \(index + 1)",
+                    quantity: 40, unit: "h", unitPrice: 55, vatRate: .exempt
                 )
             },
-            intro: "Zaračunavam vam storitev za mesec AVGUST 2026:",
-            paymentNote: "Pri plačilu na TRR: SI56 1910 0000 1234 567 navedite sklic: SI00 2026-001."
+            intro: "Invoicing you for AUGUST 2026:",
+            paymentNote: "When paying to SI56 1910 0000 1234 567, quote SI00 2026-001."
         )
     }
 
@@ -79,13 +80,24 @@ struct InvoicePDFTests {
 
     @Test func `notes and a footer cost the last page rows`() {
         var withNotes = printed(lineCount: 6)
-        withNotes.notes = "Opomba"
+        withNotes.notes = "A note"
         withNotes.issuer.footer = "AJPES"
         #expect(InvoicePDF.pages(of: withNotes).count >= InvoicePDF.pages(of: printed(lineCount: 6)).count)
-        #expect(InvoicePDF.summaryExtra(notes: "Opomba", footer: "AJPES") == 3)
+        #expect(InvoicePDF.summaryExtra(notes: "A note", footer: "AJPES") == 3)
     }
 
     @Test func `pagination always yields at least one page`() {
         #expect(InvoicePDF.paginate([]).count == 1)
+    }
+
+    /// Named in the document's language, and kept to ASCII so the file
+    /// travels through any mail client and file system.
+    @Test func `the filename follows the invoice number`() {
+        let issued = printed(isDraft: false).suggestedFilename
+        #expect(issued.hasSuffix("-2026-001"))
+        #expect(issued.allSatisfy { $0.isASCII && !$0.isWhitespace })
+        let draft = printed().suggestedFilename
+        #expect(draft != issued)
+        #expect(draft.allSatisfy { $0.isASCII && !$0.isWhitespace })
     }
 }

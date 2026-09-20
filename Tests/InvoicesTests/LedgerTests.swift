@@ -4,7 +4,7 @@ import Testing
 @testable import Invoices
 
 @MainActor
-@Suite("Izdaja")
+@Suite("Ledger")
 struct LedgerTests {
     private func makeLedger() throws -> Ledger {
         let container = try ModelContainer(
@@ -21,7 +21,7 @@ struct LedgerTests {
     /// A draft that is ready to issue: a client and the starter line.
     @discardableResult
     private func readyDraft(in ledger: Ledger, issuedOn: Date = Date()) -> Invoice {
-        let client = Client(name: "PARAKEET AI d.o.o.")
+        let client = Client(name: "PARAKEET AI Ltd.")
         ledger.context.insert(client)
         let invoice = ledger.newDraft()
         invoice.client = client
@@ -148,7 +148,7 @@ struct LedgerTests {
         #expect(throws: Ledger.IssueProblem.notADraft) { try ledger.issue(invoice) }
     }
 
-    // MARK: Payment and storno
+    // MARK: Payment and cancellation
 
     @Test func `marking paid records the date`() throws {
         let ledger = try makeLedger()

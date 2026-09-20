@@ -1,17 +1,18 @@
 import AppKit
 import SwiftUI
 
-/// One A4 page of a rendered invoice, laid out like the s.p.'s existing
-/// invoices: logo and issuer top-left, customer left / invoice data right,
-/// an intro sentence, the item table, a single total line, italic clauses,
-/// and "Račun izdal" with a signature. Laid out at exactly
+/// One A4 page of a rendered invoice, laid out like the sole trader's
+/// existing invoices: logo and issuer top-left, customer left / invoice data
+/// right, an intro sentence, the item table, a single total line, italic
+/// clauses, and an "Issued by" block with a signature. Laid out at exactly
 /// `InvoicePDF.pageSize` so `ImageRenderer` can hand it to a PDF context.
 ///
 /// Every value it prints comes from `PrintedInvoice`, which has already
 /// decided what appears; the page only decides where.
 ///
-/// Every string here is `verbatim`: the invoice is a Slovenian legal
-/// document and must not change language with the app's UI.
+/// Every label comes from `DocumentText`, never from the app's own language:
+/// the invoice is a Slovenian legal document and must not change language
+/// with the UI. Never write a plain `Text("…")` on this page.
 struct InvoicePDFPage: View {
     let printed: PrintedInvoice
     /// The rows this page carries — a slice of `printed.lines`.
@@ -67,7 +68,7 @@ struct InvoicePDFPage: View {
     }
 
     private var draftWatermark: some View {
-        Text(verbatim: "OSNUTEK")
+        Text(verbatim: DocumentText.string("DRAFT"))
             .font(.system(size: 110, weight: .bold))
             .foregroundStyle(.red.opacity(0.12))
             .rotationEffect(.degrees(-30))
@@ -91,12 +92,12 @@ struct InvoicePDFPage: View {
             }
             gap(10)
             ForEach(issuer.addressLines, id: \.self) { Text($0) }
-            Text(verbatim: "Davčna številka: \(issuer.taxNumber)")
+            Text(verbatim: DocumentText.string("Tax number: \(issuer.taxNumber)"))
             if let vatID = printed.issuerVatID {
-                Text(verbatim: "ID za DDV: \(vatID)")
+                Text(verbatim: DocumentText.string("VAT ID: \(vatID)"))
             }
             if !issuer.iban.isEmpty {
-                Text(verbatim: "TRR: \(issuer.iban)")
+                Text(verbatim: DocumentText.string("Bank account: \(issuer.iban)"))
             }
             if !issuer.bankName.isEmpty {
                 Text(issuer.bankName)
@@ -114,30 +115,30 @@ struct InvoicePDFPage: View {
                     .font(.system(size: bodySize, weight: .bold))
                 ForEach(printed.customer?.addressLines ?? [], id: \.self) { Text($0) }
                 if let tax = printed.customer?.taxNumber, !tax.isEmpty {
-                    Text(verbatim: "Davčna številka: \(tax)")
+                    Text(verbatim: DocumentText.string("Tax number: \(tax)"))
                 }
                 if let vat = printed.customer?.vatID, !vat.isEmpty {
-                    Text(verbatim: "ID za DDV: \(vat)")
+                    Text(verbatim: DocumentText.string("VAT ID: \(vat)"))
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
             VStack(alignment: .leading, spacing: 4) {
-                metaLine("Račun", printed.number.isEmpty ? "osnutek" : printed.number)
-                metaLine("Datum", Formatting.date(printed.issueDate))
-                metaLine("Valuta", Formatting.date(printed.dueDate))
-                metaLine("Kraj izdaje", printed.placeOfIssue.isEmpty ? "—" : printed.placeOfIssue)
-                metaLine("Datum opr. storitve", printed.servicePeriod)
+                metaLine("Invoice", printed.number.isEmpty ? DocumentText.string("draft") : printed.number)
+                metaLine("Date", Formatting.date(printed.issueDate))
+                metaLine("Due date", Formatting.date(printed.dueDate))
+                metaLine("Place of issue", printed.placeOfIssue.isEmpty ? "—" : printed.placeOfIssue)
+                metaLine("Date of service, abbreviated", printed.servicePeriod)
                 if !printed.paymentReference.isEmpty {
-                    metaLine("Referenčna številka", printed.paymentReference)
+                    metaLine("Reference number", printed.paymentReference)
                 }
             }
             .frame(width: 240, alignment: .leading)
         }
     }
 
-    private func metaLine(_ label: String, _ value: String) -> some View {
-        (Text(verbatim: "\(label): ").fontWeight(.bold) + Text(verbatim: value))
+    private func metaLine(_ label: String.LocalizationValue, _ value: String) -> some View {
+        (Text(verbatim: "\(DocumentText.string(label)): ").fontWeight(.bold) + Text(verbatim: value))
             .fixedSize(horizontal: false, vertical: true)
     }
 
@@ -157,8 +158,8 @@ struct InvoicePDFPage: View {
                 .font(.system(size: 11, weight: .bold))
             Spacer()
             Text(verbatim: printed.number.isEmpty
-                 ? "Račun – nadaljevanje"
-                 : "Račun št. \(printed.number) – nadaljevanje")
+                 ? DocumentText.string("Invoice – continued")
+                 : DocumentText.string("Invoice no. \(printed.number) – continued"))
         }
     }
 
@@ -167,8 +168,14 @@ struct InvoicePDFPage: View {
     private var table: some View {
         VStack(spacing: 0) {
             tableRow(
-                index: "Z. št.", description: "Opis blaga ali storitev", quantity: "Količina",
-                unit: "EM", price: "Cena", discount: "Popust", vat: "DDV", amount: "Vrednost",
+                index: DocumentText.string("No."),
+                description: DocumentText.string("Description of goods or services"),
+                quantity: DocumentText.string("Quantity"),
+                unit: DocumentText.string("Unit"),
+                price: DocumentText.string("Price"),
+                discount: DocumentText.string("Discount"),
+                vat: DocumentText.string("VAT"),
+                amount: DocumentText.string("Amount"),
                 isHeader: true
             )
             Rectangle().fill(.black).frame(height: 0.8)
@@ -225,21 +232,21 @@ struct InvoicePDFPage: View {
     private var totals: some View {
         VStack(alignment: .trailing, spacing: 3) {
             if printed.chargesVat {
-                totalRow("Skupaj brez DDV:", printed.totals.net, bold: false)
+                totalRow("Subtotal excl. VAT:", printed.totals.net, bold: false)
                 ForEach(printed.vatBreakdown, id: \.rate) { entry in
-                    totalRow("DDV \(Formatting.percent(entry.rate.percentage)):", entry.amounts.vat, bold: false)
+                    totalRow("VAT \(Formatting.percent(entry.rate.percentage)):", entry.amounts.vat, bold: false)
                 }
             }
-            totalRow("SKUPAJ ZA PLAČILO \(printed.currencyCode):", printed.totals.gross, bold: true)
+            totalRow("TOTAL DUE \(printed.currencyCode):", printed.totals.gross, bold: true)
         }
         .padding(.top, 6)
         .frame(maxWidth: .infinity, alignment: .trailing)
     }
 
-    /// The amount sits in the Vrednost column, directly under the line values.
-    private func totalRow(_ label: String, _ amount: Decimal, bold: Bool) -> some View {
+    /// The amount sits in the Amount column, directly under the line values.
+    private func totalRow(_ label: String.LocalizationValue, _ amount: Decimal, bold: Bool) -> some View {
         HStack(spacing: 6) {
-            Text(label)
+            Text(verbatim: DocumentText.string(label))
             Text(Formatting.amount(amount)).frame(width: 76, alignment: .trailing)
         }
         .fontWeight(bold ? .bold : .regular)
@@ -248,8 +255,8 @@ struct InvoicePDFPage: View {
 
     private var clauses: some View {
         VStack(alignment: .leading, spacing: 4) {
-            // TODO: a registered zavezanec billing reverse charge needs its
-            // own clause (25. člen ZDDV-1); it is not the 94. člen one.
+            // TODO: a VAT-registered business billing reverse charge needs its
+            // own clause (Article 25 of ZDDV-1); it is not the Article 94 one.
             ForEach(printed.exemptionClauses, id: \.self) { Text($0) }
             if !printed.paymentNote.isEmpty { Text(printed.paymentNote) }
             if !issuer.closingNote.isEmpty { Text(issuer.closingNote) }
@@ -264,7 +271,7 @@ struct InvoicePDFPage: View {
         HStack(spacing: 0) {
             Spacer(minLength: 0)
             VStack(alignment: .leading, spacing: 3) {
-                Text(verbatim: "Račun izdal:")
+                Text(verbatim: DocumentText.string("Issued by:"))
                 Text(printed.signerName)
                 if let image = issuer.signature.flatMap(NSImage.init(data:)) {
                     Image(nsImage: image)
@@ -286,7 +293,7 @@ struct InvoicePDFPage: View {
                 Text(issuer.footer)
                 Spacer()
                 if pageCount > 1 {
-                    Text(verbatim: "Stran \(pageNumber) / \(pageCount)")
+                    Text(verbatim: DocumentText.string("Page \(pageNumber) / \(pageCount)"))
                 }
             }
             .font(.system(size: 8))

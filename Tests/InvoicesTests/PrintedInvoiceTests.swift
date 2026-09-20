@@ -3,7 +3,7 @@ import SwiftData
 import Testing
 @testable import Invoices
 
-@Suite("Natisnjeni račun")
+@Suite("Printed invoice")
 struct PrintedInvoiceTests {
     private func date(_ year: Int, _ month: Int, _ day: Int) -> Date {
         Formatting.calendar.date(from: DateComponents(year: year, month: month, day: day))!
@@ -18,13 +18,13 @@ struct PrintedInvoiceTests {
             serviceDateEnd: date(2026, 8, 31),
             dueDate: date(2026, 9, 9),
             chargesVat: chargesVat,
-            issuer: .init(name: "Domen Perko s.p.", taxNumber: "12345678", vatID: "SI12345678"),
+            issuer: .init(name: "Domen Perko", taxNumber: "12345678", vatID: "SI12345678"),
             lines: lines
         )
     }
 
     private func line(_ index: Int, price: Decimal = 100, unit: String = "", discount: Decimal = 0, rate: VatRate = .exempt) -> PrintedInvoice.Line {
-        PrintedInvoice.Line(index: index, description: "Delo", quantity: 1, unit: unit, unitPrice: price, discountPercent: discount, vatRate: rate)
+        PrintedInvoice.Line(index: index, description: "Work", quantity: 1, unit: unit, unitPrice: price, discountPercent: discount, vatRate: rate)
     }
 
     @Test func `totals add up the lines`() {
@@ -34,7 +34,7 @@ struct PrintedInvoiceTests {
         #expect(printed.vatBreakdown.map(\.rate) == [.standard, .reduced])
     }
 
-    @Test func `the VAT ID is printed only for a zavezanec`() {
+    @Test func `the VAT ID is printed only for a VAT registered business`() {
         #expect(printed(chargesVat: false, lines: [line(1)]).issuerVatID == nil)
         #expect(printed(chargesVat: true, lines: [line(1)]).issuerVatID == "SI12345678")
     }
@@ -45,7 +45,7 @@ struct PrintedInvoiceTests {
         #expect(printed(chargesVat: true, lines: [line(1, rate: .standard)]).exemptionClauses.isEmpty)
     }
 
-    @Test func `the Vrednost column is net with VAT and gross without`() {
+    @Test func `the amount column is net with VAT and gross without`() {
         let item = line(1, rate: .standard)
         #expect(printed(chargesVat: true, lines: [item]).columnAmount(of: item) == 100)
         #expect(printed(chargesVat: false, lines: [item]).columnAmount(of: item) == 122)
@@ -57,24 +57,23 @@ struct PrintedInvoiceTests {
         #expect(printed(lines: [line(1, discount: 10)]).showsDiscount)
     }
 
-    @Test func `the service period and filename follow the value`() {
+    @Test func `the service period follows the value`() {
         var printed = printed(lines: [line(1)])
         #expect(printed.servicePeriod.contains("–"))
-        #expect(printed.suggestedFilename == "Racun-2026-001")
-        printed.number = ""
-        #expect(printed.suggestedFilename == "Osnutek-racuna")
+        printed.serviceDateEnd = nil
+        #expect(!printed.servicePeriod.contains("–"))
     }
 
     @Test func `the signer falls back to the business name`() {
         var printed = printed(lines: [])
-        #expect(printed.signerName == "Domen Perko s.p.")
-        printed.issuer.signerName = "Domen Perko"
         #expect(printed.signerName == "Domen Perko")
+        printed.issuer.signerName = "D. Perko"
+        #expect(printed.signerName == "D. Perko")
     }
 }
 
 @MainActor
-@Suite("Natisnjeni račun iz shrambe")
+@Suite("Printed invoice from the store")
 struct PrintedInvoiceFromModelsTests {
     private func makeLedger() throws -> Ledger {
         let container = try ModelContainer(
@@ -91,11 +90,11 @@ struct PrintedInvoiceFromModelsTests {
     @Test func `the value carries what the models say`() throws {
         let ledger = try makeLedger()
         let profile = ledger.profile
-        profile.name = "Domen Perko s.p."
+        profile.name = "Domen Perko"
         profile.iban = "SI56 1910 0000 1234 567"
         profile.vatID = "SI12345678"
 
-        let client = Client(name: "PARAKEET AI d.o.o.")
+        let client = Client(name: "PARAKEET AI Ltd.")
         client.street = "Slovenska cesta 1"
         client.postalCode = "1000"
         client.city = "Ljubljana"
@@ -106,37 +105,41 @@ struct PrintedInvoiceFromModelsTests {
         invoice.serviceDate = date(2026, 8, 1)
         invoice.serviceDateEnd = date(2026, 8, 31)
         invoice.issueDate = date(2026, 9, 1)
-        invoice.sortedLines[0].itemDescription = "Prva"
+        invoice.sortedLines[0].itemDescription = "First"
         let second = try #require(ledger.addLine(to: invoice))
-        second.itemDescription = "Druga"
+        second.itemDescription = "Second"
 
         let printed = PrintedInvoice.make(invoice: invoice, profile: profile)
         #expect(printed.isDraft)
         #expect(printed.number.isEmpty)
-        #expect(printed.customer?.name == "PARAKEET AI d.o.o.")
+        #expect(printed.customer?.name == "PARAKEET AI Ltd.")
         #expect(printed.customer?.addressLines == ["Slovenska cesta 1", "1000 Ljubljana"])
         #expect(printed.lines.map(\.index) == [1, 2])
-        #expect(printed.lines.map(\.description) == ["Prva", "Druga"])
+        #expect(printed.lines.map(\.description) == ["First", "Second"])
         // The month is the one the service ended in, from the default template.
-        #expect(printed.intro == "Zaračunavam vam storitev za mesec AVGUST 2026:")
+        let expectedIntro = InvoiceTemplate.defaultIntro
+            .replacingOccurrences(of: "{MONTH}", with: InvoiceTemplate.upperMonthName(of: date(2026, 8, 31)))
+            .replacingOccurrences(of: "{year}", with: "2026")
+        #expect(printed.intro == expectedIntro)
+        #expect(printed.intro.contains("2026"))
         // A draft has no number yet, so the reference says what will be filled in.
-        #expect(printed.paymentNote.contains("SI00 (št. računa)"))
+        #expect(printed.paymentNote.contains(DocumentText.string("SI00 (invoice number)")))
         #expect(printed.issuerVatID == nil)
     }
 
     @Test func `an invoice's own intro overrides the template`() throws {
         let ledger = try makeLedger()
         let invoice = ledger.newDraft()
-        invoice.introOverride = "Za {stranka}:"
-        invoice.client = Client(name: "Stranka d.o.o.")
+        invoice.introOverride = "For {client}:"
+        invoice.client = Client(name: "Client Ltd.")
         ledger.context.insert(invoice.client!)
 
-        #expect(PrintedInvoice.make(invoice: invoice, profile: ledger.profile).intro == "Za Stranka d.o.o.:")
+        #expect(PrintedInvoice.make(invoice: invoice, profile: ledger.profile).intro == "For Client Ltd.:")
     }
 
     @Test func `an issued invoice prints its number and reference`() throws {
         let ledger = try makeLedger()
-        let client = Client(name: "Stranka d.o.o.")
+        let client = Client(name: "Client Ltd.")
         ledger.context.insert(client)
         let invoice = ledger.newDraft()
         invoice.client = client
@@ -152,13 +155,13 @@ struct PrintedInvoiceFromModelsTests {
     @Test func `the settings sample prints the profile's own wording and VAT status`() throws {
         let ledger = try makeLedger()
         let profile = ledger.profile
-        profile.introTemplate = "Za {stranka}, {MESEC}:"
+        profile.introTemplate = "For {client}, {MONTH}:"
         profile.isVatRegistered = true
 
         let sample = PrintedInvoice.sample(matching: profile)
         #expect(!sample.isDraft)
         #expect(sample.lines.count == 2)
-        #expect(sample.intro.hasPrefix("Za Vzorčno podjetje d.o.o., "))
+        #expect(sample.intro.hasPrefix("For \(DocumentText.string("Sample Company Ltd.")), "))
         #expect(sample.chargesVat)
         #expect(sample.lines.allSatisfy { $0.vatRate == .standard })
     }

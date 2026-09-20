@@ -1,15 +1,15 @@
 import Foundation
 import SwiftData
 
-/// Izdaja — the book of računi and stranke. Every step in an invoice's life
-/// goes through here: drafting, issuing, payment, storno, and the rules on
+/// The book of invoices and clients. Every step in an invoice's life goes
+/// through here: drafting, issuing, payment, cancellation, and the rules on
 /// what may be deleted. Views call it with the app's context; tests call it
 /// with an in-memory container and get the same behaviour.
 ///
 /// Slovenian rules require invoice numbers to run in an unbroken sequence
 /// within the year. So a number is assigned only when a draft is issued, an
 /// issued invoice is never deleted — it is cancelled and keeps its number —
-/// and a stranka with issued invoices stays, because the invoice keeps no
+/// and a client with issued invoices stays, because the invoice keeps no
 /// copy of its counterparty.
 @MainActor
 struct Ledger {
@@ -121,8 +121,8 @@ struct Ledger {
         invoice.paidDate = date
     }
 
-    /// Storno. The invoice keeps its number so the sequence stays unbroken;
-    /// the year overview lists it but does not count it.
+    /// Cancellation. The invoice keeps its number so the sequence stays
+    /// unbroken; the year overview lists it but does not count it.
     func cancel(_ invoice: Invoice) {
         guard invoice.status == .issued else { return }
         invoice.status = .cancelled

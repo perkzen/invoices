@@ -5,6 +5,9 @@ extension PrintedInvoice {
     /// for a made-up client, printed with the profile's own header, wording
     /// and VAT status. A plain value, so it never touches the store or the
     /// real numbering.
+    ///
+    /// The sample is previewed on the printed invoice, so its text reads in
+    /// the document's language, not the interface's.
     static func sample(matching profile: BusinessProfile) -> PrintedInvoice {
         let calendar = Formatting.calendar
         let today = Date()
@@ -16,8 +19,8 @@ extension PrintedInvoice {
         let reference = InvoiceNumbering.defaultReference(number: number)
 
         let customer = Customer(
-            name: "Vzorčno podjetje d.o.o.",
-            addressLines: ["Slovenska cesta 55B", "1000 Ljubljana"],
+            name: DocumentText.string("Sample Company Ltd."),
+            addressLines: [DocumentText.string("1 Sample Street"), "1000 Ljubljana"],
             taxNumber: "12345678"
         )
         let context = InvoiceTemplate.Context(
@@ -29,8 +32,8 @@ extension PrintedInvoice {
             dueDate: dueDate
         )
         let items: [(String, Decimal, Decimal)] = [
-            ("Računalniško programiranje", 1, 1075),
-            ("Svetovanje in podpora", 4, 60),
+            (DocumentText.string("Software development"), 1, 1075),
+            (DocumentText.string("Consulting and support"), 4, 60),
         ]
 
         return PrintedInvoice(

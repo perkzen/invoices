@@ -10,10 +10,11 @@ enum InvoiceNumbering {
         String(format: "%d-%03d", year, sequence)
     }
 
-    /// The bank reference most s.p. use: the SI00 model over the invoice
-    /// number. A draft has no number yet, so it shows what will be filled in.
+    /// The bank reference most sole traders use: the SI00 model over the
+    /// invoice number. A draft has no number yet, so it says what will be
+    /// filled in — on the document, so in the document's language.
     nonisolated static func defaultReference(number: String) -> String {
-        number.isEmpty ? "SI00 (št. računa)" : "SI00 \(number)"
+        number.isEmpty ? DocumentText.string("SI00 (invoice number)") : "SI00 \(number)"
     }
 
     static func nextSequence(for year: Int, in context: ModelContext) -> Int {

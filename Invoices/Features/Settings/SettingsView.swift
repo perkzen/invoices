@@ -3,7 +3,7 @@ import SwiftData
 import SwiftUI
 
 /// The ⌘, window. The same content also lives in the sidebar under
-/// Nastavitve, so nobody has to know the shortcut to find it.
+/// Settings, so nobody has to know the shortcut to find it.
 struct SettingsView: View {
     var body: some View {
         SettingsContent()
@@ -11,7 +11,7 @@ struct SettingsView: View {
     }
 }
 
-/// Nastavitve: the s.p. details and the invoice template, with a live
+/// Settings: the business details and the invoice template, with a live
 /// preview of a sample invoice so every change is seen where it lands.
 struct SettingsContent: View {
     @Environment(\.modelContext) private var context
@@ -21,7 +21,7 @@ struct SettingsContent: View {
 
         HStack(spacing: 0) {
             TabView {
-                Tab("My s.p.", systemImage: "building.2") {
+                Tab("My business", systemImage: "building.2") {
                     BusinessProfileForm(profile: profile)
                 }
                 Tab("Invoice template", systemImage: "doc.richtext") {
@@ -36,7 +36,7 @@ struct SettingsContent: View {
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity)
                     .padding(6)
-                // Built in `body`, so every edit to the profile — the DDV
+                // Built in `body`, so every edit to the profile — the VAT
                 // toggle included — re-renders the sample.
                 InvoicePreview(printed: PrintedInvoice.sample(matching: profile))
             }
@@ -51,14 +51,14 @@ private struct BusinessProfileForm: View {
     var body: some View {
         Form {
             Section {
-                TextField("Business name", text: $profile.name, prompt: Text("e.g. Domen Perko, s.p."))
+                TextField("Business name", text: $profile.name, prompt: Text("e.g. Domen Perko, sole trader"))
                 TextField("Full name", text: $profile.signerName, prompt: Text("the business owner"))
                 TextField("Email", text: $profile.email)
                 TextField("Phone", text: $profile.phone)
             } header: {
-                Text("My s.p.")
+                Text("My business")
             } footer: {
-                Text("The business name is printed in the invoice header, the full name under “Račun izdal” (issued by).")
+                Text("The business name is printed in the invoice header, the full name under “Issued by”.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -69,18 +69,18 @@ private struct BusinessProfileForm: View {
                 TextField("Country (ISO code)", text: $profile.countryCode)
             }
             Section {
-                SensitiveField("Tax number (davčna številka)", text: $profile.taxNumber)
+                SensitiveField("Tax number", text: $profile.taxNumber)
                 Toggle("VAT registered", isOn: $profile.isVatRegistered)
                 if profile.isVatRegistered {
                     SensitiveField("VAT ID", text: $profile.vatID)
                 }
-                Toggle("Flat-rate expenses (normiranec)", isOn: $profile.isFlatRate)
+                Toggle("Flat-rate expenses", isOn: $profile.isFlatRate)
             } header: {
                 Text("Tax status")
             } footer: {
                 Text(profile.isVatRegistered
                      ? "Invoices show VAT rates and a breakdown per rate."
-                     : "Invoices charge no VAT and carry the exemption clause under 94. člen ZDDV-1. Turn this on once you register for VAT.")
+                     : "Invoices charge no VAT and carry the exemption clause under Article 94 of the VAT Act (ZDDV-1). Turn this on once you register for VAT.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
             }
@@ -134,8 +134,8 @@ private struct LanguageSection: View {
         Section {
             Picker("App language", selection: $language) {
                 Text("Same as system").tag("system")
-                Text(verbatim: "Slovenščina").tag("sl")
-                Text(verbatim: "English").tag("en")
+                Text(verbatim: Self.nativeName(of: "sl")).tag("sl")
+                Text(verbatim: Self.nativeName(of: "en")).tag("en")
             }
             .onChange(of: language) { _, newValue in
                 if newValue == "system" {
@@ -159,9 +159,16 @@ private struct LanguageSection: View {
             Text("Quit and reopen Invoices to see the interface in the selected language.")
         }
     }
+
+    /// A language is offered under its own name — the way its speakers spell
+    /// it, whatever language the rest of the picker is in.
+    private static func nativeName(of code: String) -> String {
+        let locale = Locale(identifier: code)
+        return locale.localizedString(forLanguageCode: code)?.capitalized(with: locale) ?? code
+    }
 }
 
-/// Everything on the printed invoice that is the s.p.'s own: logo, tagline,
+/// Everything on the printed invoice that is the business's own: logo, tagline,
 /// the three sentences, and the signature.
 private struct InvoiceTemplateForm: View {
     @Bindable var profile: BusinessProfile
@@ -171,7 +178,7 @@ private struct InvoiceTemplateForm: View {
             Section("Header") {
                 ImageWell(title: "Logo", data: $profile.logoData)
                 TextField("Line of business", text: $profile.activityLine,
-                          prompt: Text("e.g. IT STORITVE IN SVETOVANJE"))
+                          prompt: Text("e.g. IT SERVICES AND CONSULTING"))
             }
             Section {
                 TextField("Intro sentence", text: $profile.introTemplate, axis: .vertical)
@@ -202,7 +209,7 @@ private struct InvoiceTemplateForm: View {
             } header: {
                 Text("Signature")
             } footer: {
-                Text("The name under the signature is “Full name” from the My s.p. tab.")
+                Text("The name under the signature is “Full name” from the My business tab.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }

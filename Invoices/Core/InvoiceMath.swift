@@ -33,7 +33,7 @@ nonisolated enum InvoiceMath {
         lines.reduce(Amounts(), +)
     }
 
-    /// VAT recap grouped by rate, for the "obračun DDV" block on the invoice.
+    /// VAT recap grouped by rate, for the VAT breakdown block on the invoice.
     static func vatBreakdown(_ entries: [(rate: VatRate, amounts: Amounts)]) -> [(rate: VatRate, amounts: Amounts)] {
         var byRate: [VatRate: Amounts] = [:]
         for entry in entries {

@@ -1,19 +1,19 @@
 import Foundation
 
-/// Everything the printed račun shows, as plain values — the way
+/// Everything the printed invoice shows, as plain values — the way
 /// `YearOverviewRow` is the plain value behind the year overview. Built once
 /// from the models, then consumed by the page layout, the pagination budget,
 /// the live preview and the settings sample alike.
 ///
 /// The rules about *what* is printed live here, not on the page: whether the
-/// ID za DDV appears, which optional columns show, what the Vrednost column
+/// VAT ID appears, which optional columns show, what the Amount column
 /// holds, which clauses go under the total. The page only decides where.
 ///
 /// Being `Hashable` is what drives the preview: SwiftUI builds the value in a
 /// `body`, hands it to `.task(id:)`, and re-renders when it changes. There is
 /// no list of watched properties to keep in step with the page.
 nonisolated struct PrintedInvoice: Hashable, Sendable {
-    /// The s.p. as printed in the header and the signature block.
+    /// The business as printed in the header and the signature block.
     struct Issuer: Hashable, Sendable {
         var name = ""
         var activityLine = ""
@@ -30,7 +30,7 @@ nonisolated struct PrintedInvoice: Hashable, Sendable {
         var closingNote = ""
     }
 
-    /// The stranka as printed opposite the invoice data.
+    /// The client as printed opposite the invoice data.
     struct Customer: Hashable, Sendable {
         var name = ""
         var addressLines: [String] = []
@@ -61,7 +61,7 @@ nonisolated struct PrintedInvoice: Hashable, Sendable {
         }
     }
 
-    /// Empty for a draft; the OSNUTEK watermark follows `isDraft`.
+    /// Empty for a draft; the draft watermark follows `isDraft`.
     var number = ""
     var isDraft = true
     var issueDate: Date
@@ -71,7 +71,7 @@ nonisolated struct PrintedInvoice: Hashable, Sendable {
     var placeOfIssue = ""
     var paymentReference = ""
     var currencyCode = "EUR"
-    /// The issuer is a DDV zavezanec: the table gets a VAT column and the
+    /// The issuer is VAT registered: the table gets a VAT column and the
     /// summary a breakdown per rate. Otherwise the exemption clauses print.
     var chargesVat = false
     var issuer = Issuer()
@@ -88,25 +88,26 @@ nonisolated struct PrintedInvoice: Hashable, Sendable {
 
     var totals: Amounts { InvoiceMath.total(of: lines.map(\.amounts)) }
 
-    /// The "obračun DDV" block: one row per rate that actually charged something.
+    /// The VAT breakdown: one row per rate that actually charged something.
     var vatBreakdown: [(rate: VatRate, amounts: Amounts)] {
         InvoiceMath.vatBreakdown(lines.map { ($0.vatRate, $0.amounts) })
             .filter { $0.amounts.vat != 0 }
     }
 
-    /// Clauses that must be printed when no VAT is charged. A zavezanec's
-    /// invoice carries the breakdown instead.
+    /// Clauses that must be printed when no VAT is charged. A VAT-registered
+    /// business's invoice carries the breakdown instead.
     var exemptionClauses: [String] {
         guard !chargesVat else { return [] }
         return Array(Set(lines.compactMap { $0.vatRate.exemptionClause })).sorted()
     }
 
-    /// A non-zavezanec must not print an ID za DDV, even a stored one.
+    /// A business that is not VAT registered must not print a VAT ID, even a
+    /// stored one.
     var issuerVatID: String? {
         chargesVat && !issuer.vatID.isEmpty ? issuer.vatID : nil
     }
 
-    /// Printed under "Račun izdal:". Falls back to the business name.
+    /// Printed under "Issued by:". Falls back to the business name.
     var signerName: String { issuer.signerName.isEmpty ? issuer.name : issuer.signerName }
 
     // Optional columns are decided per invoice, not per page, so a
@@ -114,14 +115,18 @@ nonisolated struct PrintedInvoice: Hashable, Sendable {
     var showsUnit: Bool { lines.contains { !$0.unit.isEmpty } }
     var showsDiscount: Bool { lines.contains { $0.discountPercent != 0 } }
 
-    /// With VAT the Vrednost column is the net value and the tax is summed
+    /// With VAT the Amount column is the net value and the tax is summed
     /// below; without VAT the two are the same number.
     func columnAmount(of line: Line) -> Decimal {
         chargesVat ? line.amounts.net : line.amounts.gross
     }
 
+    /// Named in the document's language, like the invoice itself, and kept
+    /// to ASCII so the file travels through any mail client and file system.
     var suggestedFilename: String {
-        number.isEmpty ? "Osnutek-racuna" : "Racun-\(number)"
+        number.isEmpty
+            ? DocumentText.string("Draft-invoice")
+            : DocumentText.string("Invoice-\(number)")
     }
 }
 

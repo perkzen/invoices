@@ -203,7 +203,7 @@ private func drawSheet(in ctx: CGContext, detail: Detail, unit: CGFloat) {
 
     ctx.fill(pill(CGRect(x: contentX, y: totalY, width: 124, height: totalHeight)), Palette.ink)
 
-    // Header block — stands in for the s.p. name at the top of the invoice.
+    // Header block — stands in for the business name at the top of the invoice.
     ctx.fill(pill(CGRect(x: contentX, y: sheet.minY + 72, width: 152, height: 30)), Palette.ink)
 
     // Line items: a label on the left, an amount on the right.

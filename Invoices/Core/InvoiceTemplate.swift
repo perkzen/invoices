@@ -7,30 +7,38 @@ import Foundation
 /// wording can be tested without a `ModelContainer`. `PrintedInvoice` is
 /// what builds the context from the models.
 nonisolated enum InvoiceTemplate {
-    static let defaultIntro = "Zaračunavam vam storitev za mesec {MESEC} {leto}:"
-    static let defaultPaymentNote = "Pri plačilu na TRR: {trr} navedite sklic: {sklic}."
-    static let defaultClosingNote = "Prosim, da račun poravnate do valute plačila!"
+    /// The sentences a fresh profile starts with. They are printed on the
+    /// invoice, so they come from `DocumentText` like every other label on it.
+    static var defaultIntro: String {
+        DocumentText.string("I am invoicing you for services in the month of {MONTH} {year}:")
+    }
+    static var defaultPaymentNote: String {
+        DocumentText.string("When paying to bank account {iban}, quote the reference {reference}.")
+    }
+    static var defaultClosingNote: String {
+        DocumentText.string("Please settle the invoice by the due date.")
+    }
 
     /// Every token a template may use. The editor lists these and the
     /// resolver fills exactly these — one list, so the two cannot drift and
     /// advertise a token that would print literally on a legal document.
     enum Placeholder: String, CaseIterable, Sendable {
-        case month = "{mesec}"
-        case monthUppercased = "{MESEC}"
-        case year = "{leto}"
-        case client = "{stranka}"
-        case number = "{stevilka}"
-        case iban = "{trr}"
-        case reference = "{sklic}"
-        case dueDate = "{valuta}"
+        case month = "{month}"
+        case monthUppercased = "{MONTH}"
+        case year = "{year}"
+        case client = "{client}"
+        case number = "{number}"
+        case iban = "{iban}"
+        case reference = "{reference}"
+        case dueDate = "{due}"
 
         var token: String { rawValue }
 
         /// The text shown next to the token in the editor.
         var meaning: String {
             switch self {
-            case .month: String(localized: "month of service, in Slovenian (avgust)")
-            case .monthUppercased: String(localized: "month of service, in Slovenian (AVGUST)")
+            case .month: String(localized: "month of service (august)")
+            case .monthUppercased: String(localized: "month of service, in capitals (AUGUST)")
             case .year: String(localized: "year of service")
             case .client: String(localized: "client name")
             case .number: String(localized: "invoice number")
@@ -41,10 +49,29 @@ nonisolated enum InvoiceTemplate {
         }
     }
 
+    /// The tokens with the text shown in the editor, in the order it lists them.
+    static var placeholders: [(token: String, meaning: String)] {
+        Placeholder.allCases.map { ($0.token, $0.meaning) }
+    }
+
+    /// The tokens as they were spelled before the placeholders were renamed.
+    /// They sit inside sentences already saved in users' profiles and
+    /// invoices, so a template written with them has to keep resolving.
+    static let legacyTokens: [String: String] = [
+        "{mesec}": Placeholder.month.token,
+        "{MESEC}": Placeholder.monthUppercased.token,
+        "{leto}": Placeholder.year.token,
+        "{stranka}": Placeholder.client.token,
+        "{stevilka}": Placeholder.number.token,
+        "{trr}": Placeholder.iban.token,
+        "{sklic}": Placeholder.reference.token,
+        "{valuta}": Placeholder.dueDate.token,
+    ]
+
     /// The facts one invoice contributes to its sentences.
     struct Context: Hashable, Sendable {
-        /// The day the service ended — a period "1.8.–31.8." is August even
-        /// when the invoice goes out in September.
+        /// The day the service ended — a period spanning one month is that
+        /// month even when the invoice goes out in the next.
         var serviceDate: Date
         var clientName: String
         var number: String
@@ -73,6 +100,9 @@ nonisolated enum InvoiceTemplate {
 
     static func resolve(_ template: String, with values: [String: String]) -> String {
         var result = template
+        for (legacy, token) in legacyTokens {
+            result = result.replacingOccurrences(of: legacy, with: token)
+        }
         for (token, value) in values {
             result = result.replacingOccurrences(of: token, with: value)
         }
@@ -84,8 +114,8 @@ nonisolated enum InvoiceTemplate {
         return Formatting.calendar.standaloneMonthSymbols[month - 1]
     }
 
-    /// `{MESEC}` in Slovenian. `uppercased()` alone would turn "avgust" into
-    /// "AVGUST" correctly, but the locale keeps č/š/ž right on every system.
+    /// `{MONTH}`. A plain `uppercased()` would usually be right, but the
+    /// locale keeps the Slovenian letters with diacritics right on every system.
     static func upperMonthName(of date: Date) -> String {
         monthName(of: date).uppercased(with: Formatting.locale)
     }
