@@ -14,15 +14,23 @@ struct YearOverviewView: View {
     @State private var exportedSheet: XLSXFile?
     @State private var isExporting = false
     @State private var exportError: String?
+    /// The number of the row picked in the table; numbers are unique within
+    /// the year the table shows.
+    @State private var selectedNumber: String?
 
     private var overview: YearOverview? {
         year.map { YearOverview.make(year: $0, invoices: invoices, profile: profiles.first) }
+    }
+
+    private var selectedInvoice: Invoice? {
+        invoices.first { $0.year == year && $0.number == selectedNumber }
     }
 
     var body: some View {
         Group {
             if let overview {
                 content(for: overview)
+                    .onChange(of: year) { selectedNumber = nil }
                     .navigationTitle(overview.title)
                     .toolbar {
                         ToolbarItem(placement: .primaryAction) {
@@ -60,15 +68,28 @@ struct YearOverviewView: View {
         }
     }
 
+    /// Picking a row opens its invoice beside the table, the way the editor
+    /// shows the page: the number in the table is the printed document.
     @ViewBuilder
     private func content(for overview: YearOverview) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            OverviewHeadline(overview: overview)
-            Divider()
-            IssuerHeader(overview: overview)
-            Divider()
-            OverviewTable(rows: overview.rows, currencyCode: overview.currencyCode)
+        HSplitView {
+            VStack(alignment: .leading, spacing: 0) {
+                OverviewHeadline(overview: overview)
+                Divider()
+                IssuerHeader(overview: overview)
+                Divider()
+                OverviewTable(
+                    rows: overview.rows, currencyCode: overview.currencyCode,
+                    selection: $selectedNumber
+                )
+            }
+            .frame(minWidth: 520)
+            if let invoice = selectedInvoice {
+                OverviewPreviewPane(invoice: invoice, profile: profiles.first)
+                    .frame(minWidth: 300, idealWidth: 360)
+            }
         }
+        .animation(nil, value: selectedNumber)
     }
 
     private func exportSheet(_ overview: YearOverview) {
@@ -112,9 +133,10 @@ private struct IssuerHeader: View {
 private struct OverviewTable: View {
     let rows: [YearOverviewRow]
     let currencyCode: String
+    @Binding var selection: String?
 
     var body: some View {
-        Table(rows) {
+        Table(rows, selection: $selection) {
             TableColumn("Client") { row in
                 Text(row.clientLabel).strikethrough(row.isCancelled)
             }
@@ -204,5 +226,39 @@ private struct OverviewHeadline: View {
             }
         }
         .frame(minWidth: 120, alignment: .leading)
+    }
+}
+
+/// The picked invoice as its printed page, with who and what above it.
+private struct OverviewPreviewPane: View {
+    let invoice: Invoice
+    let profile: BusinessProfile?
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 10) {
+                ClientAvatar(client: invoice.client, size: 30)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(invoice.number)
+                        .font(.headline)
+                        .monospacedDigit()
+                    Text(invoice.client?.displayName ?? String(localized: "No client"))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+                Spacer(minLength: 8)
+                InvoiceStatusBadge(invoice: invoice)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            Divider()
+            if let profile {
+                InvoicePreview(invoice: invoice, profile: profile)
+            } else {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
     }
 }
