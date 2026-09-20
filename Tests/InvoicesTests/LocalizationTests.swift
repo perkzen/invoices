@@ -48,6 +48,25 @@ struct LocalizationTests {
         }
     }
 
+    /// Slovenian counts in four forms and the dual is not optional in writing,
+    /// so the count is the one string that cannot be translated word for word:
+    /// 1 račun, 2 računa, 3 računi, 5 računov — and 101 starts again at one.
+    @Test func `the invoice count keeps all four Slovenian plural forms`() throws {
+        let sl = try bundle("sl")
+        let slovene = Locale(identifier: "sl")
+        func count(_ n: Int) -> String {
+            String(localized: "\(n) invoices", bundle: sl, locale: slovene)
+        }
+        #expect(count(1) == "1 račun")
+        #expect(count(2) == "2 računa")
+        #expect(count(3) == "3 računi")
+        #expect(count(4) == "4 računi")
+        #expect(count(5) == "5 računov")
+        #expect(count(11) == "11 računov")
+        #expect(count(101) == "101 račun")
+        #expect(count(0) == "0 računov")
+    }
+
     /// The sheet goes to a Slovenian accountant whatever language the app is
     /// running in, so its headers must not travel through the catalog either.
     @Test func `the spreadsheet headers are not localized`() throws {

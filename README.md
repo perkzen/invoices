@@ -41,11 +41,13 @@ a Slovenian Mac is given in brackets.
 - **English / Slovenian** — the interface follows the Mac's language, or the picker in
   Settings › Language. Strings live in `Resources/Localizable.xcstrings` with **English as
   the source language**: write the English text as the key in code, and Slovenian is the
-  translation hanging off it. Three kinds of string deliberately stay out of the catalog,
+  translation hanging off it. Two kinds of string deliberately stay out of the catalog,
   because they are Slovenian documents rather than interface — the printed račun (wrap any
-  new string on the PDF page in `Text(verbatim:)`), the .xlsx headers in
-  `Core/YearOverviewXLSX.swift`, and the invoice-count nouns in `Core/Formatting.swift`,
-  which decline four ways. Where one English word covers two Slovenian ones, use a symbolic
+  new string on the PDF page in `Text(verbatim:)`) and the .xlsx headers in
+  `Core/YearOverviewXLSX.swift`. Counts go through the catalog's plural rules rather than
+  an `if`: Slovenian needs `one` / `two` / `few` / `other` where English needs two, and
+  `Formatting.invoiceCount` is the worked example. Where one English word covers two
+  Slovenian ones, use a symbolic
   key: `InvoiceStatus.paid` is `"invoiceStatus.paid"` because an invoice is *plačan* while
   a year's receipts are *plačano*, and both are "Paid"
 

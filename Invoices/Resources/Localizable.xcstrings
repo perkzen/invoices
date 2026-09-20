@@ -14,6 +14,60 @@
         }
       }
     },
+    "%lld invoices": {
+      "extractionState": "manual",
+      "comment": "Count of invoices in the year overview. Slovenian needs all four plural categories.",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld invoice"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld invoices"
+                }
+              }
+            }
+          }
+        },
+        "sl": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld račun"
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld računa"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld računi"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld računov"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "0 %": {},
     "22 % (standard)": {
       "localizations": {

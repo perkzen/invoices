@@ -160,15 +160,13 @@ struct YearOverviewTests {
         #expect(row.servicePeriod.contains(Formatting.date(date(2026, 3, 31))))
     }
 
-    @Test func `the invoice count is written in Slovenian, dual included`() {
-        #expect(Formatting.invoiceCount(1) == "1 račun")
-        #expect(Formatting.invoiceCount(2) == "2 računa")
-        #expect(Formatting.invoiceCount(3) == "3 računi")
-        #expect(Formatting.invoiceCount(4) == "4 računi")
-        #expect(Formatting.invoiceCount(5) == "5 računov")
-        #expect(Formatting.invoiceCount(11) == "11 računov")
-        #expect(Formatting.invoiceCount(101) == "101 račun")
-        #expect(Formatting.invoiceCount(0) == "0 računov")
+    /// English has one plural boundary. The Slovenian four are pinned in
+    /// `LocalizationTests`, where the sl bundle can be asked directly.
+    @Test func `the invoice count is written in the app's language`() {
+        #expect(Formatting.invoiceCount(1) == "1 invoice")
+        #expect(Formatting.invoiceCount(2) == "2 invoices")
+        #expect(Formatting.invoiceCount(5) == "5 invoices")
+        #expect(Formatting.invoiceCount(0) == "0 invoices")
     }
 
     @Test func `the issuer block joins the name and the activity line`() throws {
