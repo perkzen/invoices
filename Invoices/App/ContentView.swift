@@ -9,7 +9,7 @@ import SwiftUI
 /// Selection is kept per section, so switching to Clients and back lands on
 /// the same invoice.
 struct ContentView: View {
-    @State private var section: AppSection? = .invoices
+    @State private var section: AppSection? = .overview
     @State private var invoiceSelection: PersistentIdentifier?
     @State private var clientSelection: PersistentIdentifier?
     @State private var overviewYear: Int?

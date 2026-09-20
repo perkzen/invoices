@@ -36,7 +36,7 @@ struct YearOverviewView: View {
                 ContentUnavailableView {
                     Label("No invoices issued", systemImage: "tablecells")
                 } description: {
-                    Text("The overview lists invoices once the first one has been issued.")
+                    Text("Issue your first invoice and the year's numbers appear here.")
                 }
             }
         }
@@ -63,11 +63,11 @@ struct YearOverviewView: View {
     @ViewBuilder
     private func content(for overview: YearOverview) -> some View {
         VStack(alignment: .leading, spacing: 0) {
+            OverviewHeadline(overview: overview)
+            Divider()
             IssuerHeader(overview: overview)
             Divider()
             OverviewTable(rows: overview.rows, currencyCode: overview.currencyCode)
-            Divider()
-            OverviewSummary(overview: overview)
         }
     }
 
@@ -161,33 +161,48 @@ private struct OverviewTable: View {
     }
 }
 
-private struct OverviewSummary: View {
+/// The year at a glance: what went out, what came in, what is still owed,
+/// and how much of that is late. The table below is the accountant's view;
+/// this row is the owner's.
+private struct OverviewHeadline: View {
     let overview: YearOverview
 
+    private var overdue: [YearOverviewRow] { overview.overdueRows() }
+
     var body: some View {
-        HStack(spacing: 24) {
-            Label(Formatting.invoiceCount(overview.countedRows.count), systemImage: "doc.text")
-                .foregroundStyle(.secondary)
-            Spacer()
-            amount("Paid", overview.paidTotal, style: .secondary)
-            amount("Outstanding", overview.outstandingTotal, style: .secondary)
-            amount("TOTAL", overview.total, style: .primary)
-                .font(.headline)
+        HStack(alignment: .top, spacing: 32) {
+            figure("Invoiced", overview.total,
+                   detail: Formatting.invoiceCount(overview.countedRows.count))
+            figure("Paid", overview.paidTotal)
+            figure("Outstanding", overview.outstandingTotal)
+            figure("overview.overdue", overview.overdueTotal(),
+                   detail: overdue.isEmpty ? nil : Formatting.invoiceCount(overdue.count),
+                   tint: overdue.isEmpty ? .primary : .red)
+            Spacer(minLength: 0)
         }
         .padding(.horizontal, 20)
-        .padding(.vertical, 12)
+        .padding(.vertical, 18)
     }
 
-    private func amount(
-        _ title: LocalizedStringKey, _ value: Decimal, style: HierarchicalShapeStyle
+    private func figure(
+        _ title: LocalizedStringKey, _ value: Decimal,
+        detail: String? = nil, tint: Color = .primary
     ) -> some View {
-        HStack(spacing: 6) {
+        VStack(alignment: .leading, spacing: 3) {
             Text(title)
+                .font(.subheadline)
                 .foregroundStyle(.secondary)
             Text(Formatting.money(value, currencyCode: overview.currencyCode))
+                .font(.title2.weight(.semibold))
                 .monospacedDigit()
-                .foregroundStyle(style)
+                .foregroundStyle(tint)
                 .sensitiveValue()
+            if let detail {
+                Text(detail)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
+        .frame(minWidth: 120, alignment: .leading)
     }
 }

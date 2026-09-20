@@ -11,8 +11,9 @@ enum AppSection: String, CaseIterable, Identifiable, Hashable {
 
     var id: String { rawValue }
 
-    /// The sections listed at the top of the sidebar, in order of daily use.
-    static let content: [AppSection] = [.invoices, .clients, .overview]
+    /// The sections listed at the top of the sidebar. The overview opens
+    /// first: it answers "how am I doing" before any one invoice is touched.
+    static let content: [AppSection] = [.overview, .invoices, .clients]
 
     var title: String {
         switch self {

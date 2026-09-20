@@ -152,6 +152,21 @@ struct YearOverviewTests {
         #expect(overview.paidTotal + overview.outstandingTotal == overview.total)
     }
 
+    @Test func `overdue is the unpaid part whose due date has passed`() throws {
+        let context = try makeContext()
+        makeInvoice(in: context, year: 2026, sequence: 1, amount: 100, status: .paid)
+        makeInvoice(in: context, year: 2026, sequence: 2, amount: 25)
+        makeInvoice(in: context, year: 2026, sequence: 3, amount: 40, status: .cancelled)
+
+        let overview = YearOverview.make(
+            year: 2026, invoices: try context.fetch(FetchDescriptor<Invoice>()), profile: nil
+        )
+        // Everything falls due on 8 April; the day before, nothing is late.
+        #expect(overview.overdueTotal(asOf: date(2026, 4, 7)) == 0)
+        #expect(overview.overdueRows(asOf: date(2026, 4, 9)).map(\.number) == ["2026-002"])
+        #expect(overview.overdueTotal(asOf: date(2026, 4, 9)) == 25)
+    }
+
     @Test func `a service spanning a period prints both dates`() {
         var row = sampleRow()
         #expect(!row.servicePeriod.contains("–"))

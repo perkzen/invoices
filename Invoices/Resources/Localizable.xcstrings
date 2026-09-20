@@ -810,6 +810,16 @@
         }
       }
     },
+    "Issue your first invoice and the year's numbers appear here.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izdaj prvi račun in tu se prikažejo številke leta."
+          }
+        }
+      }
+    },
     "Issued": {
       "localizations": {
         "sl": {
@@ -1670,16 +1680,6 @@
         }
       }
     },
-    "The overview lists invoices once the first one has been issued.": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pregled pokaže račune, ko je prvi od njih izdan."
-          }
-        }
-      }
-    },
     "Total": {
       "localizations": {
         "sl": {
@@ -1882,6 +1882,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "mesec storitve (avgust)"
+          }
+        }
+      }
+    },
+    "overview.overdue": {
+      "extractionState": "manual",
+      "comment": "Overdue amount in the year overview. Slovenian needs the neuter form here, unlike the badge on one invoice.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Overdue"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapadlo"
           }
         }
       }

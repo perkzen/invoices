@@ -17,7 +17,7 @@ struct YearListView: View {
                 ContentUnavailableView {
                     Label("No invoices issued", systemImage: "tablecells")
                 } description: {
-                    Text("The overview lists invoices once the first one has been issued.")
+                    Text("Issue your first invoice and the year's numbers appear here.")
                 }
             } else {
                 List(selection: $selection) {
