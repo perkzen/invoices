@@ -46,10 +46,41 @@ After cloning, or after adding or renaming a file:
 xcodegen generate && open Invoices.xcodeproj
 ```
 
-From the command line:
+From the command line — always with the same `-derivedDataPath`, so builds land in
+`build/` and nowhere else:
 
 ```bash
-xcodebuild -project Invoices.xcodeproj -scheme Invoices -destination 'platform=macOS' test
+xcodebuild -project Invoices.xcodeproj -scheme Invoices -destination 'platform=macOS' -derivedDataPath build test
+```
+
+## Two apps: Invoices and Invoices Dev
+
+The two configurations build two separate applications, on purpose:
+
+| | Debug | Release |
+|---|---|---|
+| Bundle | `Invoices Dev.app` | `Invoices.app` |
+| Bundle id | `com.domenperko.Invoices.dev` | `com.domenperko.Invoices` |
+| Data | its own sandbox container, empty at first | `~/Library/Containers/com.domenperko.Invoices` — the real invoices |
+| Where it lives | wherever you built it | `/Applications` |
+
+Debug is what Xcode runs. It carries a different name because Spotlight labels an app by
+its file name, and a different bundle id so that a half-finished feature can never write
+to the invoices you actually issued.
+
+Release is the app you use. Build and install it with:
+
+```bash
+Scripts/install-release.sh
+```
+
+Every build of the Debug configuration — including ones an agent makes in a temporary
+directory — is named `Invoices Dev`, so only one thing in Spotlight is ever called
+`Invoices`. If stale copies do pile up, delete the build directories and tell Launch
+Services they are gone:
+
+```bash
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -u "/path/to/stale/Invoices Dev.app"
 ```
 
 ## App icon
@@ -74,13 +105,26 @@ changing the artwork.
 ```
 project.yml              target, build settings, Info.plist
 Invoices/
-  App/                   @main entry point, Settings scene, entitlements
+  App/                   @main entry point, Settings scene, sidebar shell, entitlements
   Models/                SwiftData @Model types + VatRate / InvoiceStatus enums
-  Core/                  pure value logic: totals, rounding, numbering, sl_SI formatting
-  Views/                 NavigationSplitView shell, lists, editors
+  Core/                  pure value logic — imports Foundation and nothing else
+  Services/              the framework edge: SwiftData, AppKit, PDF and file export
+  Features/              one folder per sidebar section, views and their local state
+    Invoices/            list, editor, live preview
+    Clients/             list and detail form
+    YearOverview/        the year's table and its export
+    Settings/            s.p. profile, invoice template, sample invoice
+  Resources/             asset catalog, Localizable.xcstrings
 Tests/InvoicesTests/     Swift Testing, covers the money arithmetic
-Scripts/                 app icon renderer (not part of any target)
+Scripts/                 app icon renderer, release installer (not part of any target)
 ```
+
+The split between `Core/` and `Services/` is enforceable by reading the imports: a file
+in `Core/` imports Foundation only, so every rule about money, numbering and formatting is
+testable without a `ModelContainer`, a window or a run loop. Anything that has to reach a
+framework — `InvoiceNumbering` for its `ModelContext` fetch, `InvoicePDF` for
+`ImageRenderer`, the two `FileDocument` wrappers, `ImageData` for AppKit — lives in
+`Services/` instead.
 
 `Core/XLSXWriter.swift` writes the .xlsx by hand — the OOXML parts plus a stored
 (uncompressed) ZIP in `Core/ZIPArchive.swift` — so the app stays dependency-free. The
@@ -92,8 +136,8 @@ would quietly disagree with the app.
 The money arithmetic lives in `Core/InvoiceMath.swift` as plain `Decimal` functions
 rather than on the `@Model` classes, so it is testable without a `ModelContainer`.
 
-`Core/InvoicePDF.swift` renders `Views/InvoicePDFPage.swift` through `ImageRenderer` into
-a CGPDF context, one A4 page at a time. Pagination is a budget in layout units, not a row
+`Services/InvoicePDF.swift` renders `Services/InvoicePDFPage.swift` through
+`ImageRenderer` into a CGPDF context, one A4 page at a time. Pagination is a budget in layout units, not a row
 count: a row costs 2 units of padding plus one per wrapped line of its description, so a
 long description cannot silently push the last row off the page. Continuation pages get a
 slim header — with the full one they would not fit the rows the budget assumes. The
