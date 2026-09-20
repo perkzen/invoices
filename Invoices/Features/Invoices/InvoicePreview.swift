@@ -2,10 +2,14 @@ import PDFKit
 import SwiftUI
 
 /// The invoice exactly as "Export PDF" will write it, re-rendered whenever
-/// anything printed on it changes.
+/// the printed value changes.
+///
+/// The caller builds `printed` inside its own `body`, which is what registers
+/// observation: any printed property that changes re-evaluates that view, the
+/// value differs, and `.task(id:)` renders again. Nothing here lists what to
+/// watch.
 struct InvoicePreview: View {
-    let invoice: Invoice
-    let profile: BusinessProfile
+    let printed: PrintedInvoice
 
     /// `.redacted(reason: .privacy)` stops at the edge of an AppKit view, so
     /// the rendered page cannot be blanked the way the rest of the interface
@@ -28,70 +32,12 @@ struct InvoicePreview: View {
                 }
             }
             .animation(.default, value: hidesSensitiveValues)
-            .task(id: renderKey) {
+            .task(id: printed) {
                 // Coalesce a burst of keystrokes into one render.
                 try? await Task.sleep(for: .milliseconds(120))
                 guard !Task.isCancelled else { return }
-                pdfData = InvoicePDF.render(invoice: invoice, profile: profile)
+                pdfData = InvoicePDF.render(printed)
             }
-    }
-
-    /// Reading every printed property inside `body` is what registers
-    /// observation: when any of them changes SwiftUI re-evaluates the view,
-    /// the key changes, and `.task(id:)` renders again.
-    private var renderKey: Int {
-        var hasher = Hasher()
-        hasher.combine(invoice.number)
-        hasher.combine(invoice.status)
-        hasher.combine(invoice.issueDate)
-        hasher.combine(invoice.serviceDate)
-        hasher.combine(invoice.serviceDateEnd)
-        hasher.combine(invoice.dueDate)
-        hasher.combine(invoice.currencyCode)
-        hasher.combine(invoice.placeOfIssue)
-        hasher.combine(invoice.paymentReference)
-        hasher.combine(invoice.notes)
-        hasher.combine(invoice.introOverride)
-
-        if let client = invoice.client {
-            hasher.combine(client.name)
-            hasher.combine(client.street)
-            hasher.combine(client.postalCode)
-            hasher.combine(client.city)
-            hasher.combine(client.countryCode)
-            hasher.combine(client.taxNumber)
-            hasher.combine(client.vatID)
-        }
-
-        for line in invoice.sortedLines {
-            hasher.combine(line.itemDescription)
-            hasher.combine(line.quantity)
-            hasher.combine(line.unit)
-            hasher.combine(line.unitPrice)
-            hasher.combine(line.discountPercent)
-            hasher.combine(line.vatRate)
-            hasher.combine(line.sortIndex)
-        }
-
-        hasher.combine(profile.name)
-        hasher.combine(profile.activityLine)
-        hasher.combine(profile.street)
-        hasher.combine(profile.postalCode)
-        hasher.combine(profile.city)
-        hasher.combine(profile.taxNumber)
-        hasher.combine(profile.vatID)
-        hasher.combine(profile.isVatRegistered)
-        hasher.combine(profile.iban)
-        hasher.combine(profile.bankName)
-        hasher.combine(profile.registrationNote)
-        hasher.combine(profile.invoiceFooter)
-        hasher.combine(profile.signerName)
-        hasher.combine(profile.introTemplate)
-        hasher.combine(profile.paymentNoteTemplate)
-        hasher.combine(profile.closingNote)
-        hasher.combine(profile.logoData)
-        hasher.combine(profile.signatureData)
-        return hasher.finalize()
     }
 }
 

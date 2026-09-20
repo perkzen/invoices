@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-/// The issuer — your s.p. There is exactly one of these; see `current(in:)`.
+/// The issuer — your s.p. There is exactly one of these; see `Ledger.profile`.
 @Model
 final class BusinessProfile {
     var name: String = ""
@@ -44,14 +44,5 @@ final class BusinessProfile {
     var addressLines: [String] {
         [street, "\(postalCode) \(city)".trimmingCharacters(in: .whitespaces)]
             .filter { !$0.isEmpty }
-    }
-
-    /// Fetches the single profile, creating it on first launch.
-    static func current(in context: ModelContext) -> BusinessProfile {
-        let existing = try? context.fetch(FetchDescriptor<BusinessProfile>())
-        if let profile = existing?.first { return profile }
-        let profile = BusinessProfile()
-        context.insert(profile)
-        return profile
     }
 }

@@ -1,27 +1,74 @@
 import Foundation
 
 /// Text templates on the printed invoice. The profile stores sentences with
-/// `{placeholder}` tokens; this resolves them against one invoice.
+/// `{placeholder}` tokens; this resolves them against one invoice's facts.
 ///
-/// Resolution is a pure string operation so it can be tested without a
-/// `ModelContainer`; `values(for:profile:)` is the only part that reads models.
+/// Everything here is a pure string operation over a `Context`, so the
+/// wording can be tested without a `ModelContainer`. `PrintedInvoice` is
+/// what builds the context from the models.
 nonisolated enum InvoiceTemplate {
     static let defaultIntro = "Zaračunavam vam storitev za mesec {MESEC} {leto}:"
     static let defaultPaymentNote = "Pri plačilu na TRR: {trr} navedite sklic: {sklic}."
     static let defaultClosingNote = "Prosim, da račun poravnate do valute plačila!"
 
-    /// Every token a template may use, with the text shown in the editor.
-    static var placeholders: [(token: String, meaning: String)] {
+    /// Every token a template may use. The editor lists these and the
+    /// resolver fills exactly these — one list, so the two cannot drift and
+    /// advertise a token that would print literally on a legal document.
+    enum Placeholder: String, CaseIterable, Sendable {
+        case month = "{mesec}"
+        case monthUppercased = "{MESEC}"
+        case year = "{leto}"
+        case client = "{stranka}"
+        case number = "{stevilka}"
+        case iban = "{trr}"
+        case reference = "{sklic}"
+        case dueDate = "{valuta}"
+
+        var token: String { rawValue }
+
+        /// The text shown next to the token in the editor.
+        var meaning: String {
+            switch self {
+            case .month: String(localized: "month of service, in Slovenian (avgust)")
+            case .monthUppercased: String(localized: "month of service, in Slovenian (AVGUST)")
+            case .year: String(localized: "year of service")
+            case .client: String(localized: "client name")
+            case .number: String(localized: "invoice number")
+            case .iban: String(localized: "your IBAN")
+            case .reference: String(localized: "payment reference")
+            case .dueDate: String(localized: "due date")
+            }
+        }
+    }
+
+    /// The facts one invoice contributes to its sentences.
+    struct Context: Hashable, Sendable {
+        /// The day the service ended — a period "1.8.–31.8." is August even
+        /// when the invoice goes out in September.
+        var serviceDate: Date
+        var clientName: String
+        var number: String
+        var iban: String
+        var reference: String
+        var dueDate: Date
+    }
+
+    static func values(for context: Context) -> [Placeholder: String] {
         [
-            ("{mesec}", String(localized: "month of service, in Slovenian (avgust)")),
-            ("{MESEC}", String(localized: "month of service, in Slovenian (AVGUST)")),
-            ("{leto}", String(localized: "year of service")),
-            ("{stranka}", String(localized: "client name")),
-            ("{stevilka}", String(localized: "invoice number")),
-            ("{trr}", String(localized: "your IBAN")),
-            ("{sklic}", String(localized: "payment reference")),
-            ("{valuta}", String(localized: "due date")),
+            .month: monthName(of: context.serviceDate),
+            .monthUppercased: upperMonthName(of: context.serviceDate),
+            .year: String(Formatting.calendar.component(.year, from: context.serviceDate)),
+            .client: context.clientName,
+            .number: context.number,
+            .iban: context.iban,
+            .reference: context.reference,
+            .dueDate: Formatting.date(context.dueDate),
         ]
+    }
+
+    static func resolve(_ template: String, in context: Context) -> String {
+        let values = values(for: context).map { ($0.key.token, $0.value) }
+        return resolve(template, with: Dictionary(uniqueKeysWithValues: values))
     }
 
     static func resolve(_ template: String, with values: [String: String]) -> String {
@@ -33,62 +80,13 @@ nonisolated enum InvoiceTemplate {
     }
 
     static func monthName(of date: Date) -> String {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.locale = Formatting.locale
-        let month = calendar.component(.month, from: date)
-        return calendar.standaloneMonthSymbols[month - 1]
+        let month = Formatting.calendar.component(.month, from: date)
+        return Formatting.calendar.standaloneMonthSymbols[month - 1]
     }
 
     /// `{MESEC}` in Slovenian. `uppercased()` alone would turn "avgust" into
     /// "AVGUST" correctly, but the locale keeps č/š/ž right on every system.
     static func upperMonthName(of date: Date) -> String {
         monthName(of: date).uppercased(with: Formatting.locale)
-    }
-}
-
-extension InvoiceTemplate {
-    @MainActor
-    static func values(for invoice: Invoice, profile: BusinessProfile) -> [String: String] {
-        // The month is the one the service ends in — a period "1.8.–31.8."
-        // is August even when the invoice goes out in September.
-        let serviceDate = invoice.serviceDateEnd ?? invoice.serviceDate
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.locale = Formatting.locale
-        return [
-            "{mesec}": monthName(of: serviceDate),
-            "{MESEC}": upperMonthName(of: serviceDate),
-            "{leto}": String(calendar.component(.year, from: serviceDate)),
-            "{stranka}": invoice.client?.displayName ?? "",
-            "{stevilka}": invoice.number,
-            "{trr}": profile.iban,
-            "{sklic}": invoice.paymentReference.isEmpty ? defaultReference(for: invoice) : invoice.paymentReference,
-            "{valuta}": Formatting.date(invoice.dueDate),
-        ]
-    }
-
-    /// The SI00 model over the invoice number — what `issue()` fills in when
-    /// nothing was typed, and what a draft shows in its place.
-    @MainActor
-    static func defaultReference(for invoice: Invoice) -> String {
-        invoice.number.isEmpty ? "SI00 (št. računa)" : "SI00 \(invoice.number)"
-    }
-
-    @MainActor
-    static func intro(for invoice: Invoice, profile: BusinessProfile) -> String {
-        let template = invoice.introOverride.isEmpty ? profile.introTemplate : invoice.introOverride
-        return resolve(template, with: values(for: invoice, profile: profile))
-    }
-
-    @MainActor
-    static func paymentNote(for invoice: Invoice, profile: BusinessProfile) -> String {
-        guard !profile.iban.isEmpty else { return "" }
-        return resolve(profile.paymentNoteTemplate, with: values(for: invoice, profile: profile))
-    }
-
-    /// "1. 8. 2026 – 31. 8. 2026", or just the one date.
-    @MainActor
-    static func servicePeriod(for invoice: Invoice) -> String {
-        guard let end = invoice.serviceDateEnd else { return Formatting.date(invoice.serviceDate) }
-        return "\(Formatting.date(invoice.serviceDate)) – \(Formatting.date(end))"
     }
 }

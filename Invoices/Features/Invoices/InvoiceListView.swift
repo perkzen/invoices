@@ -7,6 +7,8 @@ struct InvoiceListView: View {
     private var invoices: [Invoice]
     @State private var pendingDelete: Invoice?
 
+    private var ledger: Ledger { Ledger(context) }
+
     var body: some View {
         Group {
             if invoices.isEmpty {
@@ -20,10 +22,13 @@ struct InvoiceListView: View {
             } else {
                 List {
                     ForEach(invoices) { invoice in
-                        InvoiceRow(invoice: invoice) {
-                            pendingDelete = invoice
+                        DeletableRow(
+                            "Delete draft",
+                            blocker: ledger.deletionProblem(for: invoice)?.message,
+                            onDelete: { pendingDelete = invoice }
+                        ) {
+                            NavigationLink(value: invoice) { InvoiceRow(invoice: invoice) }
                         }
-                        .contextMenu { deleteMenu(for: invoice) }
                     }
                     .onDelete(perform: delete)
                 }
@@ -31,15 +36,10 @@ struct InvoiceListView: View {
         }
         .navigationTitle("Invoices")
         .navigationDestination(for: Invoice.self) { InvoiceDetailView(invoice: $0) }
-        .confirmationDialog(
-            "Delete draft?",
-            isPresented: isConfirming,
-            presenting: pendingDelete
-        ) { invoice in
-            Button("Delete", role: .destructive) { delete(invoice) }
-            Button("Cancel", role: .cancel) {}
-        } message: { _ in
+        .deletionConfirmation("Delete draft?", item: $pendingDelete) { _ in
             Text("The draft and all of its line items will be permanently deleted.")
+        } perform: { invoice in
+            try? ledger.delete(invoice)
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -52,77 +52,22 @@ struct InvoiceListView: View {
     }
 
     private func newInvoice() {
-        let profile = BusinessProfile.current(in: context)
-        let today = Date()
-        let due = Calendar.current.date(
-            byAdding: .day, value: profile.defaultPaymentTermDays, to: today
-        ) ?? today
-        let invoice = Invoice(issueDate: today, serviceDate: today, dueDate: due)
-        invoice.placeOfIssue = profile.city
-        context.insert(invoice)
-
-        let line = InvoiceLine(vatRate: profile.defaultVatRate)
-        line.invoice = invoice
-        context.insert(line)
+        ledger.newDraft()
     }
 
-    private var isConfirming: Binding<Bool> {
-        Binding(get: { pendingDelete != nil }, set: { if !$0 { pendingDelete = nil } })
-    }
-
-    @ViewBuilder
-    private func deleteMenu(for invoice: Invoice) -> some View {
-        if invoice.status.isEditable {
-            Button("Delete draft", systemImage: "trash", role: .destructive) {
-                pendingDelete = invoice
-            }
-        } else {
-            Text("An issued invoice cannot be deleted")
-        }
-    }
-
-    private func delete(_ invoice: Invoice) {
-        pendingDelete = nil
-        if invoice.status.isEditable {
-            context.delete(invoice)
-        }
-    }
-
-    /// Only drafts may be deleted. An issued number has to stay in the
-    /// sequence — removing it would leave an unexplainable gap.
+    /// The swipe path asks no question, but the rule still holds: the
+    /// ledger refuses an issued invoice.
     private func delete(at offsets: IndexSet) {
-        for index in offsets where invoices[index].status.isEditable {
-            context.delete(invoices[index])
+        for index in offsets {
+            try? ledger.delete(invoices[index])
         }
     }
 }
 
-/// The trash only appears under the pointer — a permanently visible destructive
-/// control on every row is louder than the action deserves.
 private struct InvoiceRow: View {
     let invoice: Invoice
-    let onDelete: () -> Void
-
-    @State private var isHovering = false
 
     var body: some View {
-        HStack(spacing: 8) {
-            NavigationLink(value: invoice) { content }
-
-            Button("Delete draft", systemImage: "trash", action: onDelete)
-                .labelStyle(.iconOnly)
-                .buttonStyle(.borderless)
-                .tint(.red)
-                .disabled(!invoice.status.isEditable)
-                .help(invoice.status.isEditable
-                      ? "Delete draft"
-                      : "An issued invoice cannot be deleted")
-                .opacity(isHovering ? 1 : 0)
-        }
-        .onHover { isHovering = $0 }
-    }
-
-    private var content: some View {
         HStack(alignment: .firstTextBaseline) {
             Image(systemName: invoice.status.symbol)
                 .foregroundStyle(invoice.isOverdue ? .red : .secondary)

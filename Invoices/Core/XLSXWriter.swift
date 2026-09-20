@@ -82,8 +82,9 @@ nonisolated enum XLSXWriter {
 
     /// Excel stores a date as the number of days since 1899-12-30. The serial
     /// is derived from the calendar components, not from a time interval, so a
-    /// timezone offset cannot push a date onto the previous day.
-    static func serial(for date: Date, calendar: Calendar = .current) -> Int {
+    /// timezone offset cannot push a date onto the previous day — and from
+    /// the app's Gregorian calendar, so the Mac's own cannot either.
+    static func serial(for date: Date, calendar: Calendar = Formatting.calendar) -> Int {
         let parts = calendar.dateComponents([.year, .month, .day], from: date)
         guard let year = parts.year, let month = parts.month, let day = parts.day else { return 0 }
         let serial = daysSinceEpoch(year: year, month: month, day: day) + 25_569

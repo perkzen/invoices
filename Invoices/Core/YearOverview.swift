@@ -28,10 +28,7 @@ nonisolated struct YearOverviewRow: Identifiable, Sendable, Equatable {
 
     /// "1. 8. 2026 – 31. 8. 2026", or the single date when the service did
     /// not span a period.
-    var servicePeriod: String {
-        guard let end = serviceDateEnd else { return Formatting.date(serviceDate) }
-        return "\(Formatting.date(serviceDate)) – \(Formatting.date(end))"
-    }
+    var servicePeriod: String { Formatting.period(serviceDate, to: serviceDateEnd) }
 
     /// A cancelled invoice keeps its number so the sequence stays unbroken;
     /// the payment column says why no money arrived. On screen only — the

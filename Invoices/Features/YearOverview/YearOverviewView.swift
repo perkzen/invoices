@@ -5,13 +5,11 @@ import SwiftUI
 /// bookkeeper keeps it in a spreadsheet, and the same table exported as
 /// .xlsx for the accountant.
 struct YearOverviewView: View {
+    @Environment(\.modelContext) private var context
     @Query(sort: [SortDescriptor(\Invoice.sequence)]) private var invoices: [Invoice]
-    @Query private var profiles: [BusinessProfile]
 
     @State private var selectedYear: Int?
-    @State private var exportedSheet: XLSXFile?
-    @State private var isExporting = false
-    @State private var exportError: String?
+    @State private var export: FileExport?
 
     private var years: [Int] { YearOverview.availableYears(in: invoices) }
 
@@ -20,11 +18,11 @@ struct YearOverviewView: View {
     private var year: Int {
         selectedYear.flatMap { years.contains($0) ? $0 : nil }
             ?? years.first
-            ?? Calendar.current.component(.year, from: Date())
+            ?? Formatting.calendar.component(.year, from: Date())
     }
 
     private var overview: YearOverview {
-        YearOverview.make(year: year, invoices: invoices, profile: profiles.first)
+        YearOverview.make(year: year, invoices: invoices, profile: Ledger(context).profile)
     }
 
     var body: some View {
@@ -57,24 +55,7 @@ struct YearOverviewView: View {
                 }
             }
         }
-        .fileExporter(
-            isPresented: $isExporting,
-            document: exportedSheet,
-            contentType: XLSXFile.contentType,
-            defaultFilename: YearOverviewXLSX.suggestedFilename(for: overview)
-        ) { result in
-            if case .failure(let error) = result {
-                exportError = error.localizedDescription
-            }
-        }
-        .alert(
-            "Export failed",
-            isPresented: Binding(get: { exportError != nil }, set: { if !$0 { exportError = nil } })
-        ) {
-            Button("OK", role: .cancel) { exportError = nil }
-        } message: {
-            Text(exportError ?? "")
-        }
+        .fileExport($export)
     }
 
     @ViewBuilder
@@ -89,10 +70,10 @@ struct YearOverviewView: View {
     }
 
     private func exportSheet() {
-        exportedSheet = XLSXFile(data: YearOverviewXLSX.data(for: overview))
-        // Present on the next turn so the document is committed first —
-        // setting both in one frame can hand the exporter a nil document.
-        Task { isExporting = true }
+        export = .xlsx(
+            YearOverviewXLSX.data(for: overview),
+            named: YearOverviewXLSX.suggestedFilename(for: overview)
+        )
     }
 }
 

@@ -1,38 +1,37 @@
 import SwiftData
 import SwiftUI
-import UniformTypeIdentifiers
 
 struct InvoiceDetailView: View {
     @Bindable var invoice: Invoice
 
     @Environment(\.modelContext) private var context
     @Query(sort: [SortDescriptor(\Client.name)]) private var clients: [Client]
-    @Query private var profiles: [BusinessProfile]
 
-    private var isLocked: Bool { !invoice.status.isEditable }
-    /// A s.p. that is not a DDV zavezanec never charges VAT, so the whole
-    /// VAT apparatus stays out of the way until the toggle in Nastavitve flips.
-    private var chargesVat: Bool { profiles.first?.isVatRegistered ?? false }
-
-    @State private var exportedPDF: PDFFile?
-    @State private var isExporting = false
+    @State private var export: FileExport?
     @State private var exportError: String?
     @State private var showsPreview = true
+
+    private var ledger: Ledger { Ledger(context) }
+    private var isLocked: Bool { !invoice.status.isEditable }
+    private var issueProblem: Ledger.IssueProblem? { ledger.issueProblem(for: invoice) }
 
     /// `serviceDateEnd` as a toggle: on means the service spans a period.
     private var isPeriod: Binding<Bool> {
         Binding(
             get: { invoice.serviceDateEnd != nil },
             set: { on in
-                invoice.serviceDateEnd = on
-                    ? Calendar.current.date(byAdding: .month, value: 1, to: invoice.serviceDate)
-                        .flatMap { Calendar.current.date(byAdding: .day, value: -1, to: $0) }
-                    : nil
+                invoice.serviceDateEnd = on ? Ledger.defaultPeriodEnd(from: invoice.serviceDate) : nil
             }
         )
     }
 
     var body: some View {
+        // Built here, in `body`, so every printed property is read under
+        // observation: a change anywhere on the invoice, its client or the
+        // profile re-evaluates the view, and the summary and the preview
+        // follow the same value the PDF will print.
+        let printed = PrintedInvoice.make(invoice: invoice, profile: ledger.profile)
+
         Form {
             Section("Invoice") {
                 LabeledContent("Number") {
@@ -63,42 +62,42 @@ struct InvoiceDetailView: View {
                 DatePicker("Payment due", selection: $invoice.dueDate, displayedComponents: .date)
                 TextField("Place of issue", text: $invoice.placeOfIssue)
                 TextField("Payment reference", text: $invoice.paymentReference,
-                          prompt: Text(verbatim: InvoiceTemplate.defaultReference(for: invoice)))
+                          prompt: Text(verbatim: InvoiceNumbering.defaultReference(number: invoice.number)))
             }
             .disabled(isLocked)
 
             Section("Line items") {
                 ForEach(invoice.sortedLines) { line in
-                    InvoiceLineEditor(line: line, showsVatRate: chargesVat) {
-                        delete(line)
+                    InvoiceLineEditor(line: line, currencyCode: invoice.currencyCode, showsVatRate: printed.chargesVat) {
+                        ledger.removeLine(line)
                     }
                 }
-                .onDelete(perform: deleteLines)
+                .onDelete(perform: removeLines)
 
                 Button("Add line item", systemImage: "plus", action: addLine)
             }
             .disabled(isLocked)
 
             Section("Summary") {
-                if chargesVat {
+                if printed.chargesVat {
                     LabeledContent("Net") {
-                        Text(Formatting.money(invoice.totals.net, currencyCode: invoice.currencyCode))
+                        Text(Formatting.money(printed.totals.net, currencyCode: printed.currencyCode))
                             .sensitiveValue()
                     }
-                    ForEach(invoice.vatBreakdown.filter { $0.amounts.vat != 0 }, id: \.rate) { entry in
+                    ForEach(printed.vatBreakdown, id: \.rate) { entry in
                         LabeledContent("VAT \(entry.rate.label)") {
-                            Text(Formatting.money(entry.amounts.vat, currencyCode: invoice.currencyCode))
+                            Text(Formatting.money(entry.amounts.vat, currencyCode: printed.currencyCode))
                                 .sensitiveValue()
                         }
                     }
                 }
                 LabeledContent("Amount due") {
-                    Text(Formatting.money(invoice.totals.gross, currencyCode: invoice.currencyCode))
+                    Text(Formatting.money(printed.totals.gross, currencyCode: printed.currencyCode))
                         .font(.headline)
                         .monospacedDigit()
                         .sensitiveValue()
                 }
-                ForEach(invoice.exemptionClauses, id: \.self) { clause in
+                ForEach(printed.exemptionClauses, id: \.self) { clause in
                     Text(clause)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
@@ -109,7 +108,7 @@ struct InvoiceDetailView: View {
                 TextField(
                     "Intro sentence",
                     text: $invoice.introOverride,
-                    prompt: Text(profiles.first.map { InvoiceTemplate.intro(for: invoice, profile: $0) } ?? ""),
+                    prompt: Text(verbatim: printed.intro),
                     axis: .vertical
                 )
                 .lineLimit(1...3)
@@ -126,18 +125,8 @@ struct InvoiceDetailView: View {
         }
         .formStyle(.grouped)
         .inspector(isPresented: $showsPreview) {
-            Group {
-                if let profile = profiles.first {
-                    InvoicePreview(invoice: invoice, profile: profile)
-                } else {
-                    ProgressView()
-                }
-            }
-            .inspectorColumnWidth(min: 340, ideal: 440, max: 760)
-        }
-        .task {
-            // Guarantees the preview has a profile on a fresh install.
-            _ = BusinessProfile.current(in: context)
+            InvoicePreview(printed: printed)
+                .inspectorColumnWidth(min: 340, ideal: 440, max: 760)
         }
         .navigationTitle(invoice.number.isEmpty ? String(localized: "Draft invoice") : invoice.number)
         .toolbar {
@@ -146,7 +135,7 @@ struct InvoiceDetailView: View {
                     .foregroundStyle(.secondary)
             }
             ToolbarItem(placement: .primaryAction) {
-                Button("Export PDF", systemImage: "square.and.arrow.down", action: exportPDF)
+                Button("Export PDF", systemImage: "square.and.arrow.down") { exportPDF(printed) }
             }
             ToolbarItem(placement: .primaryAction) {
                 Toggle("Preview", systemImage: "sidebar.trailing", isOn: $showsPreview)
@@ -156,91 +145,49 @@ struct InvoiceDetailView: View {
                 switch invoice.status {
                 case .draft:
                     Button("Issue invoice", action: issue)
-                        .disabled(invoice.client == nil || invoice.lines.isEmpty)
+                        .disabled(issueProblem != nil)
+                        .help(issueProblem.map { Text(verbatim: $0.message) } ?? Text("Issue invoice"))
                 case .issued:
-                    Button("Mark as paid", action: markPaid)
-                    Button("Cancel invoice", role: .destructive) { invoice.status = .cancelled }
+                    Button("Mark as paid") { ledger.markPaid(invoice) }
+                    Button("Cancel invoice", role: .destructive) { ledger.cancel(invoice) }
                 case .paid, .cancelled:
                     EmptyView()
                 }
             }
         }
-        .fileExporter(
-            isPresented: $isExporting,
-            document: exportedPDF,
-            contentType: .pdf,
-            defaultFilename: InvoicePDF.suggestedFilename(for: invoice)
-        ) { result in
-            if case .failure(let error) = result {
-                exportError = error.localizedDescription
-            }
-        }
-        .alert(
-            "Export failed",
-            isPresented: Binding(get: { exportError != nil }, set: { if !$0 { exportError = nil } })
-        ) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text(exportError ?? "")
-        }
+        .fileExport($export)
+        .errorAlert("Export failed", message: $exportError)
     }
 
-    private func exportPDF() {
-        let profile = BusinessProfile.current(in: context)
-        guard let data = InvoicePDF.render(invoice: invoice, profile: profile) else {
+    private func exportPDF(_ printed: PrintedInvoice) {
+        guard let data = InvoicePDF.render(printed) else {
             exportError = String(localized: "The invoice could not be rendered.")
             return
         }
-        exportedPDF = PDFFile(data: data)
-        // Present on the next turn so the document is committed first —
-        // setting both in one frame can hand the exporter a nil document.
-        Task { isExporting = true }
+        export = .pdf(data, named: printed.suggestedFilename)
     }
 
     private func addLine() {
-        let profile = BusinessProfile.current(in: context)
-        let line = InvoiceLine(
-            vatRate: invoice.sortedLines.last?.vatRate ?? profile.defaultVatRate,
-            sortIndex: (invoice.sortedLines.last?.sortIndex ?? -1) + 1
-        )
-        line.invoice = invoice
-        context.insert(line)
+        ledger.addLine(to: invoice)
     }
 
-    /// Detach before deleting: the ForEach above is driven by `invoice.lines`,
-    /// and it must not re-render an editor bound to a deleted model.
-    private func delete(_ line: InvoiceLine) {
-        guard !isLocked else { return }
-        line.invoice = nil
-        context.delete(line)
-    }
-
-    private func deleteLines(at offsets: IndexSet) {
-        guard !isLocked else { return }
+    private func removeLines(at offsets: IndexSet) {
         let sorted = invoice.sortedLines
         for index in offsets {
-            delete(sorted[index])
+            ledger.removeLine(sorted[index])
         }
     }
 
+    /// The button is disabled while the ledger has an objection, so the
+    /// throw cannot reach here from the toolbar.
     private func issue() {
-        InvoiceNumbering.assign(to: invoice, in: context)
-        // The bank reference most s.p. use is the invoice number under the
-        // SI00 model; only fill it in when nothing was typed by hand.
-        if invoice.paymentReference.isEmpty {
-            invoice.paymentReference = InvoiceTemplate.defaultReference(for: invoice)
-        }
-        invoice.status = .issued
-    }
-
-    private func markPaid() {
-        invoice.status = .paid
-        invoice.paidDate = Date()
+        try? ledger.issue(invoice)
     }
 }
 
 private struct InvoiceLineEditor: View {
     @Bindable var line: InvoiceLine
+    let currencyCode: String
     let showsVatRate: Bool
     let remove: () -> Void
 
@@ -277,7 +224,7 @@ private struct InvoiceLineEditor: View {
                     Text("Total")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    Text(Formatting.money(line.amounts.gross))
+                    Text(Formatting.money(line.amounts.gross, currencyCode: currencyCode))
                         .monospacedDigit()
                         .sensitiveValue()
                 }

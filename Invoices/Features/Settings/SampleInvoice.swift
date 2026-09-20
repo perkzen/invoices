@@ -1,58 +1,61 @@
 import Foundation
-import SwiftData
 
-/// A representative invoice for the settings preview. It lives in its own
-/// in-memory container so it never touches the real numbering or store.
-@MainActor
-final class SampleInvoice {
-    let container: ModelContainer
-    let invoice: Invoice
-
-    init(matching profile: BusinessProfile) throws {
-        container = try ModelContainer(
-            for: Invoice.self, InvoiceLine.self, Client.self, BusinessProfile.self,
-            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-        )
-        let context = container.mainContext
-
-        let client = Client(name: "Vzorčno podjetje d.o.o.")
-        client.street = "Slovenska cesta 55B"
-        client.postalCode = "1000"
-        client.city = "Ljubljana"
-        client.taxNumber = "12345678"
-        context.insert(client)
-
-        let calendar = Calendar.current
+extension PrintedInvoice {
+    /// A representative invoice for the settings preview: last month's work
+    /// for a made-up client, printed with the profile's own header, wording
+    /// and VAT status. A plain value, so it never touches the store or the
+    /// real numbering.
+    static func sample(matching profile: BusinessProfile) -> PrintedInvoice {
+        let calendar = Formatting.calendar
         let today = Date()
         let startOfThisMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: today)) ?? today
         let startOfLastMonth = calendar.date(byAdding: .month, value: -1, to: startOfThisMonth) ?? today
         let endOfLastMonth = calendar.date(byAdding: .day, value: -1, to: startOfThisMonth) ?? today
-        let year = calendar.component(.year, from: today)
+        let dueDate = calendar.date(byAdding: .day, value: profile.defaultPaymentTermDays, to: today) ?? today
+        let number = InvoiceNumbering.format(year: calendar.component(.year, from: today), sequence: 8)
+        let reference = InvoiceNumbering.defaultReference(number: number)
 
-        invoice = Invoice(
-            number: InvoiceNumbering.format(year: year, sequence: 8),
-            year: year, sequence: 8,
-            issueDate: today, serviceDate: startOfLastMonth,
-            dueDate: calendar.date(byAdding: .day, value: profile.defaultPaymentTermDays, to: today) ?? today
+        let customer = Customer(
+            name: "Vzorčno podjetje d.o.o.",
+            addressLines: ["Slovenska cesta 55B", "1000 Ljubljana"],
+            taxNumber: "12345678"
         )
-        invoice.serviceDateEnd = endOfLastMonth
-        invoice.status = .issued
-        invoice.client = client
-        invoice.placeOfIssue = profile.city.isEmpty ? "Ljubljana" : profile.city
-        invoice.paymentReference = "SI00 \(invoice.number)"
-        context.insert(invoice)
-
+        let context = InvoiceTemplate.Context(
+            serviceDate: endOfLastMonth,
+            clientName: customer.name,
+            number: number,
+            iban: profile.iban,
+            reference: reference,
+            dueDate: dueDate
+        )
         let items: [(String, Decimal, Decimal)] = [
             ("Računalniško programiranje", 1, 1075),
             ("Svetovanje in podpora", 4, 60),
         ]
-        for (index, item) in items.enumerated() {
-            let line = InvoiceLine(
-                itemDescription: item.0, quantity: item.1, unitPrice: item.2,
-                vatRate: profile.defaultVatRate, sortIndex: index
-            )
-            line.invoice = invoice
-            context.insert(line)
-        }
+
+        return PrintedInvoice(
+            number: number,
+            isDraft: false,
+            issueDate: today,
+            serviceDate: startOfLastMonth,
+            serviceDateEnd: endOfLastMonth,
+            dueDate: dueDate,
+            placeOfIssue: profile.city.isEmpty ? "Ljubljana" : profile.city,
+            paymentReference: reference,
+            chargesVat: profile.isVatRegistered,
+            issuer: Issuer(profile),
+            customer: customer,
+            lines: items.enumerated().map { offset, item in
+                Line(
+                    index: offset + 1,
+                    description: item.0,
+                    quantity: item.1,
+                    unitPrice: item.2,
+                    vatRate: profile.defaultVatRate
+                )
+            },
+            intro: InvoiceTemplate.resolve(profile.introTemplate, in: context),
+            paymentNote: profile.iban.isEmpty ? "" : InvoiceTemplate.resolve(profile.paymentNoteTemplate, in: context)
+        )
     }
 }
