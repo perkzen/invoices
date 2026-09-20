@@ -24,19 +24,17 @@ struct ContentView: View {
                 }
             }
             // Settings is a destination one visits rarely, so it sits apart
-            // at the foot of the sidebar. A second list bound to the same
-            // selection keeps the row looking and highlighting like the rest.
+            // at the foot of the sidebar, set off by the empty space above it
+            // rather than a rule. A second list bound to the same selection
+            // keeps the row looking and highlighting like the rest.
             .safeAreaInset(edge: .bottom, spacing: 0) {
-                VStack(spacing: 0) {
-                    Divider()
-                    List(selection: $section) {
-                        Label(AppSection.settings.title, systemImage: AppSection.settings.symbol)
-                            .tag(AppSection.settings)
-                    }
-                    .listStyle(.sidebar)
-                    .scrollDisabled(true)
-                    .frame(height: 44)
+                List(selection: $section) {
+                    Label(AppSection.settings.title, systemImage: AppSection.settings.symbol)
+                        .tag(AppSection.settings)
                 }
+                .listStyle(.sidebar)
+                .scrollDisabled(true)
+                .frame(height: 44)
             }
             .navigationSplitViewColumnWidth(min: 170, ideal: 190, max: 240)
         } content: {
