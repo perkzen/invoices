@@ -1,0 +1,101 @@
+Invoices/Core/InvoiceMath.swift
+  s_c5595a7759f84a::t_808455c8eb20de 5,36
+Invoices/App/ImageWell.swift
+  s_c5595a7759f84a::t_33e5a6665599b9 50
+Invoices/Core/PrintedInvoice.swift
+  s_c5595a7759f84a::t_808455c8eb20de 1-209
+Invoices/Features/Clients/ClientDetailView.swift
+  s_c5595a7759f84a::t_808455c8eb20de 25
+Invoices/App/ErrorAlert.swift
+  s_c5595a7759f84a::t_808455c8eb20de 3-17
+CONTEXT.md
+  s_c5595a7759f84a::t_808455c8eb20de 1-72
+Invoices/Features/YearOverview/YearOverviewView.swift
+  ai_agent 4-6,11,14,19-20,22,51,71-75,82-85,94-95,223,244
+Tests/InvoicesTests/LedgerTests.swift
+  s_c5595a7759f84a::t_808455c8eb20de 1-224
+Scripts/render-app-icon.swift
+  s_c5595a7759f84a::t_808455c8eb20de 206
+Invoices/Resources/Localizable.xcstrings
+  s_c5595a7759f84a::t_e0c7b18c288e17 134-143,174-185,277-288,359,364,459-470,491-502,523-534,605-616,627-638,669-680,761,831-842,893-904,915-938,959-971,1031-1054,1125,1275-1286,1337-1346,1397-1408,1499-1510,1611-1622,1653-1676,1687-1698,1839-1850,1871-1882,1903-1914,1925,1945-1956,1977,2047,2137-2148,2159-2182,2193-2204,2235-2246,2257,2267,2323,2328,2333,2338
+Tests/InvoicesTests/InvoiceTemplateTests.swift
+  s_c5595a7759f84a::t_808455c8eb20de 5,9-10,12,16-35,42-83
+Tests/InvoicesTests/InvoicePDFTests.swift
+  s_c5595a7759f84a::t_808455c8eb20de 6,8-38,43,49,53-55,60-61,63-70,73-74,81-88,93-101
+Invoices/Features/Template/InvoiceTemplateForm.swift
+  s_c5595a7759f84a::t_33e5a6665599b9 3,13,23,44
+Invoices/App/DeletionConfirmation.swift
+  s_c5595a7759f84a::t_291acca466e25e 1-28
+Invoices/App/PrivacyCommands.swift
+  s_c5595a7759f84a::t_808455c8eb20de 3,5
+Invoices/Features/Settings/SampleInvoice.swift
+  s_c5595a7759f84a::t_808455c8eb20de 3-12,17-19,21-32,35-36,38-62
+Tests/InvoicesTests/InvoiceMathTests.swift
+  s_c5595a7759f84a::t_808455c8eb20de 5,67,73-76
+Invoices/Services/Ledger.swift
+  s_c5595a7759f84a::t_808455c8eb20de 1-168
+Invoices/Models/Client.swift
+  s_c5595a7759f84a::t_808455c8eb20de 11,13
+Invoices/App/FileExport.swift
+  s_c5595a7759f84a::t_808455c8eb20de 4-21,24,28-69,71-74,78-79
+Invoices/Features/Invoices/InvoiceDetailView.swift
+  ai_agent 18-21,27,33-38,40,43-45,50,56,66,77-79,81,89,94-95,98,129,136-138,140,145,147,150,152,158,163,174,192-193,197,200-201,203,213,237-239,266,284,302
+Invoices/Models/BusinessProfile.swift
+  s_c5595a7759f84a::t_808455c8eb20de 4,14,26,30,34
+Tests/InvoicesTests/PrintedInvoiceTests.swift
+  s_c5595a7759f84a::t_808455c8eb20de 1-168
+Invoices/Services/InvoiceNumbering.swift
+  s_c5595a7759f84a::t_808455c8eb20de 6-7,9,13-19,33
+Tests/InvoicesTests/YearOverviewTests.swift
+  s_c5595a7759f84a::t_808455c8eb20de 7,57,105,108,139,189-191,198,205,209-210,224,226,232,236-237
+README.md
+  s_c5595a7759f84a::t_e0c7b18c288e17 8-35,39-42,52,54,56-60,62,74-76,78-80,82,84-86,95-96,100-103,110-112
+Invoices/Core/Formatting.swift
+  s_c5595a7759f84a::t_808455c8eb20de 4,8-17,39-42,50-55
+Invoices/App/PrivacyMode.swift
+  s_c5595a7759f84a::t_808455c8eb20de 8
+Invoices/Models/InvoiceStatus.swift
+  s_c5595a7759f84a::t_808455c8eb20de 4
+Tests/InvoicesTests/XLSXWriterTests.swift
+  s_c5595a7759f84a::t_808455c8eb20de 3,6,62,71,78,95,103,107
+Invoices/Core/XLSXWriter.swift
+  s_c5595a7759f84a::t_808455c8eb20de 85-87
+Invoices/Features/Invoices/InvoicePreview.swift
+  s_c5595a7759f84a::t_808455c8eb20de 5-10,12,35,39
+Invoices/Core/DocumentText.swift
+  s_c5595a7759f84a::t_808455c8eb20de 1-26
+Tests/InvoicesTests/LocalizationTests.swift
+  s_c5595a7759f84a::t_808455c8eb20de 5,12-19,22-25,29-30,33-35,49-77,79-81,85-101,103-104,111-115,117-122
+Invoices/Core/YearOverview.swift
+  s_c5595a7759f84a::t_808455c8eb20de 14,31,54
+Invoices/Core/InvoiceTemplate.swift
+  s_c5595a7759f84a::t_808455c8eb20de 4,6-8,10-50,52,54-83,85-92,96-100,103-105,113-114,117-118
+Invoices/App/InvoicesApp.swift
+  s_c5595a7759f84a::t_808455c8eb20de 16-18
+Invoices/Core/YearOverviewXLSX.swift
+  s_c5595a7759f84a::t_808455c8eb20de 4,11-12,14-20,26,35,47,52,58,72,77,87
+Invoices/Services/InvoicePDFPage.swift
+  s_c5595a7759f84a::t_808455c8eb20de 4-7,10-15,17-19,28,33,38,71,79,81,88,90-91,94-97,99-100,102-103,105-106,114,116-118,120-121,127-133,140-141,147-148,157,160-162,171-178,182,184-185,191,213,217,220,234-237,240,246-247,249,258-263,274-276,291,293,296
+Invoices/Models/InvoiceLine.swift
+  s_c5595a7759f84a::t_808455c8eb20de 8
+Invoices/Services/InvoicePDF.swift
+  s_c5595a7759f84a::t_808455c8eb20de 5,38-39,44-45,79-84,88-89,99,103
+Invoices/Models/Invoice.swift
+  s_c5595a7759f84a::t_808455c8eb20de 14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "82f535e05616982e64217e96b2085ae0a52657c8",
+  "prompts": {},
+  "sessions": {
+    "s_c5595a7759f84a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4e50920c-a177-4332-bbb9-950d410104fa",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
