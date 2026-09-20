@@ -94,6 +94,20 @@ nonisolated enum XLSXWriter {
         return serial <= 60 ? serial - 1 : serial
     }
 
+    /// The day an Excel serial names, at midnight in the app's calendar —
+    /// the inverse of `serial(for:)`, phantom leap day included. A serial
+    /// with a fraction is a time of day, which a date column ignores.
+    static func date(fromSerial serial: Decimal, calendar: Calendar = Formatting.calendar) -> Date? {
+        var input = serial
+        var floored = Decimal()
+        NSDecimalRound(&floored, &input, 0, .down)
+        let whole = Int(truncating: NSDecimalNumber(decimal: floored))
+        guard whole >= 1 else { return nil }
+        let days = (whole <= 60 ? whole + 1 : whole) - 25_569
+        let parts = civilDate(daysSinceEpoch: days)
+        return calendar.date(from: DateComponents(year: parts.year, month: parts.month, day: parts.day))
+    }
+
     /// Days from 1970-01-01 to the given proleptic Gregorian date.
     private static func daysSinceEpoch(year: Int, month: Int, day: Int) -> Int {
         let shiftedYear = year - (month <= 2 ? 1 : 0)
@@ -102,6 +116,20 @@ nonisolated enum XLSXWriter {
         let dayOfYear = (153 * (month + (month > 2 ? -3 : 9)) + 2) / 5 + day - 1
         let dayOfEra = yearOfEra * 365 + yearOfEra / 4 - yearOfEra / 100 + dayOfYear
         return era * 146_097 + dayOfEra - 719_468
+    }
+
+    /// The proleptic Gregorian date `days` after 1970-01-01.
+    private static func civilDate(daysSinceEpoch days: Int) -> (year: Int, month: Int, day: Int) {
+        let shifted = days + 719_468
+        let era = (shifted >= 0 ? shifted : shifted - 146_096) / 146_097
+        let dayOfEra = shifted - era * 146_097
+        let yearOfEra = (dayOfEra - dayOfEra / 1460 + dayOfEra / 36_524 - dayOfEra / 146_096) / 365
+        let dayOfYear = dayOfEra - (365 * yearOfEra + yearOfEra / 4 - yearOfEra / 100)
+        let shiftedMonth = (5 * dayOfYear + 2) / 153
+        let day = dayOfYear - (153 * shiftedMonth + 2) / 5 + 1
+        let month = shiftedMonth < 10 ? shiftedMonth + 3 : shiftedMonth - 9
+        let year = yearOfEra + era * 400 + (month <= 2 ? 1 : 0)
+        return (year, month, day)
     }
 
     static func escape(_ string: String) -> String {

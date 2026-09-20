@@ -3,6 +3,7 @@ import SwiftUI
 
 struct InvoiceListView: View {
     @Environment(\.modelContext) private var context
+    @Environment(\.importSpreadsheet) private var importSpreadsheet
     @Query(sort: [SortDescriptor(\Invoice.issueDate, order: .reverse)])
     private var invoices: [Invoice]
     @State private var pendingDelete: Invoice?
@@ -15,9 +16,12 @@ struct InvoiceListView: View {
                 ContentUnavailableView {
                     Label("No invoices", systemImage: "doc.text")
                 } description: {
-                    Text("Create your first draft invoice.")
+                    Text("Create your first draft invoice, or bring in the ones you issued before from a spreadsheet.")
                 } actions: {
                     Button("New invoice", action: newInvoice)
+                    if let importSpreadsheet {
+                        Button("Import from a spreadsheet…") { importSpreadsheet() }
+                    }
                 }
             } else {
                 List {

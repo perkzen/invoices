@@ -27,6 +27,7 @@ struct InvoicesApp: App {
         .defaultSize(width: 1400, height: 860)
         .commands {
             CommandGroup(replacing: .newItem) {}
+            ImportCommands()
             PrivacyCommands()
             #if !DEBUG
                 UpdaterCommands()

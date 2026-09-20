@@ -92,3 +92,88 @@ nonisolated private extension Data {
         append(contentsOf: (0..<4).map { UInt8((value >> (8 * $0)) & 0xFF) })
     }
 }
+
+// MARK: Reading
+
+nonisolated extension ZIPArchive {
+    enum ReadError: Error, Equatable {
+        case notAnArchive
+        case truncated
+        case unsupportedCompression(method: Int)
+        case corruptEntry(path: String)
+    }
+
+    /// The entries of an archive, inflated. Stored and deflated entries are
+    /// read — the two methods every spreadsheet program writes — and the
+    /// central directory is trusted for sizes, because a local header may
+    /// carry zeros and defer them to a descriptor after the data.
+    static func entries(in archive: Data) throws(ReadError) -> [Entry] {
+        let bytes = Data(archive)  // rebased, so offsets start at 0
+        guard bytes.count >= 22 else { throw .notAnArchive }
+
+        // The end-of-central-directory record sits at the very end, behind
+        // an optional comment; scan backwards for its signature.
+        var eocd: Int?
+        var index = bytes.count - 22
+        while index >= max(0, bytes.count - 22 - 65_535) {
+            if bytes.uint32(at: index) == 0x0605_4B50 { eocd = index; break }
+            index -= 1
+        }
+        guard let eocd else { throw .notAnArchive }
+
+        let count = Int(bytes.uint16(at: eocd + 10))
+        var record = Int(bytes.uint32(at: eocd + 16))
+        var entries: [Entry] = []
+        entries.reserveCapacity(count)
+
+        for _ in 0..<count {
+            guard record + 46 <= bytes.count, bytes.uint32(at: record) == 0x0201_4B50 else { throw .truncated }
+            let method = Int(bytes.uint16(at: record + 10))
+            let compressedSize = Int(bytes.uint32(at: record + 20))
+            let size = Int(bytes.uint32(at: record + 24))
+            let nameLength = Int(bytes.uint16(at: record + 28))
+            let extraLength = Int(bytes.uint16(at: record + 30))
+            let commentLength = Int(bytes.uint16(at: record + 32))
+            let localHeader = Int(bytes.uint32(at: record + 42))
+            guard record + 46 + nameLength <= bytes.count else { throw .truncated }
+            let path = String(decoding: bytes[(record + 46)..<(record + 46 + nameLength)], as: UTF8.self)
+            record += 46 + nameLength + extraLength + commentLength
+
+            // The local header repeats the name and may carry a different
+            // extra field, so the data offset comes from its own lengths.
+            guard localHeader + 30 <= bytes.count, bytes.uint32(at: localHeader) == 0x0403_4B50 else { throw .truncated }
+            let start = localHeader + 30
+                + Int(bytes.uint16(at: localHeader + 26))
+                + Int(bytes.uint16(at: localHeader + 28))
+            guard start + compressedSize <= bytes.count else { throw .truncated }
+            let raw = bytes[start..<(start + compressedSize)]
+
+            let data: Data
+            switch method {
+            case 0:
+                data = Data(raw)
+            case 8:
+                // ZIP's deflate is the raw RFC 1951 stream, which is what
+                // Foundation calls zlib here — no header, no checksum.
+                guard let inflated = try? (Data(raw) as NSData).decompressed(using: .zlib) as Data,
+                      inflated.count == size
+                else { throw .corruptEntry(path: path) }
+                data = inflated
+            default:
+                throw .unsupportedCompression(method: method)
+            }
+            entries.append(Entry(path: path, data: data))
+        }
+        return entries
+    }
+}
+
+nonisolated private extension Data {
+    func uint16(at offset: Int) -> UInt16 {
+        UInt16(self[offset]) | UInt16(self[offset + 1]) << 8
+    }
+
+    func uint32(at offset: Int) -> UInt32 {
+        UInt32(uint16(at: offset)) | UInt32(uint16(at: offset + 2)) << 16
+    }
+}
