@@ -1,8 +1,8 @@
 import SwiftUI
 
-/// Pogled › Skrij občutljive podatke. The switch has to be reachable in one
+/// View › Hide sensitive values. The switch has to be reachable in one
 /// stroke — its moment is the second before a screen share starts, and a trip
-/// into Nastavitve is too slow for that.
+/// into Settings is too slow for that.
 struct PrivacyCommands: Commands {
     @AppStorage(PrivacyMode.storageKey) private var hidesSensitiveValues = false
 
