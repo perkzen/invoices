@@ -25,11 +25,12 @@ v0 scaffold. It builds, runs, and persists data. What works today:
   such as `{MESEC}`, `{leto}`, `{trr}`, `{sklic}`; see `Core/InvoiceTemplate.swift`
 - **Nastavitve** — your own details (name, address, bank account, tax status) are in the
   sidebar and under ⌘,
-- **Zasebni način** — Pogled › Skrij občutljive podatke (⇧⌘H) zakrije davčne
-  številke, IBAN in vse zneske v vmesniku, za deljenje zaslona ali pogled čez ramo.
-  Je nastavitev pogleda in ne podatek: izvožen PDF, preglednica in natisnjen račun
-  nosijo prave vrednosti tudi takrat, ko je vklopljen. Označi novo vrednost s
-  `.sensitiveValue()`; zakrije jo `.privacyRedacted()` na korenu okna — glej `App/PrivacyMode.swift`
+- **Zasebni način** — Pogled › Skrij občutljive podatke (⇧⌘H) blanks the tax numbers,
+  the IBAN and every amount in the interface, for a screen share or a look over your
+  shoulder. It is a view preference, not a fact: the exported PDF, the spreadsheet and
+  the printed račun carry the real values whether it is on or off. Mark a new value with
+  `.sensitiveValue()`; `.privacyRedacted()` at the root of the window blanks it — see
+  `App/PrivacyMode.swift`
 - **Slovenščina / English** — the interface follows the Mac's language, or the picker in
   Nastavitve › Jezik. Strings live in `Resources/Localizable.xcstrings` with Slovenian as
   the source language. The printed invoice is always Slovenian; wrap any new string on

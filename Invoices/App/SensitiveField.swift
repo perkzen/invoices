@@ -1,8 +1,8 @@
 import SwiftUI
 
-/// Vnosno polje, katerega vrednost zasebni način zakrije. Zakriti `TextField`
-/// vzame s sabo tudi svojo oznako, zato oznaka stoji zunaj njega — sicer bi
-/// v razdelku ostali sami sivi pravokotniki brez imen.
+/// A text field whose value private mode blanks. A redacted `TextField` takes
+/// its own label with it, so the label sits outside it — otherwise a section
+/// would be left as grey rectangles with nothing naming them.
 struct SensitiveField: View {
     let title: LocalizedStringKey
     @Binding var text: String

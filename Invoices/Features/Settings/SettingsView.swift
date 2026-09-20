@@ -123,8 +123,8 @@ private struct BusinessProfileForm: View {
     }
 }
 
-/// Zasebni način, isto stikalo kot Pogled › Skrij občutljive podatke.
-/// Tu stoji zato, da ga je mogoče najti; uporablja se prek ⇧⌘H.
+/// Private mode, the same switch as Pogled › Skrij občutljive podatke.
+/// It is here so it can be found; it is used through ⇧⌘H.
 private struct PrivacySection: View {
     @AppStorage(PrivacyMode.storageKey) private var hidesSensitiveValues = false
 

@@ -1,26 +1,25 @@
 import SwiftUI
 
-/// Zasebni način — en sam preklop, ki zakrije vrednosti, ki jih mimoidoči
-/// ali deljen zaslon ne bi smela prebrati: bančni račun, davčne številke in
-/// vse zneske.
+/// Private mode — one switch that blanks the values a passer-by or a shared
+/// screen should not read: the bank account, the tax numbers and every amount.
 ///
-/// To je nastavitev pogleda in ne podatek o poslovanju, zato živi v
-/// `AppStorage` in se shrambe ne dotakne: izvožen PDF, preglednica in
-/// natisnjen račun nosijo prave vrednosti tudi takrat, ko je vklopljen.
+/// It is a view preference and not a fact about the business, so it lives in
+/// `AppStorage` and never touches the store: the exported PDF, the spreadsheet
+/// and the printed račun carry the real values even while it is on.
 enum PrivacyMode {
     static let storageKey = "hidesSensitiveValues"
 }
 
 extension View {
-    /// Označi vrednost, ki jo zasebni način zakrije. Sam po sebi ne naredi
-    /// nič — zakrije jo šele `privacyRedacted()` na vrhu drevesa.
+    /// Marks a value that private mode blanks. On its own it does nothing —
+    /// `privacyRedacted()` higher up the tree is what blanks it.
     func sensitiveValue() -> some View {
         privacySensitive()
     }
 
-    /// Enkrat na okno, na korenu. Razlog `.privacy` zakrije le podpoglede,
-    /// označene s `sensitiveValue()`, zato oznake, datumi in opisi okoli
-    /// njih ostanejo berljivi.
+    /// Once per window, at the root. The `.privacy` reason redacts only the
+    /// subviews marked `sensitiveValue()`, so the labels, dates and
+    /// descriptions around them stay readable.
     func privacyRedacted() -> some View {
         modifier(PrivacyRedaction())
     }
