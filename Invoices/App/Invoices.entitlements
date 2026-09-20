@@ -8,5 +8,18 @@
 	<true/>
 	<key>com.apple.security.print</key>
 	<true/>
+	<!-- Sparkle downloads the update itself; without this it would need its
+	     Downloader.xpc service instead. -->
+	<key>com.apple.security.network.client</key>
+	<true/>
+	<!-- A sandboxed app cannot replace its own bundle, so Sparkle hands the job
+	     to two XPC services and has to be allowed to reach them by name.
+	     $(PRODUCT_BUNDLE_IDENTIFIER) expands per configuration, so the dev and
+	     release builds each talk to their own. -->
+	<key>com.apple.security.temporary-exception.mach-lookup.global-name</key>
+	<array>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)-spks</string>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)-spki</string>
+	</array>
 </dict>
 </plist>

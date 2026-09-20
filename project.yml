@@ -9,12 +9,17 @@ options:
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    MARKETING_VERSION: "0.1.0"
+    MARKETING_VERSION: "0.0.1"
     CURRENT_PROJECT_VERSION: "1"
     SWIFT_APPROACHABLE_CONCURRENCY: YES
     SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
     SWIFT_EMIT_LOC_STRINGS: YES
     LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+
+packages:
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    exactVersion: 2.10.0
 
 targets:
   Invoices:
@@ -25,6 +30,8 @@ targets:
         excludes:
           # Claude Code parks git worktrees here; they hold a second copy of every source.
           - ".claude/**"
+    dependencies:
+      - package: Sparkle
     settings:
       base:
         # The bundle is named per configuration (below), but the Swift module
@@ -60,6 +67,14 @@ targets:
         LSMinimumSystemVersion: "$(MACOSX_DEPLOYMENT_TARGET)"
         LSApplicationCategoryType: public.app-category.business
         NSHumanReadableCopyright: ""
+        # Sparkle. /releases/latest/download/ redirects to whichever release is
+        # newest, so the feed the app is built with never has to change and
+        # there is nothing to host.
+        SUFeedURL: https://github.com/perkzen/invoices/releases/latest/download/appcast.xml
+        SUPublicEDKey: 4rQ1hMdGuWrYw/8xIYaDAFjfJeZujQj8lwkTsiIbzNk=
+        # Mandatory for a sandboxed app: the sandbox forbids an app from
+        # replacing its own bundle, so the install runs in an XPC service.
+        SUEnableInstallerLauncherService: true
 
   InvoicesTests:
     type: bundle.unit-test

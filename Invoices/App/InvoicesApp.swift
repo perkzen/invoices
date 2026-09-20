@@ -25,6 +25,9 @@ struct InvoicesApp: App {
         .commands {
             CommandGroup(replacing: .newItem) {}
             PrivacyCommands()
+            #if !DEBUG
+                UpdaterCommands()
+            #endif
         }
 
         Settings {

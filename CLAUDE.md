@@ -23,6 +23,10 @@ Debug builds `Invoices Dev.app` (`com.domenperko.Invoices.dev`), Release builds
 containers — never change the Debug id back, or a development build will write to the
 user's real invoices.
 
+Only Release updates itself, over Sparkle — `App/UpdaterCommands.swift` is behind
+`#if !DEBUG`, and that gate has to stay. Debug is a different app, so an update installed
+into it would replace the development build with the production one.
+
 If you build somewhere outside `build/` anyway, unregister the leftover bundle when you
 are done:
 
