@@ -28,7 +28,8 @@ a Slovenian Mac is given in brackets.
   številka, datum, valuta, obdobje storitve, vrednost, prejem plačila): it is written
   for the accountant, not for the app
 - **Invoice template** [Predloga računa] — logo, tagline, signature and the three
-  sentences (intro, payment instruction, closing) live in Settings › Predloga računa.
+  sentences (intro, payment instruction, closing) have their own sidebar section, with the
+  sample preview beside the form.
   Sentences take placeholders such as `{MESEC}`, `{leto}`, `{trr}`, `{sklic}`; see
   `Core/InvoiceTemplate.swift`
 - **Settings** [Nastavitve] — your own s.p. details (name, address, bank account, tax

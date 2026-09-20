@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var invoiceSelection: PersistentIdentifier?
     @State private var clientSelection: PersistentIdentifier?
     @State private var overviewYear: Int?
+    @State private var templateSelection: String?
     @State private var settingsPage: SettingsPage? = .business
 
     var body: some View {
@@ -48,6 +49,9 @@ struct ContentView: View {
             case .overview:
                 YearListView(selection: $overviewYear)
                     .navigationSplitViewColumnWidth(min: 200, ideal: 240, max: 320)
+            case .template:
+                TemplateListView(selection: $templateSelection)
+                    .navigationSplitViewColumnWidth(min: 200, ideal: 240, max: 320)
             case .settings:
                 SettingsPageList(selection: $settingsPage)
                     .navigationSplitViewColumnWidth(min: 200, ideal: 240, max: 320)
@@ -62,6 +66,8 @@ struct ContentView: View {
                 ClientDetailColumn(selection: clientSelection)
             case .overview:
                 YearOverviewView(year: overviewYear)
+            case .template:
+                TemplateDetailColumn(selection: templateSelection)
             case .settings:
                 SettingsContent(page: settingsPage)
             case nil:

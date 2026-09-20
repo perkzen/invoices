@@ -340,6 +340,16 @@
         }
       }
     },
+    "Choose a template from the list.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izberi predlogo s seznama."
+          }
+        }
+      }
+    },
     "Choose an invoice from the list, or create a new one.": {
       "localizations": {
         "sl": {
@@ -656,6 +666,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ime in priimek"
+          }
+        }
+      }
+    },
+    "General": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Splošno"
           }
         }
       }
@@ -1036,6 +1056,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ni izdanih računov"
+          }
+        }
+      }
+    },
+    "No template selected": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ni izbrane predloge"
           }
         }
       }
@@ -1510,6 +1540,16 @@
         }
       }
     },
+    "Standard template": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standardna predloga"
+          }
+        }
+      }
+    },
     "Street and number": {
       "localizations": {
         "sl": {
@@ -1660,12 +1700,12 @@
         }
       }
     },
-    "The name under the signature is “Full name” from the My s.p. tab.": {
+    "The name under the signature is “Full name” from Settings › My s.p.": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ime pod podpisom je »Ime in priimek« z zavihka Moj s.p."
+            "value": "Ime pod podpisom je »Ime in priimek« iz Nastavitve › Moj s.p."
           }
         }
       }
@@ -1716,6 +1756,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Neplačano"
+          }
+        }
+      }
+    },
+    "Used on every invoice": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uporabljena na vsakem računu"
           }
         }
       }

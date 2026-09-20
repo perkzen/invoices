@@ -3,25 +3,26 @@ import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// The two pages of Nastavitve. They are rows in the middle column of the
-/// main window and the sidebar of the ⌘, window, so both show the same forms.
+/// The pages of Nastavitve. They are rows in the middle column of the main
+/// window and the sidebar of the ⌘, window, so both show the same forms.
+/// The invoice template is not one of them: it has its own sidebar section.
 enum SettingsPage: String, CaseIterable, Identifiable {
     case business
-    case template
+    case general
 
     var id: String { rawValue }
 
     var title: String {
         switch self {
         case .business: String(localized: "My s.p.")
-        case .template: String(localized: "Invoice template")
+        case .general: String(localized: "General")
         }
     }
 
     var symbol: String {
         switch self {
         case .business: "building.2"
-        case .template: "doc.richtext"
+        case .general: "gearshape"
         }
     }
 }
@@ -56,10 +57,31 @@ struct SettingsView: View {
     }
 }
 
-/// One settings page beside a live preview of a sample invoice, so every
-/// change is seen where it lands.
+/// One settings page. The s.p. details sit beside the sample preview, since
+/// they are printed; the general preferences are not, so they stand alone.
 struct SettingsContent: View {
     let page: SettingsPage?
+
+    var body: some View {
+        Group {
+            switch page {
+            case .business, nil:
+                ProfilePreviewSplit { profile in
+                    BusinessProfileForm(profile: profile)
+                }
+            case .general:
+                GeneralSettingsForm()
+            }
+        }
+        .navigationTitle((page ?? .business).title)
+    }
+}
+
+/// A form about the business profile beside a live preview of a sample
+/// invoice, so every change is seen where it lands. Shared by the s.p. page
+/// and the invoice template.
+struct ProfilePreviewSplit<Content: View>: View {
+    @ViewBuilder let form: (BusinessProfile) -> Content
 
     @Environment(\.modelContext) private var context
     @State private var profile: BusinessProfile?
@@ -69,15 +91,8 @@ struct SettingsContent: View {
         Group {
             if let profile, let sample {
                 HStack(spacing: 0) {
-                    Group {
-                        switch page {
-                        case .business, nil:
-                            BusinessProfileForm(profile: profile)
-                        case .template:
-                            InvoiceTemplateForm(profile: profile)
-                        }
-                    }
-                    .frame(width: 470)
+                    form(profile)
+                        .frame(width: 470)
                     Divider()
                     VStack(spacing: 0) {
                         Text("Preview on a sample invoice")
@@ -98,7 +113,6 @@ struct SettingsContent: View {
                 ProgressView()
             }
         }
-        .navigationTitle((page ?? .business).title)
         .task {
             if profile == nil {
                 let current = BusinessProfile.current(in: context)
@@ -106,6 +120,18 @@ struct SettingsContent: View {
                 sample = try? SampleInvoice(matching: current)
             }
         }
+    }
+}
+
+/// Preferences about the app rather than the business: private mode and
+/// the interface language.
+private struct GeneralSettingsForm: View {
+    var body: some View {
+        Form {
+            PrivacySection()
+            LanguageSection()
+        }
+        .formStyle(.grouped)
     }
 }
 
@@ -163,8 +189,6 @@ private struct BusinessProfileForm: View {
                 TextField("Footer note", text: $profile.invoiceFooter, axis: .vertical)
                     .lineLimit(2...5)
             }
-            PrivacySection()
-            LanguageSection()
         }
         .formStyle(.grouped)
     }
@@ -222,55 +246,5 @@ private struct LanguageSection: View {
         } message: {
             Text("Quit and reopen Invoices to see the interface in the selected language.")
         }
-    }
-}
-
-/// Everything on the printed invoice that is the s.p.'s own: logo, tagline,
-/// the three sentences, and the signature.
-private struct InvoiceTemplateForm: View {
-    @Bindable var profile: BusinessProfile
-
-    var body: some View {
-        Form {
-            Section("Header") {
-                ImageWell(title: "Logo", data: $profile.logoData)
-                TextField("Line of business", text: $profile.activityLine,
-                          prompt: Text("e.g. IT STORITVE IN SVETOVANJE"))
-            }
-            Section {
-                TextField("Intro sentence", text: $profile.introTemplate, axis: .vertical)
-                    .lineLimit(1...3)
-                TextField("Payment instruction", text: $profile.paymentNoteTemplate, axis: .vertical)
-                    .lineLimit(1...3)
-                TextField("Closing sentence", text: $profile.closingNote, axis: .vertical)
-                    .lineLimit(1...3)
-                DisclosureGroup("Placeholders filled in automatically") {
-                    ForEach(InvoiceTemplate.placeholders, id: \.token) { placeholder in
-                        HStack {
-                            Text(verbatim: placeholder.token).monospaced()
-                            Spacer()
-                            Text(placeholder.meaning).foregroundStyle(.secondary)
-                        }
-                        .font(.callout)
-                    }
-                }
-            } header: {
-                Text("Text")
-            } footer: {
-                Text("The intro sentence can be overridden on each invoice. The payment instruction is printed only when an IBAN is set.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-            Section {
-                ImageWell(title: "Signature", data: $profile.signatureData)
-            } header: {
-                Text("Signature")
-            } footer: {
-                Text("The name under the signature is “Full name” from the My s.p. tab.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .formStyle(.grouped)
     }
 }
