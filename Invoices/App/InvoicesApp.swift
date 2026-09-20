@@ -13,6 +13,9 @@ struct InvoicesApp: App {
         } catch {
             fatalError("Could not open the store: \(error)")
         }
+        // The one profile exists from the first launch on, so views can read
+        // it inside `body` without ever inserting during a view update.
+        _ = Ledger(container.mainContext).profile
     }
 
     var body: some Scene {

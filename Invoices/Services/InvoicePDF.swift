@@ -2,7 +2,7 @@ import CoreGraphics
 import Foundation
 import SwiftUI
 
-/// Renders an invoice to a multi-page A4 PDF.
+/// Renders a `PrintedInvoice` to a multi-page A4 PDF.
 enum InvoicePDF {
     static let pageSize = CGSize(width: 595, height: 842)  // A4 at 72 dpi
 
@@ -35,14 +35,14 @@ enum InvoicePDF {
     }
 
     /// What one item costs against a page budget.
-    static func cost(of line: InvoiceLine) -> Int {
-        let text = line.itemDescription.isEmpty ? "—" : line.itemDescription
+    static func cost(of line: PrintedInvoice.Line) -> Int {
+        let text = line.description.isEmpty ? "—" : line.description
         let wrapped = (text.count + charactersPerDescriptionLine - 1) / charactersPerDescriptionLine
         return 2 + min(maxDescriptionLines, max(1, wrapped))
     }
 
-    static func paginate(_ lines: [InvoiceLine], summaryExtra: Int = 0) -> [[InvoiceLine]] {
-        var pages: [[InvoiceLine]] = []
+    static func paginate(_ lines: [PrintedInvoice.Line], summaryExtra: Int = 0) -> [[PrintedInvoice.Line]] {
+        var pages: [[PrintedInvoice.Line]] = []
         var remaining = lines[...]
         var isFirst = true
 
@@ -76,16 +76,17 @@ enum InvoicePDF {
         }
     }
 
-    static func suggestedFilename(for invoice: Invoice) -> String {
-        invoice.number.isEmpty ? "Osnutek-racuna" : "Racun-\(invoice.number)"
+    /// The pages of `printed`: the rows each one carries, in order.
+    static func pages(of printed: PrintedInvoice) -> [[PrintedInvoice.Line]] {
+        paginate(
+            printed.lines,
+            summaryExtra: summaryExtra(notes: printed.notes, footer: printed.issuer.footer)
+        )
     }
 
     @MainActor
-    static func render(invoice: Invoice, profile: BusinessProfile) -> Data? {
-        let chunks = paginate(
-            invoice.sortedLines,
-            summaryExtra: summaryExtra(notes: invoice.notes, footer: profile.invoiceFooter)
-        )
+    static func render(_ printed: PrintedInvoice) -> Data? {
+        let chunks = pages(of: printed)
         let data = NSMutableData()
         var box = CGRect(origin: .zero, size: pageSize)
 
@@ -95,13 +96,11 @@ enum InvoicePDF {
 
         for (index, chunk) in chunks.enumerated() {
             let page = InvoicePDFPage(
-                invoice: invoice,
-                profile: profile,
+                printed: printed,
                 lines: chunk,
                 pageNumber: index + 1,
                 pageCount: chunks.count,
-                showsSummary: index == chunks.count - 1,
-                chargesVat: profile.isVatRegistered
+                showsSummary: index == chunks.count - 1
             )
             let renderer = ImageRenderer(content: page)
             renderer.proposedSize = ProposedViewSize(pageSize)

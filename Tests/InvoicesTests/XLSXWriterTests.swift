@@ -1,8 +1,9 @@
 import Foundation
 import Testing
+import UniformTypeIdentifiers
 @testable import Invoices
 
-@Suite("Zapis XLSX")
+@Suite("XLSX writer")
 struct XLSXWriterTests {
     private func date(_ year: Int, _ month: Int, _ day: Int) -> Date {
         Calendar.current.date(from: DateComponents(year: year, month: month, day: day))!
@@ -58,7 +59,7 @@ struct XLSXWriterTests {
     }
 
     @Test func `text is XML escaped`() {
-        #expect(XLSXWriter.escape("Mize & stoli d.o.o.") == "Mize &amp; stoli d.o.o.")
+        #expect(XLSXWriter.escape("Tables & Chairs Ltd.") == "Tables &amp; Chairs Ltd.")
         #expect(XLSXWriter.escape("<b>\"x\"</b>") == "&lt;b&gt;&quot;x&quot;&lt;/b&gt;")
         #expect(XLSXWriter.escape("Ljubljana") == "Ljubljana")
     }
@@ -67,14 +68,14 @@ struct XLSXWriterTests {
         let sheet = XLSXWriter.Sheet(
             name: "Test",
             rows: [[
-                .text("Stranka & sin"),
+                .text("Client & Son"),
                 XLSXWriter.Cell(.number(Decimal(string: "4389.99")!), style: .cellMoney),
                 XLSXWriter.Cell(.date(date(2026, 3, 31)), style: .cellDate),
             ]]
         )
         let xml = worksheet(in: XLSXWriter.data(for: sheet))
         #expect(xml.contains("<c r=\"A1\" t=\"inlineStr\">"))
-        #expect(xml.contains("Stranka &amp; sin"))
+        #expect(xml.contains("Client &amp; Son"))
         // Decimals are written with a dot whatever the locale says.
         #expect(xml.contains("<c r=\"B1\" s=\"4\"><v>4389.99</v></c>"))
         #expect(xml.contains("<c r=\"C1\" s=\"3\"><v>46112</v></c>"))
@@ -91,7 +92,7 @@ struct XLSXWriterTests {
     }
 
     @Test func `the workbook contains the parts Excel opens`() throws {
-        let data = XLSXWriter.data(for: XLSXWriter.Sheet(name: "Pregled", rows: [[.text("A")]]))
+        let data = XLSXWriter.data(for: XLSXWriter.Sheet(name: "Overview", rows: [[.text("A")]]))
         let text = String(decoding: data, as: UTF8.self)
         for part in [
             "[Content_Types].xml", "_rels/.rels", "xl/workbook.xml",
@@ -99,11 +100,11 @@ struct XLSXWriterTests {
         ] {
             #expect(text.contains(part), "manjka del \(part)")
         }
-        #expect(text.contains("<sheet name=\"Pregled\""))
+        #expect(text.contains("<sheet name=\"Overview\""))
     }
 
     @Test func `the exported document declares the xlsx type`() {
-        #expect(XLSXFile.contentType.preferredFilenameExtension == "xlsx")
+        #expect(UTType.xlsx.preferredFilenameExtension == "xlsx")
     }
 
     /// The parts are stored uncompressed, so the sheet XML can be read

@@ -47,14 +47,7 @@ struct ImageWell: View {
                 importError = error.localizedDescription
             }
         }
-        .alert(
-            "The image could not be loaded",
-            isPresented: Binding(get: { importError != nil }, set: { if !$0 { importError = nil } })
-        ) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text(importError ?? "")
-        }
+        .errorAlert("The image could not be loaded", message: $importError)
     }
 
     private func load(_ url: URL) {

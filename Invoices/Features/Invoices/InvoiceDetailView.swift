@@ -1,59 +1,59 @@
 import SwiftData
 import SwiftUI
-import UniformTypeIdentifiers
 
 struct InvoiceDetailView: View {
     @Bindable var invoice: Invoice
 
     @Environment(\.modelContext) private var context
     @Query(sort: [SortDescriptor(\Client.name)]) private var clients: [Client]
-    @Query private var profiles: [BusinessProfile]
 
-    private var isLocked: Bool { !invoice.status.isEditable }
-    /// A s.p. that is not a DDV zavezanec never charges VAT, so the whole
-    /// VAT apparatus stays out of the way until the toggle in Nastavitve flips.
-    private var chargesVat: Bool { profiles.first?.isVatRegistered ?? false }
-
-    @State private var exportedPDF: PDFFile?
-    @State private var isExporting = false
+    @State private var export: FileExport?
     @State private var exportError: String?
     @State private var showsPreview = true
     @State private var isConfirmingCancel = false
+
+    private var ledger: Ledger { Ledger(context) }
+    private var isLocked: Bool { !invoice.status.isEditable }
+    private var issueProblem: Ledger.IssueProblem? { ledger.issueProblem(for: invoice) }
+    private var title: String {
+        invoice.number.isEmpty ? String(localized: "Draft invoice") : invoice.number
+    }
 
     /// `serviceDateEnd` as a toggle: on means the service spans a period.
     private var isPeriod: Binding<Bool> {
         Binding(
             get: { invoice.serviceDateEnd != nil },
             set: { on in
-                invoice.serviceDateEnd = on
-                    ? Calendar.current.date(byAdding: .month, value: 1, to: invoice.serviceDate)
-                        .flatMap { Calendar.current.date(byAdding: .day, value: -1, to: $0) }
-                    : nil
+                invoice.serviceDateEnd = on ? Ledger.defaultPeriodEnd(from: invoice.serviceDate) : nil
             }
         )
     }
 
     var body: some View {
+        // Built here, in `body`, so every printed property is read under
+        // observation: a change anywhere on the invoice, its client or the
+        // profile re-evaluates the view, and the summary and the preview
+        // follow the same value the PDF will print.
+        let printed = PrintedInvoice.make(invoice: invoice, profile: ledger.profile)
+
         HSplitView {
-            form
+            form(printed)
                 .frame(minWidth: 540, idealWidth: 600)
             if showsPreview {
-                previewPane
+                // The rendered page beside the form, the way the template
+                // page shows its sample.
+                InvoicePreview(printed: printed)
                     .frame(minWidth: 280, idealWidth: 320)
             }
         }
         .animation(nil, value: showsPreview)
-        .task {
-            // Guarantees the preview has a profile on a fresh install.
-            _ = BusinessProfile.current(in: context)
-        }
-        .navigationTitle(invoice.number.isEmpty ? String(localized: "Draft invoice") : invoice.number)
+        .navigationTitle(title)
         .toolbar {
             // A three-column window shows only the list's title, so the
             // editor names its own invoice here.
             ToolbarItem(placement: .principal) {
                 HStack(spacing: 8) {
-                    Text(invoice.number.isEmpty ? String(localized: "Draft invoice") : invoice.number)
+                    Text(title)
                         .font(.headline)
                         .monospacedDigit()
                     // "Draft invoice" already says what a draft is.
@@ -63,7 +63,7 @@ struct InvoiceDetailView: View {
                 }
             }
             ToolbarItem(placement: .primaryAction) {
-                Button("Export PDF", systemImage: "square.and.arrow.up", action: exportPDF)
+                Button("Export PDF", systemImage: "square.and.arrow.up") { exportPDF(printed) }
                     .help("Save the invoice as a PDF")
             }
             ToolbarItem(placement: .primaryAction) {
@@ -74,55 +74,28 @@ struct InvoiceDetailView: View {
                 switch invoice.status {
                 case .draft:
                     Button("Issue invoice", action: issue)
-                        .disabled(invoice.client == nil || invoice.lines.isEmpty)
-                        .help(invoice.client == nil
-                              ? "Choose a client before issuing"
-                              : "Assign the next number and lock the invoice")
+                        .disabled(issueProblem != nil)
+                        .help(issueProblem.map { Text(verbatim: $0.message) }
+                              ?? Text("Assign the next number and lock the invoice"))
                 case .issued:
-                    Button("Mark as paid", action: markPaid)
+                    Button("Mark as paid") { ledger.markPaid(invoice) }
                     Button("Cancel invoice", role: .destructive) { isConfirmingCancel = true }
                 case .paid, .cancelled:
                     EmptyView()
                 }
             }
         }
-        .fileExporter(
-            isPresented: $isExporting,
-            document: exportedPDF,
-            contentType: .pdf,
-            defaultFilename: InvoicePDF.suggestedFilename(for: invoice)
-        ) { result in
-            if case .failure(let error) = result {
-                exportError = error.localizedDescription
-            }
-        }
         .confirmationDialog("Cancel this invoice?", isPresented: $isConfirmingCancel) {
-            Button("Cancel invoice", role: .destructive) { invoice.status = .cancelled }
+            Button("Cancel invoice", role: .destructive) { ledger.cancel(invoice) }
             Button("Keep invoice", role: .cancel) {}
         } message: {
             Text("The number stays in the sequence and the invoice is listed as cancelled. This cannot be undone.")
         }
-        .alert(
-            "Export failed",
-            isPresented: Binding(get: { exportError != nil }, set: { if !$0 { exportError = nil } })
-        ) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text(exportError ?? "")
-        }
+        .fileExport($export)
+        .errorAlert("Export failed", message: $exportError)
     }
 
-    /// The rendered page beside the form, the way Settings shows its sample.
-    @ViewBuilder
-    private var previewPane: some View {
-        if let profile = profiles.first {
-            InvoicePreview(invoice: invoice, profile: profile)
-        } else {
-            ProgressView()
-        }
-    }
-
-    private var form: some View {
+    private func form(_ printed: PrintedInvoice) -> some View {
         Form {
             Section("Invoice") {
                 LabeledContent("Number") {
@@ -153,40 +126,41 @@ struct InvoiceDetailView: View {
                 DatePicker("Payment due", selection: $invoice.dueDate, displayedComponents: .date)
                 TextField("Place of issue", text: $invoice.placeOfIssue)
                 TextField("Payment reference", text: $invoice.paymentReference,
-                          prompt: Text(verbatim: InvoiceTemplate.defaultReference(for: invoice)))
+                          prompt: Text(verbatim: InvoiceNumbering.defaultReference(number: invoice.number)))
             }
             .disabled(isLocked)
 
             Section("Line items") {
                 InvoiceLinesEditor(
                     lines: invoice.sortedLines,
-                    showsVatRate: chargesVat,
-                    remove: delete
+                    currencyCode: invoice.currencyCode,
+                    showsVatRate: printed.chargesVat,
+                    remove: ledger.removeLine
                 )
-                Button("Add line item", systemImage: "plus", action: addLine)
+                Button("Add line item", systemImage: "plus") { ledger.addLine(to: invoice) }
             }
             .disabled(isLocked)
 
             Section("Summary") {
-                if chargesVat {
+                if printed.chargesVat {
                     LabeledContent("Net") {
-                        Text(Formatting.money(invoice.totals.net, currencyCode: invoice.currencyCode))
+                        Text(Formatting.money(printed.totals.net, currencyCode: printed.currencyCode))
                             .sensitiveValue()
                     }
-                    ForEach(invoice.vatBreakdown.filter { $0.amounts.vat != 0 }, id: \.rate) { entry in
+                    ForEach(printed.vatBreakdown, id: \.rate) { entry in
                         LabeledContent("VAT \(entry.rate.label)") {
-                            Text(Formatting.money(entry.amounts.vat, currencyCode: invoice.currencyCode))
+                            Text(Formatting.money(entry.amounts.vat, currencyCode: printed.currencyCode))
                                 .sensitiveValue()
                         }
                     }
                 }
                 LabeledContent("Amount due") {
-                    Text(Formatting.money(invoice.totals.gross, currencyCode: invoice.currencyCode))
+                    Text(Formatting.money(printed.totals.gross, currencyCode: printed.currencyCode))
                         .font(.headline)
                         .monospacedDigit()
                         .sensitiveValue()
                 }
-                ForEach(invoice.exemptionClauses, id: \.self) { clause in
+                ForEach(printed.exemptionClauses, id: \.self) { clause in
                     Text(clause)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
@@ -197,7 +171,7 @@ struct InvoiceDetailView: View {
                 TextField(
                     "Intro sentence",
                     text: $invoice.introOverride,
-                    prompt: Text(profiles.first.map { InvoiceTemplate.intro(for: invoice, profile: $0) } ?? ""),
+                    prompt: Text(verbatim: printed.intro),
                     axis: .vertical
                 )
                 .lineLimit(1...3)
@@ -215,49 +189,18 @@ struct InvoiceDetailView: View {
         .formStyle(.grouped)
     }
 
-    private func exportPDF() {
-        let profile = BusinessProfile.current(in: context)
-        guard let data = InvoicePDF.render(invoice: invoice, profile: profile) else {
+    private func exportPDF(_ printed: PrintedInvoice) {
+        guard let data = InvoicePDF.render(printed) else {
             exportError = String(localized: "The invoice could not be rendered.")
             return
         }
-        exportedPDF = PDFFile(data: data)
-        // Present on the next turn so the document is committed first —
-        // setting both in one frame can hand the exporter a nil document.
-        Task { isExporting = true }
+        export = .pdf(data, named: printed.suggestedFilename)
     }
 
-    private func addLine() {
-        let profile = BusinessProfile.current(in: context)
-        let line = InvoiceLine(
-            vatRate: invoice.sortedLines.last?.vatRate ?? profile.defaultVatRate,
-            sortIndex: (invoice.sortedLines.last?.sortIndex ?? -1) + 1
-        )
-        line.invoice = invoice
-        context.insert(line)
-    }
-
-    /// Detach before deleting: the ForEach above is driven by `invoice.lines`,
-    /// and it must not re-render an editor bound to a deleted model.
-    private func delete(_ line: InvoiceLine) {
-        guard !isLocked else { return }
-        line.invoice = nil
-        context.delete(line)
-    }
-
+    /// The button is disabled while the ledger has an objection, so the
+    /// throw cannot reach here from the toolbar.
     private func issue() {
-        InvoiceNumbering.assign(to: invoice, in: context)
-        // The bank reference most s.p. use is the invoice number under the
-        // SI00 model; only fill it in when nothing was typed by hand.
-        if invoice.paymentReference.isEmpty {
-            invoice.paymentReference = InvoiceTemplate.defaultReference(for: invoice)
-        }
-        invoice.status = .issued
-    }
-
-    private func markPaid() {
-        invoice.status = .paid
-        invoice.paidDate = Date()
+        try? ledger.issue(invoice)
     }
 }
 
@@ -267,6 +210,7 @@ struct InvoiceDetailView: View {
 /// without a grid having to negotiate width with the form.
 private struct InvoiceLinesEditor: View {
     let lines: [InvoiceLine]
+    let currencyCode: String
     let showsVatRate: Bool
     let remove: (InvoiceLine) -> Void
 
@@ -290,7 +234,9 @@ private struct InvoiceLinesEditor: View {
                 if index > 0 {
                     Divider().padding(.vertical, 4)
                 }
-                InvoiceLineRows(line: line, showsVatRate: showsVatRate) { remove(line) }
+                InvoiceLineRows(line: line, currencyCode: currencyCode, showsVatRate: showsVatRate) {
+                    remove(line)
+                }
             }
         }
         .labelsHidden()
@@ -317,6 +263,7 @@ private enum LineColumns {
 
 private struct InvoiceLineRows: View {
     @Bindable var line: InvoiceLine
+    let currencyCode: String
     let showsVatRate: Bool
     let remove: () -> Void
 
@@ -334,7 +281,7 @@ private struct InvoiceLineRows: View {
                 TextField("Qty", value: $line.quantity, format: .number)
                     .multilineTextAlignment(.trailing)
                     .frame(width: LineColumns.quantity)
-                TextField("Unit", text: $line.unit, prompt: Text(verbatim: "ura"))
+                TextField("Unit", text: $line.unit)
                     .frame(width: LineColumns.unit)
                 TextField("Price", value: $line.unitPrice, format: .number)
                     .multilineTextAlignment(.trailing)
@@ -352,7 +299,7 @@ private struct InvoiceLineRows: View {
                     .frame(width: LineColumns.vat)
                 }
                 Spacer(minLength: 0)
-                Text(Formatting.money(line.amounts.gross))
+                Text(Formatting.money(line.amounts.gross, currencyCode: currencyCode))
                     .monospacedDigit()
                     .sensitiveValue()
             }

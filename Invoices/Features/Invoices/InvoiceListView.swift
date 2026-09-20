@@ -3,7 +3,8 @@ import SwiftUI
 
 /// The invoice list column. Deleting is offered everywhere a Mac user looks
 /// for it: the trash in the toolbar, the ⌫ key, and the context menu — and
-/// always for the selected row, never for a row under the pointer.
+/// always for the selected row, never for a row under the pointer. The rule
+/// on what may go comes from the ledger; the list only asks.
 struct InvoiceListView: View {
     @Binding var selection: PersistentIdentifier?
 
@@ -14,6 +15,8 @@ struct InvoiceListView: View {
     @State private var pendingDelete: Invoice?
     @State private var searchText = ""
     @State private var filter: StatusFilter = .all
+
+    private var ledger: Ledger { Ledger(context) }
 
     private var selected: Invoice? {
         invoices.first { $0.persistentModelID == selection }
@@ -48,15 +51,10 @@ struct InvoiceListView: View {
         }
         .navigationTitle("Invoices")
         .searchable(text: $searchText, prompt: "Number or client")
-        .confirmationDialog(
-            "Delete draft?",
-            isPresented: isConfirming,
-            presenting: pendingDelete
-        ) { invoice in
-            Button("Delete", role: .destructive) { delete(invoice) }
-            Button("Cancel", role: .cancel) {}
-        } message: { _ in
+        .deletionConfirmation("Delete draft?", item: $pendingDelete) { _ in
             Text("The draft and all of its line items will be permanently deleted.")
+        } perform: { invoice in
+            delete(invoice)
         }
         .toolbar {
             ToolbarItem {
@@ -70,8 +68,8 @@ struct InvoiceListView: View {
             }
             ToolbarItem {
                 Button("Delete draft", systemImage: "trash") { requestDelete(selected) }
-                    .disabled(!(selected?.status.isEditable ?? false))
-                    .help(deleteHelp)
+                    .disabled(selected.map { ledger.deletionProblem(for: $0) != nil } ?? true)
+                    .help(Text(verbatim: deleteHelp))
             }
             ToolbarItem(placement: .primaryAction) {
                 Button("New invoice", systemImage: "plus", action: newInvoice)
@@ -90,25 +88,11 @@ struct InvoiceListView: View {
 
     private var deleteHelp: String {
         guard let selected else { return String(localized: "Select a draft to delete it") }
-        return selected.status.isEditable
-            ? String(localized: "Delete draft")
-            : String(localized: "An issued invoice cannot be deleted")
+        return ledger.deletionProblem(for: selected)?.message ?? String(localized: "Delete draft")
     }
 
     private func newInvoice() {
-        let profile = BusinessProfile.current(in: context)
-        let today = Date()
-        let due = Calendar.current.date(
-            byAdding: .day, value: profile.defaultPaymentTermDays, to: today
-        ) ?? today
-        let invoice = Invoice(issueDate: today, serviceDate: today, dueDate: due)
-        invoice.placeOfIssue = profile.city
-        context.insert(invoice)
-
-        let line = InvoiceLine(vatRate: profile.defaultVatRate)
-        line.invoice = invoice
-        context.insert(line)
-
+        let invoice = ledger.newDraft()
         // Save first: an unsaved model carries a temporary identifier that
         // autosave replaces, which would drop the selection a moment later.
         try? context.save()
@@ -118,35 +102,27 @@ struct InvoiceListView: View {
         selection = invoice.persistentModelID
     }
 
-    private var isConfirming: Binding<Bool> {
-        Binding(get: { pendingDelete != nil }, set: { if !$0 { pendingDelete = nil } })
-    }
-
-    /// Only drafts may be deleted. An issued number has to stay in the
-    /// sequence — removing it would leave an unexplainable gap.
     private func requestDelete(_ invoice: Invoice?) {
-        guard let invoice, invoice.status.isEditable else { return }
+        guard let invoice, ledger.deletionProblem(for: invoice) == nil else { return }
         pendingDelete = invoice
     }
 
     @ViewBuilder
     private func deleteMenu(for invoice: Invoice) -> some View {
-        if invoice.status.isEditable {
+        if let problem = ledger.deletionProblem(for: invoice) {
+            Text(verbatim: problem.message)
+        } else {
             Button("Delete draft", systemImage: "trash", role: .destructive) {
                 requestDelete(invoice)
             }
-        } else {
-            Text("An issued invoice cannot be deleted")
         }
     }
 
     private func delete(_ invoice: Invoice) {
-        pendingDelete = nil
-        guard invoice.status.isEditable else { return }
         // Drop the selection first so the editor lets go of the model
         // before it is gone.
         if selection == invoice.persistentModelID { selection = nil }
-        context.delete(invoice)
+        try? ledger.delete(invoice)
     }
 }
 

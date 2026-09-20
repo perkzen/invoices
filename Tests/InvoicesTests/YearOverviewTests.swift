@@ -4,7 +4,7 @@ import Testing
 @testable import Invoices
 
 @MainActor
-@Suite("Pregled leta")
+@Suite("Year overview")
 struct YearOverviewTests {
     private func makeContext() throws -> ModelContext {
         let container = try ModelContainer(
@@ -54,7 +54,7 @@ struct YearOverviewTests {
     ) -> YearOverviewRow {
         YearOverviewRow(
             number: number,
-            clientName: "PARAKEET AI d.o.o.",
+            clientName: "PARAKEET AI Ltd.",
             issueDate: date(2026, 3, 31),
             dueDate: date(2026, 4, 8),
             serviceDate: date(2026, 3, 1),
@@ -102,10 +102,10 @@ struct YearOverviewTests {
             year: 2026, invoices: try context.fetch(FetchDescriptor<Invoice>()), profile: nil
         )
         // The row itself holds no name; the screen and the sheet each word
-        // the empty case, and the sheet words it in Slovenian.
+        // the empty case, and the sheet words it in the document's language.
         #expect(overview.rows.first?.clientName == nil)
         let sheet = YearOverviewXLSX.sheet(for: overview)
-        #expect(sheet.rows[sheet.frozenRows].first?.value == .text("Brez stranke"))
+        #expect(sheet.rows[sheet.frozenRows].first?.value == .text(DocumentText.string("No client")))
     }
 
     @Test func `the years offered are those that have issued invoices, newest first`() throws {
@@ -136,7 +136,7 @@ struct YearOverviewTests {
         #expect(overview.countedRows.count == 1)
         // The payment column of the cancelled row, as the accountant reads it.
         let sheet = YearOverviewXLSX.sheet(for: overview)
-        #expect(sheet.rows[sheet.frozenRows + 1][6].value == .text("Storniran"))
+        #expect(sheet.rows[sheet.frozenRows + 1][6].value == .text(DocumentText.string("Cancelled")))
     }
 
     @Test func `paid and outstanding split the total`() throws {
@@ -186,28 +186,28 @@ struct YearOverviewTests {
 
     @Test func `the issuer block joins the name and the activity line`() throws {
         let context = try makeContext()
-        let profile = BusinessProfile.current(in: context)
-        profile.name = "Domen Perko s.p."
-        profile.activityLine = "IT storitve in svetovanje"
+        let profile = Ledger(context).profile
+        profile.name = "Domen Perko"
+        profile.activityLine = "IT services and consulting"
         profile.street = "Ihova 51 a"
         profile.postalCode = "2234"
         profile.city = "Benedikt"
         profile.taxNumber = "13640887"
 
         let overview = YearOverview.make(year: 2026, invoices: [], profile: profile)
-        #expect(overview.issuer.headline == "Domen Perko s.p., IT storitve in svetovanje")
+        #expect(overview.issuer.headline == "Domen Perko, IT services and consulting")
         #expect(overview.issuer.addressLines == ["Ihova 51 a", "2234 Benedikt"])
         #expect(overview.title.contains("2026"))
     }
 
     // MARK: Spreadsheet
 
-    @Test func `the sheet has an issuer block, a header row and a SKUPAJ line`() {
+    @Test func `the sheet has an issuer block, a header row and a TOTAL line`() {
         let overview = YearOverview(
             year: 2026,
             issuer: .init(
-                name: "Domen Perko s.p.",
-                activityLine: "IT storitve in svetovanje",
+                name: "Domen Perko",
+                activityLine: "IT services and consulting",
                 addressLines: ["Ihova 51 a", "2234 Benedikt"],
                 taxNumber: "13640887"
             ),
@@ -221,20 +221,20 @@ struct YearOverviewTests {
         // Title, blank, headline, two address lines, tax number, blank.
         #expect(sheet.frozenRows == 8)
         #expect(sheet.rows[sheet.frozenRows - 1].count == YearOverviewXLSX.columnHeaders.count)
-        #expect(sheet.rows.last?.first?.value == .text("SKUPAJ"))
+        #expect(sheet.rows.last?.first?.value == .text(DocumentText.string("TOTAL")))
         #expect(sheet.rows.last?[5].value == .number(Decimal(string: "5389.99")!))
-        #expect(YearOverviewXLSX.suggestedFilename(for: overview) == "Izdani-racuni-2026")
+        #expect(YearOverviewXLSX.suggestedFilename(for: overview).hasSuffix("-2026"))
     }
 
     @Test func `the exported workbook holds the year's numbers`() {
         let overview = YearOverview(
             year: 2026,
-            issuer: .init(name: "Domen Perko s.p."),
+            issuer: .init(name: "Domen Perko"),
             rows: [sampleRow(number: "2026-001", amount: Decimal(string: "4389.99")!)]
         )
         let text = String(decoding: YearOverviewXLSX.data(for: overview), as: UTF8.self)
-        #expect(text.contains("IZDANI RAČUNI ZA LETO 2026"))
-        #expect(text.contains("PARAKEET AI d.o.o."))
+        #expect(text.contains(XLSXWriter.escape(DocumentText.string("INVOICES ISSUED IN \(String(2026))"))))
+        #expect(text.contains("PARAKEET AI Ltd."))
         #expect(text.contains("2026-001"))
         #expect(text.contains("<v>4389.99</v>"))
         #expect(text.contains("<v>46112</v>"))  // 31. 3. 2026

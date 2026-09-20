@@ -2,7 +2,7 @@ import Foundation
 
 /// Net / VAT / gross for a single amount. Plain values so the arithmetic
 /// can be tested without a SwiftData container.
-nonisolated struct Amounts: Equatable, Sendable {
+nonisolated struct Amounts: Hashable, Sendable {
     var net: Decimal = 0
     var vat: Decimal = 0
 
@@ -33,7 +33,7 @@ nonisolated enum InvoiceMath {
         lines.reduce(Amounts(), +)
     }
 
-    /// VAT recap grouped by rate, for the "obračun DDV" block on the invoice.
+    /// VAT recap grouped by rate, for the VAT breakdown block on the invoice.
     static func vatBreakdown(_ entries: [(rate: VatRate, amounts: Amounts)]) -> [(rate: VatRate, amounts: Amounts)] {
         var byRate: [VatRate: Amounts] = [:]
         for entry in entries {

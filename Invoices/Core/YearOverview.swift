@@ -11,7 +11,7 @@ nonisolated struct YearOverviewRow: Identifiable, Sendable, Equatable {
     /// itself — the screen follows the app language, the .xlsx stays Slovenian.
     var clientName: String?
     var issueDate: Date
-    /// Valuta — the date the payment is due.
+    /// The date the payment is due.
     var dueDate: Date
     var serviceDate: Date
     var serviceDateEnd: Date?
@@ -28,10 +28,7 @@ nonisolated struct YearOverviewRow: Identifiable, Sendable, Equatable {
 
     /// "1. 8. 2026 – 31. 8. 2026", or the single date when the service did
     /// not span a period.
-    var servicePeriod: String {
-        guard let end = serviceDateEnd else { return Formatting.date(serviceDate) }
-        return "\(Formatting.date(serviceDate)) – \(Formatting.date(end))"
-    }
+    var servicePeriod: String { Formatting.period(serviceDate, to: serviceDateEnd) }
 
     /// A cancelled invoice keeps its number so the sequence stays unbroken;
     /// the payment column says why no money arrived. On screen only — the
@@ -54,7 +51,7 @@ nonisolated struct YearOverview: Sendable {
         var addressLines: [String] = []
         var taxNumber: String = ""
 
-        /// "Domen Perko s.p., IT storitve in svetovanje"
+        /// "Domen Perko, IT services and consulting"
         var headline: String {
             [name, activityLine].filter { !$0.isEmpty }.joined(separator: ", ")
         }

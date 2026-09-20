@@ -1,25 +1,25 @@
 import SwiftData
 import SwiftUI
 
-/// Pregled — every issued invoice of one year in one table, the way a
-/// bookkeeper keeps it in a spreadsheet, and the same table exported as
-/// .xlsx for the accountant.
+/// Overview — one year at a glance, then every issued invoice of that year
+/// in one table, the way a bookkeeper keeps it in a spreadsheet, and the
+/// same table exported as .xlsx for the accountant.
 struct YearOverviewView: View {
     /// `nil` until the year list has a year to offer.
     let year: Int?
 
+    @Environment(\.modelContext) private var context
     @Query(sort: [SortDescriptor(\Invoice.sequence)]) private var invoices: [Invoice]
-    @Query private var profiles: [BusinessProfile]
 
-    @State private var exportedSheet: XLSXFile?
-    @State private var isExporting = false
-    @State private var exportError: String?
+    @State private var export: FileExport?
     /// The number of the row picked in the table; numbers are unique within
     /// the year the table shows.
     @State private var selectedNumber: String?
 
+    private var profile: BusinessProfile { Ledger(context).profile }
+
     private var overview: YearOverview? {
-        year.map { YearOverview.make(year: $0, invoices: invoices, profile: profiles.first) }
+        year.map { YearOverview.make(year: $0, invoices: invoices, profile: profile) }
     }
 
     private var selectedInvoice: Invoice? {
@@ -48,24 +48,7 @@ struct YearOverviewView: View {
                 }
             }
         }
-        .fileExporter(
-            isPresented: $isExporting,
-            document: exportedSheet,
-            contentType: XLSXFile.contentType,
-            defaultFilename: overview.map(YearOverviewXLSX.suggestedFilename) ?? ""
-        ) { result in
-            if case .failure(let error) = result {
-                exportError = error.localizedDescription
-            }
-        }
-        .alert(
-            "Export failed",
-            isPresented: Binding(get: { exportError != nil }, set: { if !$0 { exportError = nil } })
-        ) {
-            Button("OK", role: .cancel) { exportError = nil }
-        } message: {
-            Text(exportError ?? "")
-        }
+        .fileExport($export)
     }
 
     /// Picking a row opens its invoice beside the table, the way the editor
@@ -85,18 +68,21 @@ struct YearOverviewView: View {
             }
             .frame(minWidth: 520)
             if let invoice = selectedInvoice {
-                OverviewPreviewPane(invoice: invoice, profile: profiles.first)
-                    .frame(minWidth: 300, idealWidth: 360)
+                OverviewPreviewPane(
+                    invoice: invoice,
+                    printed: PrintedInvoice.make(invoice: invoice, profile: profile)
+                )
+                .frame(minWidth: 300, idealWidth: 360)
             }
         }
         .animation(nil, value: selectedNumber)
     }
 
     private func exportSheet(_ overview: YearOverview) {
-        exportedSheet = XLSXFile(data: YearOverviewXLSX.data(for: overview))
-        // Present on the next turn so the document is committed first —
-        // setting both in one frame can hand the exporter a nil document.
-        Task { isExporting = true }
+        export = .xlsx(
+            YearOverviewXLSX.data(for: overview),
+            named: YearOverviewXLSX.suggestedFilename(for: overview)
+        )
     }
 }
 
@@ -105,6 +91,8 @@ private struct IssuerHeader: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
+            // Detail titles are not shown in a three-column window, so the
+            // sheet's own heading stays here where it mirrors the export.
             Text(overview.title)
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(.primary)
@@ -232,7 +220,7 @@ private struct OverviewHeadline: View {
 /// The picked invoice as its printed page, with who and what above it.
 private struct OverviewPreviewPane: View {
     let invoice: Invoice
-    let profile: BusinessProfile?
+    let printed: PrintedInvoice
 
     var body: some View {
         VStack(spacing: 0) {
@@ -253,12 +241,7 @@ private struct OverviewPreviewPane: View {
             .padding(.horizontal, 14)
             .padding(.vertical, 10)
             Divider()
-            if let profile {
-                InvoicePreview(invoice: invoice, profile: profile)
-            } else {
-                ProgressView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
+            InvoicePreview(printed: printed)
         }
     }
 }

@@ -1,9 +1,8 @@
 import AppKit
 import SwiftData
 import SwiftUI
-import UniformTypeIdentifiers
 
-/// The pages of Nastavitve. They are rows in the middle column of the main
+/// The pages of Settings. They are rows in the middle column of the main
 /// window and the sidebar of the ⌘, window, so both show the same forms.
 /// The invoice template is not one of them: it has its own sidebar section.
 enum SettingsPage: String, CaseIterable, Identifiable {
@@ -14,7 +13,7 @@ enum SettingsPage: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .business: String(localized: "My s.p.")
+        case .business: String(localized: "My business")
         case .general: String(localized: "General")
         }
     }
@@ -57,8 +56,9 @@ struct SettingsView: View {
     }
 }
 
-/// One settings page. The s.p. details sit beside the sample preview, since
-/// they are printed; the general preferences are not, so they stand alone.
+/// One settings page. The business details sit beside the sample preview,
+/// since they are printed; the general preferences are not, so they stand
+/// alone.
 struct SettingsContent: View {
     let page: SettingsPage?
 
@@ -78,47 +78,31 @@ struct SettingsContent: View {
 }
 
 /// A form about the business profile beside a live preview of a sample
-/// invoice, so every change is seen where it lands. Shared by the s.p. page
-/// and the invoice template.
+/// invoice, so every change is seen where it lands. Shared by the business
+/// page and the invoice template.
 struct ProfilePreviewSplit<Content: View>: View {
     @ViewBuilder let form: (BusinessProfile) -> Content
 
     @Environment(\.modelContext) private var context
-    @State private var profile: BusinessProfile?
-    @State private var sample: SampleInvoice?
 
     var body: some View {
-        Group {
-            if let profile, let sample {
-                HStack(spacing: 0) {
-                    form(profile)
-                        .frame(width: 470)
-                    Divider()
-                    VStack(spacing: 0) {
-                        Text("Preview on a sample invoice")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .frame(maxWidth: .infinity)
-                            .padding(6)
-                        InvoicePreview(invoice: sample.invoice, profile: profile)
-                    }
-                    .frame(minWidth: 400)
-                }
-                // The sample's lines carry the profile's default VAT rate, so
-                // flipping the DDV toggle rebuilds it with the right rate.
-                .onChange(of: profile.isVatRegistered) {
-                    self.sample = try? SampleInvoice(matching: profile)
-                }
-            } else {
-                ProgressView()
+        let profile = Ledger(context).profile
+
+        HStack(spacing: 0) {
+            form(profile)
+                .frame(width: 470)
+            Divider()
+            VStack(spacing: 0) {
+                Text("Preview on a sample invoice")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity)
+                    .padding(6)
+                // Built in `body`, so every edit to the profile — the VAT
+                // toggle included — re-renders the sample.
+                InvoicePreview(printed: PrintedInvoice.sample(matching: profile))
             }
-        }
-        .task {
-            if profile == nil {
-                let current = BusinessProfile.current(in: context)
-                profile = current
-                sample = try? SampleInvoice(matching: current)
-            }
+            .frame(minWidth: 400)
         }
     }
 }
@@ -141,14 +125,14 @@ private struct BusinessProfileForm: View {
     var body: some View {
         Form {
             Section {
-                TextField("Business name", text: $profile.name, prompt: Text("e.g. Domen Perko, s.p."))
+                TextField("Business name", text: $profile.name, prompt: Text("e.g. Domen Perko, sole trader"))
                 TextField("Full name", text: $profile.signerName, prompt: Text("the business owner"))
                 TextField("Email", text: $profile.email)
                 TextField("Phone", text: $profile.phone)
             } header: {
-                Text("My s.p.")
+                Text("My business")
             } footer: {
-                Text("The business name is printed in the invoice header, the full name under “Račun izdal” (issued by).")
+                Text("The business name is printed in the invoice header, the full name under “Issued by”.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -159,18 +143,18 @@ private struct BusinessProfileForm: View {
                 TextField("Country (ISO code)", text: $profile.countryCode)
             }
             Section {
-                SensitiveField("Tax number (davčna številka)", text: $profile.taxNumber)
+                SensitiveField("Tax number", text: $profile.taxNumber)
                 Toggle("VAT registered", isOn: $profile.isVatRegistered)
                 if profile.isVatRegistered {
                     SensitiveField("VAT ID", text: $profile.vatID)
                 }
-                Toggle("Flat-rate expenses (normiranec)", isOn: $profile.isFlatRate)
+                Toggle("Flat-rate expenses", isOn: $profile.isFlatRate)
             } header: {
                 Text("Tax status")
             } footer: {
                 Text(profile.isVatRegistered
                      ? "Invoices show VAT rates and a breakdown per rate."
-                     : "Invoices charge no VAT and carry the exemption clause under 94. člen ZDDV-1. Turn this on once you register for VAT.")
+                     : "Invoices charge no VAT and carry the exemption clause under Article 94 of the VAT Act (ZDDV-1). Turn this on once you register for VAT.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
             }
@@ -194,7 +178,7 @@ private struct BusinessProfileForm: View {
     }
 }
 
-/// Private mode, the same switch as Pogled › Skrij občutljive podatke.
+/// Private mode, the same switch as View › Hide sensitive values.
 /// It is here so it can be found; it is used through ⇧⌘H.
 private struct PrivacySection: View {
     @AppStorage(PrivacyMode.storageKey) private var hidesSensitiveValues = false
@@ -222,8 +206,8 @@ private struct LanguageSection: View {
         Section {
             Picker("App language", selection: $language) {
                 Text("Same as system").tag("system")
-                Text(verbatim: "Slovenščina").tag("sl")
-                Text(verbatim: "English").tag("en")
+                Text(verbatim: Self.nativeName(of: "sl")).tag("sl")
+                Text(verbatim: Self.nativeName(of: "en")).tag("en")
             }
             .onChange(of: language) { _, newValue in
                 if newValue == "system" {
@@ -246,5 +230,12 @@ private struct LanguageSection: View {
         } message: {
             Text("Quit and reopen Invoices to see the interface in the selected language.")
         }
+    }
+
+    /// A language is offered under its own name — the way its speakers spell
+    /// it, whatever language the rest of the picker is in.
+    private static func nativeName(of code: String) -> String {
+        let locale = Locale(identifier: code)
+        return locale.localizedString(forLanguageCode: code)?.capitalized(with: locale) ?? code
     }
 }

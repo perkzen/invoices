@@ -22,7 +22,7 @@ struct ClientDetailView: View {
                 TextField("Country (ISO code)", text: $client.countryCode)
             }
             Section("Tax details") {
-                SensitiveField("Tax number (davčna številka)", text: $client.taxNumber)
+                SensitiveField("Tax number", text: $client.taxNumber)
                 SensitiveField("VAT ID", text: $client.vatID)
             }
             Section("Other") {

@@ -2,7 +2,7 @@ import Foundation
 import Testing
 @testable import Invoices
 
-@Suite("Izračun postavk")
+@Suite("Line arithmetic")
 struct InvoiceMathTests {
     @Test func `line without discount adds 22 % VAT`() {
         let amounts = InvoiceMath.lineAmounts(
@@ -64,10 +64,15 @@ struct InvoiceMathTests {
     }
 }
 
-@Suite("Številčenje računov")
+@Suite("Invoice numbering")
 struct InvoiceNumberingTests {
     @Test func `number is year and zero padded sequence`() {
         #expect(InvoiceNumbering.format(year: 2026, sequence: 1) == "2026-001")
         #expect(InvoiceNumbering.format(year: 2026, sequence: 142) == "2026-142")
+    }
+
+    @Test func `the default reference is the SI00 model over the number`() {
+        #expect(InvoiceNumbering.defaultReference(number: "2026-001") == "SI00 2026-001")
+        #expect(InvoiceNumbering.defaultReference(number: "") == DocumentText.string("SI00 (invoice number)"))
     }
 }

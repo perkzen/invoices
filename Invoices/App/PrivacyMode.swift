@@ -5,7 +5,7 @@ import SwiftUI
 ///
 /// It is a view preference and not a fact about the business, so it lives in
 /// `AppStorage` and never touches the store: the exported PDF, the spreadsheet
-/// and the printed račun carry the real values even while it is on.
+/// and the printed invoice carry the real values even while it is on.
 enum PrivacyMode {
     static let storageKey = "hidesSensitiveValues"
 }

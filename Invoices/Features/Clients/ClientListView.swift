@@ -2,7 +2,8 @@ import SwiftData
 import SwiftUI
 
 /// The client list column. Deleting follows the same three routes as the
-/// invoice list: toolbar trash, ⌫, context menu — all on the selected row.
+/// invoice list: toolbar trash, ⌫, context menu — all on the selected row,
+/// and always by the ledger's rule.
 struct ClientListView: View {
     @Binding var selection: PersistentIdentifier?
 
@@ -11,6 +12,8 @@ struct ClientListView: View {
 
     @State private var pendingDelete: Client?
     @State private var searchText = ""
+
+    private var ledger: Ledger { Ledger(context) }
 
     private var selected: Client? {
         clients.first { $0.persistentModelID == selection }
@@ -49,21 +52,16 @@ struct ClientListView: View {
         }
         .navigationTitle("Clients")
         .searchable(text: $searchText, prompt: "Name or city")
-        .confirmationDialog(
-            "Delete client?",
-            isPresented: isConfirming,
-            presenting: pendingDelete
-        ) { client in
-            Button("Delete", role: .destructive) { delete(client) }
-            Button("Cancel", role: .cancel) {}
-        } message: { client in
+        .deletionConfirmation("Delete client?", item: $pendingDelete) { client in
             Text("\(client.displayName) will be permanently deleted.")
+        } perform: { client in
+            delete(client)
         }
         .toolbar {
             ToolbarItem {
                 Button("Delete client", systemImage: "trash") { requestDelete(selected) }
-                    .disabled(selected.map(hasRecords) ?? true)
-                    .help(deleteHelp)
+                    .disabled(selected.map { ledger.deletionProblem(for: $0) != nil } ?? true)
+                    .help(Text(verbatim: deleteHelp))
             }
             ToolbarItem(placement: .primaryAction) {
                 Button("New client", systemImage: "plus", action: newClient)
@@ -83,33 +81,20 @@ struct ClientListView: View {
         selection = client.persistentModelID
     }
 
-    private var isConfirming: Binding<Bool> {
-        Binding(get: { pendingDelete != nil }, set: { if !$0 { pendingDelete = nil } })
-    }
-
     private var deleteHelp: String {
         guard let selected else { return String(localized: "Select a client to delete it") }
-        return hasRecords(selected)
-            ? String(localized: "Has issued invoices and cannot be deleted")
-            : String(localized: "Delete client")
-    }
-
-    /// An invoice keeps no copy of its counterparty — name, address and tax
-    /// number live only on the Client — so deleting one would strip a
-    /// mandatory field off a document that has already been sent out.
-    private func hasRecords(_ client: Client) -> Bool {
-        client.invoices.contains { $0.status != .draft }
+        return ledger.deletionProblem(for: selected)?.message ?? String(localized: "Delete client")
     }
 
     private func requestDelete(_ client: Client?) {
-        guard let client, !hasRecords(client) else { return }
+        guard let client, ledger.deletionProblem(for: client) == nil else { return }
         pendingDelete = client
     }
 
     @ViewBuilder
     private func deleteMenu(for client: Client) -> some View {
-        if hasRecords(client) {
-            Text("Has issued invoices and cannot be deleted")
+        if let problem = ledger.deletionProblem(for: client) {
+            Text(verbatim: problem.message)
         } else {
             Button("Delete client", systemImage: "trash", role: .destructive) {
                 requestDelete(client)
@@ -118,10 +103,8 @@ struct ClientListView: View {
     }
 
     private func delete(_ client: Client) {
-        pendingDelete = nil
-        guard !hasRecords(client) else { return }
         if selection == client.persistentModelID { selection = nil }
-        context.delete(client)
+        try? ledger.delete(client)
     }
 }
 
