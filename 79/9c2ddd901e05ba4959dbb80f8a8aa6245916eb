@@ -1,0 +1,31 @@
+Invoices/Features/YearOverview/YearListView.swift
+  s_c5595a7759f84a::t_ab686326fa2a4f 20
+Invoices/Core/YearOverview.swift
+  s_c5595a7759f84a::t_ee6fd01257b7aa 83-92
+Invoices/Resources/Localizable.xcstrings
+  s_c5595a7759f84a::t_ee6fd01257b7aa 813-822,1889-1902
+Invoices/App/AppSection.swift
+  s_c5595a7759f84a::t_ee6fd01257b7aa 14-16
+Invoices/App/ContentView.swift
+  s_c5595a7759f84a::t_ee6fd01257b7aa 12
+Invoices/Features/YearOverview/YearOverviewView.swift
+  s_c5595a7759f84a::t_ee6fd01257b7aa 39,66-67,164-167,170-171,173-181,184,187-189,191,193,196,198,200-204,206
+Tests/InvoicesTests/YearOverviewTests.swift
+  s_c5595a7759f84a::t_ee6fd01257b7aa 155-169
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "799c2ddd901e05ba4959dbb80f8a8aa6245916eb",
+  "prompts": {},
+  "sessions": {
+    "s_c5595a7759f84a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4e50920c-a177-4332-bbb9-950d410104fa",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
