@@ -6,29 +6,48 @@ SwiftUI desktop app (macOS) for managing invoices for a Slovenian **s.p.**
 
 v0 scaffold. It builds, runs, and persists data. What works today:
 
-- **Stranke** — client list with address and tax details (davčna številka, ID za DDV)
-- **Računi** — draft invoices with line items, quantity/price/discount per line and live
-  totals (VAT columns appear only when the DDV toggle in Nastavitve is on)
-- **Nastavitve** — your own s.p. details: tax status, IBAN, default payment term, footer note
-- **Izdaja** — issuing a draft assigns the next sequential number (`2026-001`) and locks the invoice
-- **Izvoz PDF** — A4 invoice with the mandatory Slovenian fields, paginated for long
-  invoices; drafts carry an OSNUTEK watermark so one cannot be mistaken for a real invoice
-- **Predogled** — the invoice editor shows the PDF live in a trailing inspector, re-rendered
-  as you type; Nastavitve shows the same preview on a sample invoice
-- **Pregled** — every issued invoice of one calendar year in one table (stranka,
-  številka, datum, valuta, obdobje storitve, vrednost, prejem plačila) with a year
-  picker and the SKUPAJ line, and **Izvoz XLSX** writing the same table as a real
-  Excel workbook — dates and amounts as values, not text, so the accountant can sort
-  and sum them
-- **Predloga računa** — logo, tagline, signature and the three sentences (intro, payment
-  instruction, closing) live in Nastavitve › Predloga računa. Sentences take placeholders
-  such as `{MESEC}`, `{leto}`, `{trr}`, `{sklic}`; see `Core/InvoiceTemplate.swift`
-- **Nastavitve** — your own details (name, address, bank account, tax status) are in the
-  sidebar and under ⌘,
-- **Slovenščina / English** — the interface follows the Mac's language, or the picker in
-  Nastavitve › Jezik. Strings live in `Resources/Localizable.xcstrings` with Slovenian as
-  the source language. The printed invoice is always Slovenian; wrap any new string on
-  the PDF page in `Text(verbatim:)` so it never lands in the catalog
+Screens are named in English, as the source is; the Slovenian label each one carries on
+a Slovenian Mac is given in brackets.
+
+- **Clients** [Stranke] — client list with address and tax details (davčna številka,
+  ID za DDV)
+- **Invoices** [Računi] — draft invoices with line items, quantity/price/discount per
+  line and live totals (VAT columns appear only when the DDV toggle in Settings is on)
+- **Issuing** [Izdaja] — issuing a draft assigns the next sequential number (`2026-001`)
+  and locks the invoice
+- **PDF export** [Izvoz PDF] — A4 invoice with the mandatory Slovenian fields, paginated
+  for long invoices; drafts carry an OSNUTEK watermark so one cannot be mistaken for a
+  real invoice
+- **Preview** [Predogled] — the invoice editor shows the PDF live in a trailing inspector,
+  re-rendered as you type; Settings shows the same preview on a sample invoice
+- **Year overview** [Pregled] — every issued invoice of one calendar year in one table,
+  with a year picker and the SKUPAJ line, and **XLSX export** [Izvoz XLSX] writing the
+  same table as a real Excel workbook — dates and amounts as values, not text, so the
+  accountant can sort and sum them. The sheet keeps its Slovenian headers (stranka,
+  številka, datum, valuta, obdobje storitve, vrednost, prejem plačila): it is written
+  for the accountant, not for the app
+- **Invoice template** [Predloga računa] — logo, tagline, signature and the three
+  sentences (intro, payment instruction, closing) live in Settings › Predloga računa.
+  Sentences take placeholders such as `{MESEC}`, `{leto}`, `{trr}`, `{sklic}`; see
+  `Core/InvoiceTemplate.swift`
+- **Settings** [Nastavitve] — your own s.p. details (name, address, bank account, tax
+  status, IBAN, default payment term, footer note), in the sidebar and under ⌘,
+- **Private mode** [Zasebni način] — View › Skrij občutljive podatke (⇧⌘H) blanks the tax
+  numbers, the IBAN and every amount in the interface, for a screen share or a look over
+  your shoulder. It is a view preference, not a fact: the exported PDF, the spreadsheet
+  and the printed račun carry the real values whether it is on or off. Mark a new value
+  with `.sensitiveValue()`; `.privacyRedacted()` at the root of the window blanks it —
+  see `App/PrivacyMode.swift`
+- **English / Slovenian** — the interface follows the Mac's language, or the picker in
+  Settings › Language. Strings live in `Resources/Localizable.xcstrings` with **English as
+  the source language**: write the English text as the key in code, and Slovenian is the
+  translation hanging off it. Three kinds of string deliberately stay out of the catalog,
+  because they are Slovenian documents rather than interface — the printed račun (wrap any
+  new string on the PDF page in `Text(verbatim:)`), the .xlsx headers in
+  `Core/YearOverviewXLSX.swift`, and the invoice-count nouns in `Core/Formatting.swift`,
+  which decline four ways. Where one English word covers two Slovenian ones, use a symbolic
+  key: `InvoiceStatus.paid` is `"invoiceStatus.paid"` because an invoice is *plačan* while
+  a year's receipts are *plačano*, and both are "Paid"
 
 Not built yet: printing, e-računi, expenses, search and filtering.
 
@@ -105,7 +124,7 @@ changing the artwork.
 ```
 project.yml              target, build settings, Info.plist
 Invoices/
-  App/                   @main entry point, Settings scene, sidebar shell, entitlements
+  App/                   @main entry point, Settings scene, sidebar shell, private mode, entitlements
   Models/                SwiftData @Model types + VatRate / InvoiceStatus enums
   Core/                  pure value logic — imports Foundation and nothing else
   Services/              the framework edge: SwiftData, AppKit, PDF and file export
@@ -150,8 +169,8 @@ guess truncates a description rather than overflowing the page.
   assigned when an invoice is issued, so drafts cannot punch gaps into the sequence.
 - **Issued invoices are immutable.** `InvoiceStatus.isEditable` is true only for drafts;
   the editor disables itself otherwise. Corrections belong in a storno or dobropis.
-- **Datum opravljene storitve** is stored separately from the issue date, since both are
-  mandatory and frequently differ.
+- **Service date** (datum opravljene storitve) is stored separately from the issue date,
+  since both are mandatory and frequently differ.
 - **Non-zavezanec.** `VatRate.exempt` charges 0 % and carries the clause
   *"DDV ni obračunan na podlagi 1. odstavka 94. člena ZDDV-1."*, printed under the totals.
 - **Money is `Decimal`**, rounded half-up to cents once per line, then summed.
@@ -172,7 +191,7 @@ guess truncates a description rather than overflowing the page.
 - **Bank transfer only** — no cash, so davčno potrjevanje računov does not apply and is
   permanently out of scope.
 
-The DDV toggle in Nastavitve stays, because the status changes the day the turnover
+The DDV toggle in Settings stays, because the status changes the day the turnover
 threshold is crossed. Flipping it brings back the per-line rate picker and the VAT recap —
 the model already stores a `VatRate` per line.
 

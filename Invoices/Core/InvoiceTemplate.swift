@@ -13,14 +13,14 @@ nonisolated enum InvoiceTemplate {
     /// Every token a template may use, with the text shown in the editor.
     static var placeholders: [(token: String, meaning: String)] {
         [
-            ("{mesec}", String(localized: "mesec storitve (avgust)")),
-            ("{MESEC}", String(localized: "mesec storitve (AVGUST)")),
-            ("{leto}", String(localized: "leto storitve")),
-            ("{stranka}", String(localized: "naziv stranke")),
-            ("{stevilka}", String(localized: "številka računa")),
-            ("{trr}", String(localized: "vaš IBAN")),
-            ("{sklic}", String(localized: "referenčna številka")),
-            ("{valuta}", String(localized: "rok plačila")),
+            ("{mesec}", String(localized: "month of service, in Slovenian (avgust)")),
+            ("{MESEC}", String(localized: "month of service, in Slovenian (AVGUST)")),
+            ("{leto}", String(localized: "year of service")),
+            ("{stranka}", String(localized: "client name")),
+            ("{stevilka}", String(localized: "invoice number")),
+            ("{trr}", String(localized: "your IBAN")),
+            ("{sklic}", String(localized: "payment reference")),
+            ("{valuta}", String(localized: "due date")),
         ]
     }
 

@@ -9,19 +9,31 @@ struct LocalizationTests {
         return try #require(Bundle(path: path))
     }
 
-    @Test func `the English localization ships in the app bundle`() throws {
-        let en = try bundle("en")
-        #expect(en.localizedString(forKey: "Računi", value: nil, table: nil) == "Invoices")
-        #expect(en.localizedString(forKey: "Privzeti rok plačila: %lld dni", value: nil, table: nil)
-                == "Default payment term: %lld days")
-        #expect(en.localizedString(forKey: "Nastavitve", value: nil, table: nil) == "Settings")
+    @Test func `the Slovenian localization ships in the app bundle`() throws {
+        let sl = try bundle("sl")
+        #expect(sl.localizedString(forKey: "Invoices", value: nil, table: nil) == "Računi")
+        #expect(sl.localizedString(forKey: "Default payment term: %lld days", value: nil, table: nil)
+                == "Privzeti rok plačila: %lld dni")
+        #expect(sl.localizedString(forKey: "Settings", value: nil, table: nil) == "Nastavitve")
+        #expect(sl.localizedString(forKey: "Hide sensitive values", value: nil, table: nil)
+                == "Skrij občutljive podatke")
     }
 
-    /// Slovenian ships as the source language with no sl.lproj of its own,
-    /// so it must still win negotiation via the development region.
+    /// Slovenian declines the two differently, so they cannot share the "Paid"
+    /// key the way English would: one invoice is "Plačan", the year's total
+    /// received is "Plačano".
+    @Test func `paid the status and paid the total are separate strings`() throws {
+        let sl = try bundle("sl")
+        #expect(sl.localizedString(forKey: "invoiceStatus.paid", value: nil, table: nil) == "Plačan")
+        #expect(sl.localizedString(forKey: "Paid", value: nil, table: nil) == "Plačano")
+        #expect(InvoiceStatus.paid.label == "Paid")
+    }
+
+    /// English ships as the source language with no en.lproj of its own, so it
+    /// must still win negotiation via the development region.
     @Test func `a Slovenian Mac gets Slovenian, anything unsupported gets English`() {
         let app = Bundle(for: BusinessProfile.self)
-        #expect(app.developmentLocalization == "sl")
+        #expect(app.developmentLocalization == "en")
         #expect(Bundle.preferredLocalizations(from: app.localizations, forPreferences: ["sl"]) == ["sl"])
         #expect(Bundle.preferredLocalizations(from: app.localizations, forPreferences: ["en"]) == ["en"])
         #expect(Bundle.preferredLocalizations(from: app.localizations, forPreferences: ["de"]) == ["en"])
@@ -30,9 +42,18 @@ struct LocalizationTests {
     @Test func `the invoice page is not localized`() throws {
         // The PDF is a Slovenian legal document; none of its labels may
         // have leaked into the catalog where a translation could swap them.
-        let en = try bundle("en")
+        let sl = try bundle("sl")
         for key in ["OSNUTEK", "Račun izdal:", "Stran %lld / %lld", "Davčna številka: %@"] {
-            #expect(en.localizedString(forKey: key, value: "∅", table: nil) == "∅")
+            #expect(sl.localizedString(forKey: key, value: "∅", table: nil) == "∅")
+        }
+    }
+
+    /// The sheet goes to a Slovenian accountant whatever language the app is
+    /// running in, so its headers must not travel through the catalog either.
+    @Test func `the spreadsheet headers are not localized`() throws {
+        let sl = try bundle("sl")
+        for key in YearOverviewXLSX.columnHeaders {
+            #expect(sl.localizedString(forKey: key, value: "∅", table: nil) == "∅")
         }
     }
 }

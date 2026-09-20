@@ -34,24 +34,24 @@ struct InvoiceDetailView: View {
 
     var body: some View {
         Form {
-            Section("Račun") {
-                LabeledContent("Številka") {
-                    Text(invoice.number.isEmpty ? String(localized: "dodeljena ob izdaji") : invoice.number)
+            Section("Invoice") {
+                LabeledContent("Number") {
+                    Text(invoice.number.isEmpty ? String(localized: "assigned on issue") : invoice.number)
                         .foregroundStyle(invoice.number.isEmpty ? .secondary : .primary)
                 }
-                Picker("Stranka", selection: $invoice.client) {
-                    Text("Brez stranke").tag(Client?.none)
+                Picker("Client", selection: $invoice.client) {
+                    Text("No client").tag(Client?.none)
                     ForEach(clients) { client in
                         Text(client.displayName).tag(Client?.some(client))
                     }
                 }
-                DatePicker("Datum izdaje", selection: $invoice.issueDate, displayedComponents: .date)
-                DatePicker(isPeriod.wrappedValue ? "Storitev od" : "Datum storitve",
+                DatePicker("Issue date", selection: $invoice.issueDate, displayedComponents: .date)
+                DatePicker(isPeriod.wrappedValue ? "Service from" : "Service date",
                            selection: $invoice.serviceDate, displayedComponents: .date)
-                Toggle("Storitev za obdobje", isOn: isPeriod)
+                Toggle("Service covers a period", isOn: isPeriod)
                 if invoice.serviceDateEnd != nil {
                     DatePicker(
-                        "Storitev do",
+                        "Service until",
                         selection: Binding(
                             get: { invoice.serviceDateEnd ?? invoice.serviceDate },
                             set: { invoice.serviceDateEnd = $0 }
@@ -60,14 +60,14 @@ struct InvoiceDetailView: View {
                         displayedComponents: .date
                     )
                 }
-                DatePicker("Rok plačila", selection: $invoice.dueDate, displayedComponents: .date)
-                TextField("Kraj izdaje", text: $invoice.placeOfIssue)
-                TextField("Sklic", text: $invoice.paymentReference,
+                DatePicker("Payment due", selection: $invoice.dueDate, displayedComponents: .date)
+                TextField("Place of issue", text: $invoice.placeOfIssue)
+                TextField("Payment reference", text: $invoice.paymentReference,
                           prompt: Text(verbatim: InvoiceTemplate.defaultReference(for: invoice)))
             }
             .disabled(isLocked)
 
-            Section("Postavke") {
+            Section("Line items") {
                 ForEach(invoice.sortedLines) { line in
                     InvoiceLineEditor(line: line, showsVatRate: chargesVat) {
                         delete(line)
@@ -75,21 +75,28 @@ struct InvoiceDetailView: View {
                 }
                 .onDelete(perform: deleteLines)
 
-                Button("Dodaj postavko", systemImage: "plus", action: addLine)
+                Button("Add line item", systemImage: "plus", action: addLine)
             }
             .disabled(isLocked)
 
-            Section("Povzetek") {
+            Section("Summary") {
                 if chargesVat {
-                    LabeledContent("Neto", value: Formatting.money(invoice.totals.net, currencyCode: invoice.currencyCode))
+                    LabeledContent("Net") {
+                        Text(Formatting.money(invoice.totals.net, currencyCode: invoice.currencyCode))
+                            .sensitiveValue()
+                    }
                     ForEach(invoice.vatBreakdown.filter { $0.amounts.vat != 0 }, id: \.rate) { entry in
-                        LabeledContent("DDV \(entry.rate.label)", value: Formatting.money(entry.amounts.vat, currencyCode: invoice.currencyCode))
+                        LabeledContent("VAT \(entry.rate.label)") {
+                            Text(Formatting.money(entry.amounts.vat, currencyCode: invoice.currencyCode))
+                                .sensitiveValue()
+                        }
                     }
                 }
-                LabeledContent("Za plačilo") {
+                LabeledContent("Amount due") {
                     Text(Formatting.money(invoice.totals.gross, currencyCode: invoice.currencyCode))
                         .font(.headline)
                         .monospacedDigit()
+                        .sensitiveValue()
                 }
                 ForEach(invoice.exemptionClauses, id: \.self) { clause in
                     Text(clause)
@@ -100,18 +107,18 @@ struct InvoiceDetailView: View {
 
             Section {
                 TextField(
-                    "Uvodni stavek",
+                    "Intro sentence",
                     text: $invoice.introOverride,
                     prompt: Text(profiles.first.map { InvoiceTemplate.intro(for: invoice, profile: $0) } ?? ""),
                     axis: .vertical
                 )
                 .lineLimit(1...3)
-                TextField("Opombe", text: $invoice.notes, axis: .vertical)
+                TextField("Notes", text: $invoice.notes, axis: .vertical)
                     .lineLimit(3...8)
             } header: {
-                Text("Besedilo")
+                Text("Text")
             } footer: {
-                Text("Prazen uvodni stavek uporabi predlogo iz Nastavitev. Opombe se natisnejo pod klavzulami.")
+                Text("An empty intro sentence uses the template from Settings. Notes are printed below the clauses.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -132,27 +139,27 @@ struct InvoiceDetailView: View {
             // Guarantees the preview has a profile on a fresh install.
             _ = BusinessProfile.current(in: context)
         }
-        .navigationTitle(invoice.number.isEmpty ? String(localized: "Osnutek računa") : invoice.number)
+        .navigationTitle(invoice.number.isEmpty ? String(localized: "Draft invoice") : invoice.number)
         .toolbar {
             ToolbarItem(placement: .status) {
                 Label(invoice.status.label, systemImage: invoice.status.symbol)
                     .foregroundStyle(.secondary)
             }
             ToolbarItem(placement: .primaryAction) {
-                Button("Izvozi PDF", systemImage: "square.and.arrow.down", action: exportPDF)
+                Button("Export PDF", systemImage: "square.and.arrow.down", action: exportPDF)
             }
             ToolbarItem(placement: .primaryAction) {
-                Toggle("Predogled", systemImage: "sidebar.trailing", isOn: $showsPreview)
-                    .help("Pokaži ali skrij predogled računa")
+                Toggle("Preview", systemImage: "sidebar.trailing", isOn: $showsPreview)
+                    .help("Show or hide the invoice preview")
             }
             ToolbarItemGroup(placement: .primaryAction) {
                 switch invoice.status {
                 case .draft:
-                    Button("Izdaj račun", action: issue)
+                    Button("Issue invoice", action: issue)
                         .disabled(invoice.client == nil || invoice.lines.isEmpty)
                 case .issued:
-                    Button("Označi kot plačan", action: markPaid)
-                    Button("Storniraj", role: .destructive) { invoice.status = .cancelled }
+                    Button("Mark as paid", action: markPaid)
+                    Button("Cancel invoice", role: .destructive) { invoice.status = .cancelled }
                 case .paid, .cancelled:
                     EmptyView()
                 }
@@ -169,10 +176,10 @@ struct InvoiceDetailView: View {
             }
         }
         .alert(
-            "Izvoz ni uspel",
+            "Export failed",
             isPresented: Binding(get: { exportError != nil }, set: { if !$0 { exportError = nil } })
         ) {
-            Button("V redu", role: .cancel) {}
+            Button("OK", role: .cancel) {}
         } message: {
             Text(exportError ?? "")
         }
@@ -181,7 +188,7 @@ struct InvoiceDetailView: View {
     private func exportPDF() {
         let profile = BusinessProfile.current(in: context)
         guard let data = InvoicePDF.render(invoice: invoice, profile: profile) else {
-            exportError = String(localized: "Računa ni bilo mogoče upodobiti.")
+            exportError = String(localized: "The invoice could not be rendered.")
             return
         }
         exportedPDF = PDFFile(data: data)
@@ -239,24 +246,25 @@ private struct InvoiceLineEditor: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            TextField("Opis storitve", text: $line.itemDescription)
+            TextField("Description", text: $line.itemDescription)
                 .labelsHidden()
 
             HStack(alignment: .bottom, spacing: 12) {
-                Field("Količina", width: 70) {
+                Field("Quantity", width: 70) {
                     TextField("", value: $line.quantity, format: .number)
                 }
-                Field("EM", width: 60) {
+                Field("Unit", width: 60) {
                     TextField("", text: $line.unit)
                 }
-                Field("Cena", width: 90) {
+                Field("Price", width: 90) {
                     TextField("", value: $line.unitPrice, format: .number)
+                        .sensitiveValue()
                 }
-                Field("Popust %", width: 70) {
+                Field("Discount %", width: 70) {
                     TextField("", value: $line.discountPercent, format: .number)
                 }
                 if showsVatRate {
-                    Field("DDV", width: 180) {
+                    Field("VAT", width: 180) {
                         Picker("", selection: $line.vatRate) {
                             ForEach(VatRate.allCases) { rate in
                                 Text(rate.label).tag(rate)
@@ -266,13 +274,14 @@ private struct InvoiceLineEditor: View {
                 }
                 Spacer(minLength: 8)
                 VStack(alignment: .trailing, spacing: 2) {
-                    Text("Skupaj")
+                    Text("Total")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Text(Formatting.money(line.amounts.gross))
                         .monospacedDigit()
+                        .sensitiveValue()
                 }
-                Button("Odstrani postavko", systemImage: "trash", action: remove)
+                Button("Remove line item", systemImage: "trash", action: remove)
                     .labelStyle(.iconOnly)
                     .buttonStyle(.borderless)
                     .foregroundStyle(.secondary)

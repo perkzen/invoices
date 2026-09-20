@@ -12,10 +12,12 @@ nonisolated enum InvoiceStatus: String, Codable, CaseIterable, Identifiable, Sen
 
     var label: String {
         switch self {
-        case .draft: String(localized: "Osnutek")
-        case .issued: String(localized: "Izdan")
-        case .paid: String(localized: "Plačan")
-        case .cancelled: String(localized: "Storniran")
+        case .draft: String(localized: "Draft")
+        case .issued: String(localized: "Issued")
+        // Slovenian declines this differently from the year overview's
+        // "paid total", which is also "Paid" in English — hence the key.
+        case .paid: String(localized: "invoiceStatus.paid", defaultValue: "Paid")
+        case .cancelled: String(localized: "Cancelled")
         }
     }
 
