@@ -137,6 +137,7 @@ private struct InvoiceRow: View {
             VStack(alignment: .trailing, spacing: 2) {
                 Text(Formatting.money(invoice.totals.gross, currencyCode: invoice.currencyCode))
                     .monospacedDigit()
+                    .sensitiveValue()
                 Text(Formatting.date(invoice.issueDate))
                     .font(.caption)
                     .foregroundStyle(.secondary)

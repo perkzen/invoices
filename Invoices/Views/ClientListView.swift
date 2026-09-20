@@ -135,8 +135,8 @@ struct ClientDetailView: View {
                 TextField("Država (ISO)", text: $client.countryCode)
             }
             Section("Davčni podatki") {
-                TextField("Davčna številka", text: $client.taxNumber)
-                TextField("ID za DDV", text: $client.vatID)
+                SensitiveField("Davčna številka", text: $client.taxNumber)
+                SensitiveField("ID za DDV", text: $client.vatID)
             }
             Section("Ostalo") {
                 TextField("E-pošta", text: $client.email)

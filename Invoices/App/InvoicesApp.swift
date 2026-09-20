@@ -18,16 +18,19 @@ struct InvoicesApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .privacyRedacted()
         }
         .modelContainer(container)
         .defaultSize(width: 1400, height: 860)
         .commands {
             CommandGroup(replacing: .newItem) {}
+            PrivacyCommands()
         }
 
         Settings {
             SettingsView()
                 .modelContainer(container)
+                .privacyRedacted()
         }
     }
 }

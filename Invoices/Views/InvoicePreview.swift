@@ -7,10 +7,27 @@ struct InvoicePreview: View {
     let invoice: Invoice
     let profile: BusinessProfile
 
+    /// `.redacted(reason: .privacy)` stops at the edge of an AppKit view, so
+    /// the rendered page cannot be blanked the way the rest of the interface
+    /// is — it is blurred instead. It stays live while it is blurred, so the
+    /// layout still answers whether a long invoice broke onto a second page.
+    @AppStorage(PrivacyMode.storageKey) private var hidesSensitiveValues = false
     @State private var pdfData: Data?
 
     var body: some View {
         PDFDocumentView(data: pdfData)
+            .blur(radius: hidesSensitiveValues ? 14 : 0)
+            .overlay {
+                if hidesSensitiveValues {
+                    Label("Predogled je zakrit", systemImage: "eye.slash")
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 8)
+                        .background(.regularMaterial, in: Capsule())
+                }
+            }
+            .animation(.default, value: hidesSensitiveValues)
             .task(id: renderKey) {
                 // Coalesce a burst of keystrokes into one render.
                 try? await Task.sleep(for: .milliseconds(120))

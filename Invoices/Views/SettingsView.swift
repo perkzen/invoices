@@ -86,10 +86,10 @@ private struct BusinessProfileForm: View {
                 TextField("Država (ISO)", text: $profile.countryCode)
             }
             Section {
-                TextField("Davčna številka", text: $profile.taxNumber)
+                SensitiveField("Davčna številka", text: $profile.taxNumber)
                 Toggle("Zavezanec za DDV", isOn: $profile.isVatRegistered)
                 if profile.isVatRegistered {
-                    TextField("ID za DDV", text: $profile.vatID)
+                    SensitiveField("ID za DDV", text: $profile.vatID)
                 }
                 Toggle("Normiranec (normirani odhodki)", isOn: $profile.isFlatRate)
             } header: {
@@ -102,9 +102,9 @@ private struct BusinessProfileForm: View {
                 .foregroundStyle(.secondary)
             }
             Section("Bančni račun") {
-                TextField("IBAN (TRR)", text: $profile.iban)
+                SensitiveField("IBAN (TRR)", text: $profile.iban)
                 TextField("Banka", text: $profile.bankName)
-                TextField("BIC / SWIFT", text: $profile.bic)
+                SensitiveField("BIC / SWIFT", text: $profile.bic)
                 Stepper(
                     "Privzeti rok plačila: \(profile.defaultPaymentTermDays) dni",
                     value: $profile.defaultPaymentTermDays,
@@ -116,9 +116,28 @@ private struct BusinessProfileForm: View {
                 TextField("Opomba v nogi", text: $profile.invoiceFooter, axis: .vertical)
                     .lineLimit(2...5)
             }
+            PrivacySection()
             LanguageSection()
         }
         .formStyle(.grouped)
+    }
+}
+
+/// Zasebni način, isto stikalo kot Pogled › Skrij občutljive podatke.
+/// Tu stoji zato, da ga je mogoče najti; uporablja se prek ⇧⌘H.
+private struct PrivacySection: View {
+    @AppStorage(PrivacyMode.storageKey) private var hidesSensitiveValues = false
+
+    var body: some View {
+        Section {
+            Toggle("Skrij občutljive podatke", isOn: $hidesSensitiveValues)
+        } header: {
+            Text("Zasebnost")
+        } footer: {
+            Text("Zakrije davčne številke, IBAN in vse zneske v vmesniku — za deljenje zaslona ali pogled čez ramo. Izvožen PDF, preglednica in natisnjen račun ostanejo nespremenjeni. Bližnjica: ⇧⌘H.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        }
     }
 }
 

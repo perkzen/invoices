@@ -15,6 +15,8 @@ struct LocalizationTests {
         #expect(en.localizedString(forKey: "Privzeti rok plačila: %lld dni", value: nil, table: nil)
                 == "Default payment term: %lld days")
         #expect(en.localizedString(forKey: "Nastavitve", value: nil, table: nil) == "Settings")
+        #expect(en.localizedString(forKey: "Skrij občutljive podatke", value: nil, table: nil)
+                == "Hide sensitive values")
     }
 
     /// Slovenian ships as the source language with no sl.lproj of its own,

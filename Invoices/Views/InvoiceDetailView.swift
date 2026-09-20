@@ -81,15 +81,22 @@ struct InvoiceDetailView: View {
 
             Section("Povzetek") {
                 if chargesVat {
-                    LabeledContent("Neto", value: Formatting.money(invoice.totals.net, currencyCode: invoice.currencyCode))
+                    LabeledContent("Neto") {
+                        Text(Formatting.money(invoice.totals.net, currencyCode: invoice.currencyCode))
+                            .sensitiveValue()
+                    }
                     ForEach(invoice.vatBreakdown.filter { $0.amounts.vat != 0 }, id: \.rate) { entry in
-                        LabeledContent("DDV \(entry.rate.label)", value: Formatting.money(entry.amounts.vat, currencyCode: invoice.currencyCode))
+                        LabeledContent("DDV \(entry.rate.label)") {
+                            Text(Formatting.money(entry.amounts.vat, currencyCode: invoice.currencyCode))
+                                .sensitiveValue()
+                        }
                     }
                 }
                 LabeledContent("Za plačilo") {
                     Text(Formatting.money(invoice.totals.gross, currencyCode: invoice.currencyCode))
                         .font(.headline)
                         .monospacedDigit()
+                        .sensitiveValue()
                 }
                 ForEach(invoice.exemptionClauses, id: \.self) { clause in
                     Text(clause)
@@ -251,6 +258,7 @@ private struct InvoiceLineEditor: View {
                 }
                 Field("Cena", width: 90) {
                     TextField("", value: $line.unitPrice, format: .number)
+                        .sensitiveValue()
                 }
                 Field("Popust %", width: 70) {
                     TextField("", value: $line.discountPercent, format: .number)
@@ -271,6 +279,7 @@ private struct InvoiceLineEditor: View {
                         .foregroundStyle(.secondary)
                     Text(Formatting.money(line.amounts.gross))
                         .monospacedDigit()
+                        .sensitiveValue()
                 }
                 Button("Odstrani postavko", systemImage: "trash", action: remove)
                     .labelStyle(.iconOnly)

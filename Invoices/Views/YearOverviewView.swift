@@ -111,7 +111,10 @@ private struct IssuerHeader: View {
                 Text(line)
             }
             if !overview.issuer.taxNumber.isEmpty {
-                Text("Davčna št.: \(overview.issuer.taxNumber)")
+                HStack(spacing: 4) {
+                    Text("Davčna št.:")
+                    Text(overview.issuer.taxNumber).sensitiveValue()
+                }
             }
         }
         .font(.callout)
@@ -158,6 +161,7 @@ private struct OverviewTable: View {
                     .monospacedDigit()
                     .strikethrough(row.isCancelled)
                     .frame(maxWidth: .infinity, alignment: .trailing)
+                    .sensitiveValue()
             }
             .width(min: 90, ideal: 120)
             .alignment(.trailing)
@@ -199,6 +203,7 @@ private struct OverviewSummary: View {
             Text(Formatting.money(value, currencyCode: overview.currencyCode))
                 .monospacedDigit()
                 .foregroundStyle(style)
+                .sensitiveValue()
         }
     }
 }

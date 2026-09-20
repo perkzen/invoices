@@ -184,12 +184,12 @@
         }
       }
     },
-    "Davčna št.: %@": {
+    "Davčna št.:": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tax number: %@"
+            "value": "Tax number:"
           }
         }
       }
@@ -994,6 +994,16 @@
         }
       }
     },
+    "Predogled je zakrit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preview hidden"
+          }
+        }
+      }
+    },
     "Predogled na vzorčnem računu": {
       "localizations": {
         "en": {
@@ -1170,6 +1180,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Payment reference"
+          }
+        }
+      }
+    },
+    "Skrij občutljive podatke": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide sensitive values"
           }
         }
       }
@@ -1384,6 +1404,16 @@
         }
       }
     },
+    "Zakrije davčne številke, IBAN in vse zneske v vmesniku — za deljenje zaslona ali pogled čez ramo. Izvožen PDF, preglednica in natisnjen račun ostanejo nespremenjeni. Bližnjica: ⇧⌘H.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blanks tax numbers, the IBAN and every amount in the interface — for screen sharing, or a look over your shoulder. The exported PDF, the spreadsheet and the printed invoice are unchanged. Shortcut: ⇧⌘H."
+          }
+        }
+      }
+    },
     "Zapri aplikacijo": {
       "localizations": {
         "en": {
@@ -1400,6 +1430,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Quit and reopen Invoices to see the interface in the selected language."
+          }
+        }
+      }
+    },
+    "Zasebnost": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy"
           }
         }
       }
