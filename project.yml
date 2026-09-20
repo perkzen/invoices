@@ -27,8 +27,9 @@ targets:
           - ".claude/**"
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.domenperko.Invoices
-        PRODUCT_NAME: Invoices
+        # The bundle is named per configuration (below), but the Swift module
+        # is not: the tests say `@testable import Invoices` either way.
+        PRODUCT_MODULE_NAME: Invoices
         CODE_SIGN_ENTITLEMENTS: Invoices/App/Invoices.entitlements
         CODE_SIGN_STYLE: Automatic
         ENABLE_HARDENED_RUNTIME: YES
@@ -37,11 +38,23 @@ targets:
         ENABLE_PREVIEWS: YES
         COMBINE_HIDPI_IMAGES: YES
         GENERATE_INFOPLIST_FILE: NO
+      configs:
+        # Debug is the copy you run from Xcode, Release the one you install.
+        # They differ in both name and bundle id on purpose: the name is what
+        # Spotlight lists (it labels apps by file name, not display name), and
+        # the id gives the development build its own sandbox container, so
+        # experimenting never touches the invoices in the installed app.
+        Debug:
+          PRODUCT_NAME: Invoices Dev
+          PRODUCT_BUNDLE_IDENTIFIER: com.domenperko.Invoices.dev
+        Release:
+          PRODUCT_NAME: Invoices
+          PRODUCT_BUNDLE_IDENTIFIER: com.domenperko.Invoices
     info:
       path: Invoices/App/Info.plist
       properties:
-        CFBundleName: Invoices
-        CFBundleDisplayName: Invoices
+        CFBundleName: "$(PRODUCT_NAME)"
+        CFBundleDisplayName: "$(PRODUCT_NAME)"
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         LSMinimumSystemVersion: "$(MACOSX_DEPLOYMENT_TARGET)"
@@ -59,6 +72,13 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.domenperko.InvoicesTests
         GENERATE_INFOPLIST_FILE: YES
+      # The tests run inside the app, so the host path has to follow whichever
+      # name that configuration builds under.
+      configs:
+        Debug:
+          TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Invoices Dev.app/Contents/MacOS/Invoices Dev"
+        Release:
+          TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Invoices.app/Contents/MacOS/Invoices"
 
 schemes:
   Invoices:

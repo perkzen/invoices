@@ -33,38 +33,3 @@ private struct PrivacyRedaction: ViewModifier {
         content.redacted(reason: hidesSensitiveValues ? .privacy : [])
     }
 }
-
-/// Vnosno polje, katerega vrednost zasebni način zakrije. Zakriti `TextField`
-/// vzame s sabo tudi svojo oznako, zato oznaka stoji zunaj njega — sicer bi
-/// v razdelku ostali sami sivi pravokotniki brez imen.
-struct SensitiveField: View {
-    let title: LocalizedStringKey
-    @Binding var text: String
-
-    init(_ title: LocalizedStringKey, text: Binding<String>) {
-        self.title = title
-        self._text = text
-    }
-
-    var body: some View {
-        LabeledContent(title) {
-            TextField(title, text: $text)
-                .labelsHidden()
-                .sensitiveValue()
-        }
-    }
-}
-
-/// Pogled › Skrij občutljive podatke. Stikalo mora biti dosegljivo v eni
-/// potezi — njegov trenutek je sekunda pred začetkom deljenja zaslona in
-/// pot v Nastavitve je za to prepočasna.
-struct PrivacyCommands: Commands {
-    @AppStorage(PrivacyMode.storageKey) private var hidesSensitiveValues = false
-
-    var body: some Commands {
-        CommandGroup(after: .sidebar) {
-            Toggle("Skrij občutljive podatke", isOn: $hidesSensitiveValues)
-                .keyboardShortcut("h", modifiers: [.command, .shift])
-        }
-    }
-}
