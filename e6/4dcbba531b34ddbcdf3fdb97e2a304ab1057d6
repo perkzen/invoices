@@ -1,0 +1,19 @@
+Invoices/App/ContentView.swift
+  s_c5595a7759f84a::t_f3418cb979f977 27-29,31-33,35-37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "e64dcbba531b34ddbcdf3fdb97e2a304ab1057d6",
+  "prompts": {},
+  "sessions": {
+    "s_c5595a7759f84a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4e50920c-a177-4332-bbb9-950d410104fa",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
