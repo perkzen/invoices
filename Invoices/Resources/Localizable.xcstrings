@@ -89,6 +89,16 @@
         }
       }
     },
+    "9.5 %": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "9,5 %"
+          }
+        }
+      }
+    },
     "9.5 % (reduced)": {
       "localizations": {
         "sl": {
@@ -125,6 +135,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Naslov"
+          }
+        }
+      }
+    },
+    "All invoices": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vsi računi"
           }
         }
       }
@@ -185,6 +205,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Velja za vmesnik aplikacije. Računi so vedno v slovenščini."
+          }
+        }
+      }
+    },
+    "Assign the next number and lock the invoice": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dodeli naslednjo številko in zakleni račun"
           }
         }
       }
@@ -250,6 +280,16 @@
         }
       }
     },
+    "Cancel this invoice?": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Storniraš ta račun?"
+          }
+        }
+      }
+    },
     "Cancelled": {
       "localizations": {
         "sl": {
@@ -270,12 +310,42 @@
         }
       }
     },
+    "Choose a client before issuing": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pred izdajo izberi stranko"
+          }
+        }
+      }
+    },
+    "Choose a client from the list, or add a new one.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izberi stranko s seznama ali dodaj novo."
+          }
+        }
+      }
+    },
     "Choose a section": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "Izberi razdelek"
+          }
+        }
+      }
+    },
+    "Choose an invoice from the list, or create a new one.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izberi račun s seznama ali ustvari novega."
           }
         }
       }
@@ -480,6 +550,16 @@
         }
       }
     },
+    "Drafts": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Osnutki"
+          }
+        }
+      }
+    },
     "Due date": {
       "localizations": {
         "sl": {
@@ -496,6 +576,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "E-pošta"
+          }
+        }
+      }
+    },
+    "Exempt": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oproščeno"
           }
         }
       }
@@ -660,6 +750,16 @@
         }
       }
     },
+    "Invoiced": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izdano"
+          }
+        }
+      }
+    },
     "Invoices": {
       "localizations": {
         "sl": {
@@ -716,6 +816,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Izdan"
+          }
+        }
+      }
+    },
+    "Keep invoice": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obdrži račun"
           }
         }
       }
@@ -800,6 +910,16 @@
         }
       }
     },
+    "Name or city": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ime ali kraj"
+          }
+        }
+      }
+    },
     "Net": {
       "localizations": {
         "sl": {
@@ -820,12 +940,32 @@
         }
       }
     },
+    "New draft invoice": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nov osnutek računa"
+          }
+        }
+      }
+    },
     "New invoice": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "Nov račun"
+          }
+        }
+      }
+    },
+    "No address": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brez naslova"
           }
         }
       }
@@ -840,12 +980,32 @@
         }
       }
     },
+    "No client selected": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ni izbrane stranke"
+          }
+        }
+      }
+    },
     "No clients": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "Ni strank"
+          }
+        }
+      }
+    },
+    "No invoice selected": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ni izbranega računa"
           }
         }
       }
@@ -890,6 +1050,16 @@
         }
       }
     },
+    "Number or client": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Številka ali stranka"
+          }
+        }
+      }
+    },
     "OK": {
       "localizations": {
         "sl": {
@@ -910,6 +1080,16 @@
         }
       }
     },
+    "Open": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odprti"
+          }
+        }
+      }
+    },
     "Other": {
       "localizations": {
         "sl": {
@@ -926,6 +1106,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Odprto"
+          }
+        }
+      }
+    },
+    "Overdue": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapadel"
           }
         }
       }
@@ -1090,6 +1280,16 @@
         }
       }
     },
+    "Qty": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kol."
+          }
+        }
+      }
+    },
     "Quantity": {
       "localizations": {
         "sl": {
@@ -1160,12 +1360,42 @@
         }
       }
     },
+    "Save the invoice as a PDF": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shrani račun kot PDF"
+          }
+        }
+      }
+    },
     "Save the overview as an Excel spreadsheet": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "Shrani pregled kot Excelovo preglednico"
+          }
+        }
+      }
+    },
+    "Select a client to delete it": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izberi stranko, da jo izbrišeš"
+          }
+        }
+      }
+    },
+    "Select a draft to delete it": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izberi osnutek, da ga izbrišeš"
           }
         }
       }
@@ -1220,12 +1450,42 @@
         }
       }
     },
+    "Show": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prikaži"
+          }
+        }
+      }
+    },
+    "Show only invoices in one state": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prikaži samo račune v enem stanju"
+          }
+        }
+      }
+    },
     "Show or hide the invoice preview": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "Pokaži ali skrij predogled računa"
+          }
+        }
+      }
+    },
+    "Shown next to the client in lists. Invoices print your own logo, never the client's.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prikazan ob stranki na seznamih. Na računih je natisnjen tvoj logotip, nikoli strankin."
           }
         }
       }
@@ -1400,6 +1660,16 @@
         }
       }
     },
+    "The number stays in the sequence and the invoice is listed as cancelled. This cannot be undone.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Številka ostane v zaporedju, račun pa je naveden kot storniran. Tega ni mogoče razveljaviti."
+          }
+        }
+      }
+    },
     "The overview lists invoices once the first one has been issued.": {
       "localizations": {
         "sl": {
@@ -1559,6 +1829,24 @@
           }
         }
       }
+    },
+    "invoiceFilter.paid": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plačani"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paid"
+          }
+        }
+      },
+      "extractionState": "manual",
+      "comment": "List filter for paid invoices. Slovenian needs the plural here, unlike the status of one invoice."
     },
     "invoiceStatus.paid": {
       "localizations": {

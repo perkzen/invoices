@@ -3,18 +3,64 @@ import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// The ⌘, window. The same content also lives in the sidebar under
-/// Nastavitve, so nobody has to know the shortcut to find it.
-struct SettingsView: View {
-    var body: some View {
-        SettingsContent()
-            .frame(width: 1040, height: 720)
+/// The two pages of Nastavitve. They are rows in the middle column of the
+/// main window and the sidebar of the ⌘, window, so both show the same forms.
+enum SettingsPage: String, CaseIterable, Identifiable {
+    case business
+    case template
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .business: String(localized: "My s.p.")
+        case .template: String(localized: "Invoice template")
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .business: "building.2"
+        case .template: "doc.richtext"
+        }
     }
 }
 
-/// Nastavitve: the s.p. details and the invoice template, with a live
-/// preview of a sample invoice so every change is seen where it lands.
+struct SettingsPageList: View {
+    @Binding var selection: SettingsPage?
+
+    var body: some View {
+        List(selection: $selection) {
+            ForEach(SettingsPage.allCases) { page in
+                Label(page.title, systemImage: page.symbol)
+                    .tag(page)
+            }
+        }
+        .navigationTitle("Settings")
+    }
+}
+
+/// The ⌘, window. The same pages also live in the sidebar under Settings,
+/// so nobody has to know the shortcut to find them.
+struct SettingsView: View {
+    @State private var page: SettingsPage? = .business
+
+    var body: some View {
+        NavigationSplitView {
+            SettingsPageList(selection: $page)
+                .navigationSplitViewColumnWidth(min: 180, ideal: 200, max: 240)
+        } detail: {
+            SettingsContent(page: page)
+        }
+        .frame(width: 1240, height: 720)
+    }
+}
+
+/// One settings page beside a live preview of a sample invoice, so every
+/// change is seen where it lands.
 struct SettingsContent: View {
+    let page: SettingsPage?
+
     @Environment(\.modelContext) private var context
     @State private var profile: BusinessProfile?
     @State private var sample: SampleInvoice?
@@ -23,11 +69,11 @@ struct SettingsContent: View {
         Group {
             if let profile, let sample {
                 HStack(spacing: 0) {
-                    TabView {
-                        Tab("My s.p.", systemImage: "building.2") {
+                    Group {
+                        switch page {
+                        case .business, nil:
                             BusinessProfileForm(profile: profile)
-                        }
-                        Tab("Invoice template", systemImage: "doc.richtext") {
+                        case .template:
                             InvoiceTemplateForm(profile: profile)
                         }
                     }
@@ -52,6 +98,7 @@ struct SettingsContent: View {
                 ProgressView()
             }
         }
+        .navigationTitle((page ?? .business).title)
         .task {
             if profile == nil {
                 let current = BusinessProfile.current(in: context)
@@ -225,67 +272,5 @@ private struct InvoiceTemplateForm: View {
             }
         }
         .formStyle(.grouped)
-    }
-}
-
-/// Thumbnail plus choose/remove buttons for a stored bitmap.
-private struct ImageWell: View {
-    let title: LocalizedStringKey
-    @Binding var data: Data?
-
-    @State private var isImporting = false
-    @State private var importError: String?
-
-    var body: some View {
-        LabeledContent(title) {
-            HStack(spacing: 10) {
-                Group {
-                    if let image = data.flatMap(NSImage.init(data:)) {
-                        Image(nsImage: image).resizable().scaledToFit()
-                    } else {
-                        Image(systemName: "photo")
-                            .foregroundStyle(.tertiary)
-                    }
-                }
-                .frame(width: 72, height: 44)
-                .background(.white, in: RoundedRectangle(cornerRadius: 4))
-                .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(.separator))
-
-                Button("Choose…") { isImporting = true }
-                if data != nil {
-                    Button("Remove", role: .destructive) { data = nil }
-                }
-            }
-        }
-        .fileImporter(
-            isPresented: $isImporting,
-            allowedContentTypes: [.image, .pdf]
-        ) { result in
-            switch result {
-            case .success(let url):
-                load(url)
-            case .failure(let error):
-                importError = error.localizedDescription
-            }
-        }
-        .alert(
-            "The image could not be loaded",
-            isPresented: Binding(get: { importError != nil }, set: { if !$0 { importError = nil } })
-        ) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text(importError ?? "")
-        }
-    }
-
-    private func load(_ url: URL) {
-        // The app is sandboxed; a picked file is readable only inside this scope.
-        let scoped = url.startAccessingSecurityScopedResource()
-        defer { if scoped { url.stopAccessingSecurityScopedResource() } }
-        guard let raw = try? Data(contentsOf: url), let png = ImageData.normalized(raw) else {
-            importError = String(localized: "The file is not an image that can be read.")
-            return
-        }
-        data = png
     }
 }

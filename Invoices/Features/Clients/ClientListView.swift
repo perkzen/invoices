@@ -1,10 +1,28 @@
 import SwiftData
 import SwiftUI
 
+/// The client list column. Deleting follows the same three routes as the
+/// invoice list: toolbar trash, ⌫, context menu — all on the selected row.
 struct ClientListView: View {
+    @Binding var selection: PersistentIdentifier?
+
     @Environment(\.modelContext) private var context
     @Query(sort: [SortDescriptor(\Client.name)]) private var clients: [Client]
+
     @State private var pendingDelete: Client?
+    @State private var searchText = ""
+
+    private var selected: Client? {
+        clients.first { $0.persistentModelID == selection }
+    }
+
+    private var shown: [Client] {
+        let query = searchText.trimmingCharacters(in: .whitespaces)
+        guard !query.isEmpty else { return clients }
+        return clients.filter {
+            $0.name.localizedStandardContains(query) || $0.city.localizedStandardContains(query)
+        }
+    }
 
     var body: some View {
         Group {
@@ -16,20 +34,21 @@ struct ClientListView: View {
                 } actions: {
                     Button("New client", action: newClient)
                 }
+            } else if shown.isEmpty {
+                ContentUnavailableView.search(text: searchText)
             } else {
-                List {
-                    ForEach(clients) { client in
-                        ClientRow(client: client, isBlocked: hasRecords(client)) {
-                            pendingDelete = client
-                        }
-                        .contextMenu { deleteMenu(for: client) }
+                List(selection: $selection) {
+                    ForEach(shown) { client in
+                        ClientRow(client: client)
+                            .tag(client.persistentModelID)
+                            .contextMenu { deleteMenu(for: client) }
                     }
-                    .onDelete(perform: delete)
                 }
+                .onDeleteCommand { requestDelete(selected) }
             }
         }
         .navigationTitle("Clients")
-        .navigationDestination(for: Client.self) { ClientDetailView(client: $0) }
+        .searchable(text: $searchText, prompt: "Name or city")
         .confirmationDialog(
             "Delete client?",
             isPresented: isConfirming,
@@ -41,20 +60,38 @@ struct ClientListView: View {
             Text("\(client.displayName) will be permanently deleted.")
         }
         .toolbar {
+            ToolbarItem {
+                Button("Delete client", systemImage: "trash") { requestDelete(selected) }
+                    .disabled(selected.map(hasRecords) ?? true)
+                    .help(deleteHelp)
+            }
             ToolbarItem(placement: .primaryAction) {
-                Button(action: newClient) {
-                    Label("New client", systemImage: "plus")
-                }
+                Button("New client", systemImage: "plus", action: newClient)
+                    .keyboardShortcut("n")
+                    .help("New client")
             }
         }
     }
 
     private func newClient() {
-        context.insert(Client())
+        let client = Client()
+        context.insert(client)
+        // Save first: an unsaved model carries a temporary identifier that
+        // autosave replaces, which would drop the selection a moment later.
+        try? context.save()
+        searchText = ""
+        selection = client.persistentModelID
     }
 
     private var isConfirming: Binding<Bool> {
         Binding(get: { pendingDelete != nil }, set: { if !$0 { pendingDelete = nil } })
+    }
+
+    private var deleteHelp: String {
+        guard let selected else { return String(localized: "Select a client to delete it") }
+        return hasRecords(selected)
+            ? String(localized: "Has issued invoices and cannot be deleted")
+            : String(localized: "Delete client")
     }
 
     /// An invoice keeps no copy of its counterparty — name, address and tax
@@ -64,60 +101,58 @@ struct ClientListView: View {
         client.invoices.contains { $0.status != .draft }
     }
 
+    private func requestDelete(_ client: Client?) {
+        guard let client, !hasRecords(client) else { return }
+        pendingDelete = client
+    }
+
     @ViewBuilder
     private func deleteMenu(for client: Client) -> some View {
         if hasRecords(client) {
             Text("Has issued invoices and cannot be deleted")
         } else {
             Button("Delete client", systemImage: "trash", role: .destructive) {
-                pendingDelete = client
+                requestDelete(client)
             }
         }
     }
 
     private func delete(_ client: Client) {
         pendingDelete = nil
+        guard !hasRecords(client) else { return }
+        if selection == client.persistentModelID { selection = nil }
         context.delete(client)
-    }
-
-    private func delete(at offsets: IndexSet) {
-        for index in offsets {
-            context.delete(clients[index])
-        }
     }
 }
 
-/// The trash only appears under the pointer — a permanently visible destructive
-/// control on every row is louder than the action deserves.
 private struct ClientRow: View {
     let client: Client
-    let isBlocked: Bool
-    let onDelete: () -> Void
 
-    @State private var isHovering = false
+    private var place: String {
+        [client.city, client.countryCode.uppercased() == "SI" ? "" : client.countryCode]
+            .filter { !$0.isEmpty }
+            .joined(separator: ", ")
+    }
 
     var body: some View {
-        HStack(spacing: 8) {
-            NavigationLink(value: client) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(client.displayName).font(.headline)
-                        Text(client.addressLines.joined(separator: ", "))
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
-                    Spacer(minLength: 0)
-                }
+        HStack(spacing: 10) {
+            ClientAvatar(client: client, size: 34)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(client.displayName)
+                    .font(.headline)
+                    .lineLimit(1)
+                Text(place.isEmpty ? String(localized: "No address") : place)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
             }
-
-            Button("Delete client", systemImage: "trash", action: onDelete)
-                .labelStyle(.iconOnly)
-                .buttonStyle(.borderless)
-                .tint(.red)
-                .disabled(isBlocked)
-                .help(isBlocked ? "Has issued invoices and cannot be deleted" : "Delete client")
-                .opacity(isHovering ? 1 : 0)
+            Spacer(minLength: 8)
+            if !client.issuedInvoices.isEmpty {
+                Text(Formatting.invoiceCount(client.issuedInvoices.count))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
-        .onHover { isHovering = $0 }
+        .padding(.vertical, 3)
     }
 }

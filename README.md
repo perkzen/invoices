@@ -10,7 +10,8 @@ Screens are named in English, as the source is; the Slovenian label each one car
 a Slovenian Mac is given in brackets.
 
 - **Clients** [Stranke] — client list with address and tax details (davčna številka,
-  ID za DDV)
+  ID za DDV), and an optional logo shown next to the client in every list (the printed
+  invoice carries only your own logo)
 - **Invoices** [Računi] — draft invoices with line items, quantity/price/discount per
   line and live totals (VAT columns appear only when the DDV toggle in Settings is on)
 - **Issuing** [Izdaja] — issuing a draft assigns the next sequential number (`2026-001`)
@@ -18,8 +19,8 @@ a Slovenian Mac is given in brackets.
 - **PDF export** [Izvoz PDF] — A4 invoice with the mandatory Slovenian fields, paginated
   for long invoices; drafts carry an OSNUTEK watermark so one cannot be mistaken for a
   real invoice
-- **Preview** [Predogled] — the invoice editor shows the PDF live in a trailing inspector,
-  re-rendered as you type; Settings shows the same preview on a sample invoice
+- **Preview** [Predogled] — the invoice editor shows the PDF live in a pane beside the
+  form, re-rendered as you type; Settings shows the same preview on a sample invoice
 - **Year overview** [Pregled] — every issued invoice of one calendar year in one table,
   with a year picker and the SKUPAJ line, and **XLSX export** [Izvoz XLSX] writing the
   same table as a real Excel workbook — dates and amounts as values, not text, so the
@@ -54,7 +55,7 @@ a Slovenian Mac is given in brackets.
 - **Updates** — the release build updates itself over Sparkle; pushing a `v*` tag
   publishes a signed DMG and its appcast to GitHub Releases
 
-Not built yet: printing, e-računi, expenses, search and filtering.
+Not built yet: printing, e-računi, expenses.
 
 ## Requirements
 

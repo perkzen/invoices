@@ -5,6 +5,15 @@ struct ClientDetailView: View {
 
     var body: some View {
         Form {
+            Section {
+                ImageWell(title: "Logo", data: $client.logoData)
+            } header: {
+                Text("Logo")
+            } footer: {
+                Text("Shown next to the client in lists. Invoices print your own logo, never the client's.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
             Section("Details") {
                 TextField("Name", text: $client.name)
                 TextField("Address", text: $client.street)
@@ -26,8 +35,29 @@ struct ClientDetailView: View {
                 TextField("Notes", text: $client.notes, axis: .vertical)
                     .lineLimit(3...8)
             }
+            if !client.issuedInvoices.isEmpty {
+                Section("Invoices") {
+                    LabeledContent("Invoiced") {
+                        Text(Formatting.invoiceCount(client.issuedInvoices.count))
+                    }
+                    LabeledContent("Outstanding") {
+                        Text(Formatting.money(client.outstandingTotal))
+                            .monospacedDigit()
+                            .sensitiveValue()
+                    }
+                }
+            }
         }
         .formStyle(.grouped)
         .navigationTitle(client.displayName)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                HStack(spacing: 8) {
+                    ClientAvatar(client: client, size: 22)
+                    Text(client.displayName)
+                        .font(.headline)
+                }
+            }
+        }
     }
 }

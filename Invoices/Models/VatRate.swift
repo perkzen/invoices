@@ -31,6 +31,17 @@ nonisolated enum VatRate: String, Codable, CaseIterable, Identifiable, Sendable 
         }
     }
 
+    /// For a narrow column, where the long label would not fit.
+    var shortLabel: String {
+        switch self {
+        case .standard: "22 %"
+        case .reduced: String(localized: "9.5 %")
+        case .superReduced: "5 %"
+        case .zero: "0 %"
+        case .exempt: String(localized: "Exempt")
+        }
+    }
+
     /// Text that must appear on the invoice when no VAT is charged.
     var exemptionClause: String? {
         switch self {

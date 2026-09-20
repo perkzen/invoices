@@ -5,55 +5,38 @@ import SwiftUI
 /// bookkeeper keeps it in a spreadsheet, and the same table exported as
 /// .xlsx for the accountant.
 struct YearOverviewView: View {
+    /// `nil` until the year list has a year to offer.
+    let year: Int?
+
     @Query(sort: [SortDescriptor(\Invoice.sequence)]) private var invoices: [Invoice]
     @Query private var profiles: [BusinessProfile]
 
-    @State private var selectedYear: Int?
     @State private var exportedSheet: XLSXFile?
     @State private var isExporting = false
     @State private var exportError: String?
 
-    private var years: [Int] { YearOverview.availableYears(in: invoices) }
-
-    /// The newest year with invoices, until one is picked. Falling back to
-    /// the current year would show an empty table every January.
-    private var year: Int {
-        selectedYear.flatMap { years.contains($0) ? $0 : nil }
-            ?? years.first
-            ?? Calendar.current.component(.year, from: Date())
-    }
-
-    private var overview: YearOverview {
-        YearOverview.make(year: year, invoices: invoices, profile: profiles.first)
+    private var overview: YearOverview? {
+        year.map { YearOverview.make(year: $0, invoices: invoices, profile: profiles.first) }
     }
 
     var body: some View {
         Group {
-            if years.isEmpty {
+            if let overview {
+                content(for: overview)
+                    .navigationTitle(overview.title)
+                    .toolbar {
+                        ToolbarItem(placement: .primaryAction) {
+                            Button("Export XLSX", systemImage: "tablecells.badge.ellipsis") {
+                                exportSheet(overview)
+                            }
+                            .help("Save the overview as an Excel spreadsheet")
+                        }
+                    }
+            } else {
                 ContentUnavailableView {
                     Label("No invoices issued", systemImage: "tablecells")
                 } description: {
                     Text("The overview lists invoices once the first one has been issued.")
-                }
-            } else {
-                content(for: overview)
-            }
-        }
-        .navigationTitle("Overview")
-        .toolbar {
-            if !years.isEmpty {
-                ToolbarItem(placement: .principal) {
-                    Picker("Year", selection: Binding(get: { year }, set: { selectedYear = $0 })) {
-                        ForEach(years, id: \.self) { year in
-                            Text(verbatim: String(year)).tag(year)
-                        }
-                    }
-                    .labelsHidden()
-                    .frame(minWidth: 90)
-                }
-                ToolbarItem(placement: .primaryAction) {
-                    Button("Export XLSX", systemImage: "tablecells.badge.ellipsis", action: exportSheet)
-                        .help("Save the overview as an Excel spreadsheet")
                 }
             }
         }
@@ -61,7 +44,7 @@ struct YearOverviewView: View {
             isPresented: $isExporting,
             document: exportedSheet,
             contentType: XLSXFile.contentType,
-            defaultFilename: YearOverviewXLSX.suggestedFilename(for: overview)
+            defaultFilename: overview.map(YearOverviewXLSX.suggestedFilename) ?? ""
         ) { result in
             if case .failure(let error) = result {
                 exportError = error.localizedDescription
@@ -88,7 +71,7 @@ struct YearOverviewView: View {
         }
     }
 
-    private func exportSheet() {
+    private func exportSheet(_ overview: YearOverview) {
         exportedSheet = XLSXFile(data: YearOverviewXLSX.data(for: overview))
         // Present on the next turn so the document is committed first —
         // setting both in one frame can hand the exporter a nil document.
@@ -103,6 +86,7 @@ private struct IssuerHeader: View {
         VStack(alignment: .leading, spacing: 2) {
             Text(overview.title)
                 .font(.title3.weight(.semibold))
+                .foregroundStyle(.primary)
                 .padding(.bottom, 4)
             if !overview.issuer.headline.isEmpty {
                 Text(overview.issuer.headline)
@@ -134,27 +118,27 @@ private struct OverviewTable: View {
             TableColumn("Client") { row in
                 Text(row.clientLabel).strikethrough(row.isCancelled)
             }
-            .width(min: 160, ideal: 240)
+            .width(min: 140, ideal: 170)
 
             TableColumn("Invoice no.") { row in
                 Text(row.number).monospacedDigit()
             }
-            .width(min: 80, ideal: 90)
+            .width(min: 70, ideal: 76)
 
             TableColumn("Date") { row in
                 Text(Formatting.date(row.issueDate)).monospacedDigit()
             }
-            .width(min: 80, ideal: 95)
+            .width(min: 75, ideal: 80)
 
             TableColumn("Due date") { row in
                 Text(Formatting.date(row.dueDate)).monospacedDigit()
             }
-            .width(min: 80, ideal: 95)
+            .width(min: 75, ideal: 80)
 
             TableColumn("Date of service") { row in
                 Text(row.servicePeriod).monospacedDigit()
             }
-            .width(min: 150, ideal: 200)
+            .width(min: 140, ideal: 150)
 
             TableColumn("Amount in \(currencyCode)") { row in
                 Text(Formatting.money(row.amount, currencyCode: row.currencyCode))
@@ -163,7 +147,7 @@ private struct OverviewTable: View {
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .sensitiveValue()
             }
-            .width(min: 90, ideal: 120)
+            .width(min: 90, ideal: 100)
             .alignment(.trailing)
 
             TableColumn("Payment received") { row in
@@ -171,7 +155,7 @@ private struct OverviewTable: View {
                     .monospacedDigit()
                     .foregroundStyle(row.isPaid ? AnyShapeStyle(.primary) : AnyShapeStyle(.secondary))
             }
-            .width(min: 100, ideal: 120)
+            .width(min: 90, ideal: 100)
         }
         .tableStyle(.inset(alternatesRowBackgrounds: true))
     }
