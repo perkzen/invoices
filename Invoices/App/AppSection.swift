@@ -1,7 +1,8 @@
 import Foundation
 
 /// The sidebar's top-level destinations. Settings appears here as well as in
-/// the ⌘, window, so nobody has to know the shortcut to find it.
+/// the ⌘, window, so nobody has to know the shortcut to find it — pinned to
+/// the bottom, apart from the three sections that hold the work.
 enum AppSection: String, CaseIterable, Identifiable, Hashable {
     case invoices
     case clients
@@ -9,6 +10,9 @@ enum AppSection: String, CaseIterable, Identifiable, Hashable {
     case settings
 
     var id: String { rawValue }
+
+    /// The sections listed at the top of the sidebar, in order of daily use.
+    static let content: [AppSection] = [.invoices, .clients, .overview]
 
     var title: String {
         switch self {

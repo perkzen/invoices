@@ -18,9 +18,24 @@ struct ContentView: View {
     var body: some View {
         NavigationSplitView {
             List(selection: $section) {
-                ForEach(AppSection.allCases) { item in
+                ForEach(AppSection.content) { item in
                     Label(item.title, systemImage: item.symbol)
                         .tag(item)
+                }
+            }
+            // Settings is a destination one visits rarely, so it sits apart
+            // at the foot of the sidebar. A second list bound to the same
+            // selection keeps the row looking and highlighting like the rest.
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                VStack(spacing: 0) {
+                    Divider()
+                    List(selection: $section) {
+                        Label(AppSection.settings.title, systemImage: AppSection.settings.symbol)
+                            .tag(AppSection.settings)
+                    }
+                    .listStyle(.sidebar)
+                    .scrollDisabled(true)
+                    .frame(height: 44)
                 }
             }
             .navigationSplitViewColumnWidth(min: 170, ideal: 190, max: 240)
