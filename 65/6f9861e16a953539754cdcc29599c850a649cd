@@ -1,0 +1,23 @@
+Invoices/App/PrivacyCommands.swift
+  s_5bc68a807eb579::t_cca9e840eb0893 3,5
+README.md
+  s_5bc68a807eb579::t_fd3ea86c7badb0 3-4,8-38,42-43,47-49,53,177-178,210-211,219,221-222,224,236-239,245-251,258-263,267-270,276-281,283,289-292
+Invoices/Features/Settings/SettingsView.swift
+  s_5bc68a807eb579::t_46d493c029c4ab 126
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "656f9861e16a953539754cdcc29599c850a649cd",
+  "prompts": {},
+  "sessions": {
+    "s_5bc68a807eb579": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f2a5eda9-3117-44cc-a2bd-9d013c4ad34a",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
