@@ -11,7 +11,7 @@ nonisolated struct YearOverviewRow: Identifiable, Sendable, Equatable {
     /// itself — the screen follows the app language, the .xlsx stays Slovenian.
     var clientName: String?
     var issueDate: Date
-    /// Valuta — the date the payment is due.
+    /// The date the payment is due.
     var dueDate: Date
     var serviceDate: Date
     var serviceDateEnd: Date?
@@ -54,7 +54,7 @@ nonisolated struct YearOverview: Sendable {
         var addressLines: [String] = []
         var taxNumber: String = ""
 
-        /// "Domen Perko s.p., IT storitve in svetovanje"
+        /// "Domen Perko, IT services and consulting"
         var headline: String {
             [name, activityLine].filter { !$0.isEmpty }.joined(separator: ", ")
         }

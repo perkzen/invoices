@@ -11,7 +11,7 @@ final class Invoice {
 
     var status: InvoiceStatus = InvoiceStatus.draft
     var issueDate: Date = Date()
-    /// Datum opravljene storitve — mandatory on a Slovenian invoice and
+    /// Date of service — mandatory on a Slovenian invoice and
     /// often different from the issue date.
     var serviceDate: Date = Date()
     /// Set when the service spans a period — the invoice then prints

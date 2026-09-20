@@ -5,7 +5,7 @@ import SwiftData
 final class InvoiceLine {
     var itemDescription: String = ""
     var quantity: Decimal = 1
-    /// Unit of measure — "ura", "kos", "dan", "mesec". Empty hides the
+    /// Unit of measure — hour, piece, day, month. Empty hides the
     /// column on the printed invoice.
     var unit: String = ""
     var unitPrice: Decimal = 0

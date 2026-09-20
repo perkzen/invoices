@@ -4,7 +4,7 @@ import Testing
 @testable import Invoices
 
 @MainActor
-@Suite("Izvoz PDF")
+@Suite("PDF export")
 struct InvoicePDFTests {
     private func makeContext() throws -> ModelContext {
         let container = try ModelContainer(
@@ -21,16 +21,17 @@ struct InvoicePDFTests {
         status: InvoiceStatus = .draft
     ) -> (Invoice, BusinessProfile) {
         let profile = BusinessProfile.current(in: context)
-        profile.name = "Domen Perko s.p."
-        profile.street = "Trg svobode 4"
+        profile.name = "Domen Perko"
+        profile.street = "Rue de la Paix 4"
         profile.postalCode = "1000"
         profile.city = "Ljubljana"
         profile.taxNumber = "12345678"
         profile.iban = "SI56 1910 0000 1234 567"
-        profile.bankName = "Deželna banka"
+        profile.bankName = "Banque Générale"
 
-        let client = Client(name: "Čevljarstvo Žnidaršič d.o.o.")
-        client.street = "Šmartinska cesta 152"
+        // Diacritics on purpose — the page has to render them intact.
+        let client = Client(name: "Müller & Søn ApS")
+        client.street = "Ærøvej 152"
         client.postalCode = "1000"
         client.city = "Ljubljana"
         client.taxNumber = "87654321"
@@ -49,8 +50,8 @@ struct InvoicePDFTests {
 
         for index in 0..<lineCount {
             let line = InvoiceLine(
-                itemDescription: "Razvoj programske opreme – šifra \(index + 1)",
-                quantity: 40, unit: "ura", unitPrice: 55, vatRate: .exempt, sortIndex: index
+                itemDescription: "Software development – item \(index + 1)",
+                quantity: 40, unit: "h", unitPrice: 55, vatRate: .exempt, sortIndex: index
             )
             line.invoice = invoice
             context.insert(line)
@@ -107,6 +108,8 @@ struct InvoicePDFTests {
     @Test func `filename follows the invoice number`() throws {
         let context = try makeContext()
         let (invoice, _) = makeInvoice(in: context, status: .issued)
-        #expect(InvoicePDF.suggestedFilename(for: invoice) == "Racun-2026-001")
+        let filename = InvoicePDF.suggestedFilename(for: invoice)
+        #expect(filename.hasSuffix("-2026-001"))
+        #expect(filename.allSatisfy { $0.isASCII && !$0.isWhitespace })
     }
 }

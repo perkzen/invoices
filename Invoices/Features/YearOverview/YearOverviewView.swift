@@ -1,7 +1,7 @@
 import SwiftData
 import SwiftUI
 
-/// Pregled — every issued invoice of one year in one table, the way a
+/// Overview — every issued invoice of one year in one table, the way a
 /// bookkeeper keeps it in a spreadsheet, and the same table exported as
 /// .xlsx for the accountant.
 struct YearOverviewView: View {
