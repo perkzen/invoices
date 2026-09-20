@@ -19,8 +19,13 @@ proprietor.
 - **Private mode** — *View › Hide sensitive values* (⇧⌘H) blanks tax numbers, the IBAN
   and every amount on screen, for a screen share. Exports keep the real values
 - **English and Slovenian** — follows the Mac's language, or *Settings › Language*.
-  English is the source language; the printed invoice and the spreadsheet headers stay
-  Slovenian, because they are documents rather than interface
+  English is the source language and the only language in the repository: Slovenian
+  exists solely as translations in `Resources/Localizable.xcstrings`. The printed
+  invoice, the spreadsheet, the exported file names and the template defaults stay
+  Slovenian whatever the interface language, because they are documents rather than
+  interface — their English keys are resolved through `Core/DocumentText.swift`, and a
+  test in `LocalizationTests` lists every such key and fails when one has no Slovenian
+  translation
 - **Updates** — the release build updates itself over Sparkle
 
 Not built yet: printing, electronic invoicing, expenses, search and filtering.

@@ -76,8 +76,12 @@ enum InvoicePDF {
         }
     }
 
+    /// Named in the document's language, like the invoice itself, and kept
+    /// to ASCII so the file travels through any mail client and file system.
     static func suggestedFilename(for invoice: Invoice) -> String {
-        invoice.number.isEmpty ? "Osnutek-racuna" : "Racun-\(invoice.number)"
+        invoice.number.isEmpty
+            ? DocumentText.string("Draft-invoice")
+            : DocumentText.string("Invoice-\(invoice.number)")
     }
 
     @MainActor

@@ -8,9 +8,9 @@ final class Client {
     var postalCode: String = ""
     var city: String = ""
     var countryCode: String = "SI"
-    /// Davčna številka, without the SI prefix.
+    /// Tax number, without the SI prefix.
     var taxNumber: String = ""
-    /// ID za DDV — empty when the client is not a DDV zavezanec.
+    /// VAT ID — empty when the client is not VAT registered.
     var vatID: String = ""
     var email: String = ""
     var defaultPaymentTermDays: Int = 8

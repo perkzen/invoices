@@ -10,8 +10,8 @@ struct InvoiceDetailView: View {
     @Query private var profiles: [BusinessProfile]
 
     private var isLocked: Bool { !invoice.status.isEditable }
-    /// A s.p. that is not a DDV zavezanec never charges VAT, so the whole
-    /// VAT apparatus stays out of the way until the toggle in Nastavitve flips.
+    /// A business that is not VAT registered never charges VAT, so the whole
+    /// VAT apparatus stays out of the way until the toggle in Settings flips.
     private var chargesVat: Bool { profiles.first?.isVatRegistered ?? false }
 
     @State private var exportedPDF: PDFFile?
@@ -225,7 +225,7 @@ struct InvoiceDetailView: View {
 
     private func issue() {
         InvoiceNumbering.assign(to: invoice, in: context)
-        // The bank reference most s.p. use is the invoice number under the
+        // The bank reference most sole traders use is the invoice number under the
         // SI00 model; only fill it in when nothing was typed by hand.
         if invoice.paymentReference.isEmpty {
             invoice.paymentReference = InvoiceTemplate.defaultReference(for: invoice)

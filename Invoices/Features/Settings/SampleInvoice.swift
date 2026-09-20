@@ -15,8 +15,10 @@ final class SampleInvoice {
         )
         let context = container.mainContext
 
-        let client = Client(name: "Vzorčno podjetje d.o.o.")
-        client.street = "Slovenska cesta 55B"
+        // The sample is previewed on the printed invoice, so it reads in the
+        // document's language, not the interface's.
+        let client = Client(name: DocumentText.string("Sample Company Ltd."))
+        client.street = DocumentText.string("1 Sample Street")
         client.postalCode = "1000"
         client.city = "Ljubljana"
         client.taxNumber = "12345678"
@@ -43,8 +45,8 @@ final class SampleInvoice {
         context.insert(invoice)
 
         let items: [(String, Decimal, Decimal)] = [
-            ("Računalniško programiranje", 1, 1075),
-            ("Svetovanje in podpora", 4, 60),
+            (DocumentText.string("Software development"), 1, 1075),
+            (DocumentText.string("Consulting and support"), 4, 60),
         ]
         for (index, item) in items.enumerated() {
             let line = InvoiceLine(

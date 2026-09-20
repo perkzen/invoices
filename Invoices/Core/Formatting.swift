@@ -1,7 +1,7 @@
 import Foundation
 
 /// The app formats money and dates the Slovenian way regardless of the
-/// system locale, because that is what ends up on a printed račun.
+/// system locale, because that is what ends up on a printed invoice.
 nonisolated enum Formatting {
     static let locale = Locale(identifier: "sl_SI")
 
@@ -26,10 +26,10 @@ nonisolated enum Formatting {
         number(value, fractionDigits: 1) + " %"
     }
 
-    /// Slovenian counts in four forms — 1 račun, 2 računa, 3 računi,
-    /// 5 računov — and the dual is not optional in writing. English has two.
-    /// Both sets live in the catalog under each language's plural rules,
-    /// which for `sl` are exactly the old hand-written `% 100` switch.
+    /// Slovenian counts in four forms — one, two, few and other — and the
+    /// dual is not optional in writing. English has two. Both sets live in
+    /// the catalog under each language's plural rules, which for `sl` are
+    /// exactly the old hand-written `% 100` switch.
     static func invoiceCount(_ count: Int) -> String {
         String(localized: "\(count) invoices")
     }

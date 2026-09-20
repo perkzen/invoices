@@ -1,29 +1,29 @@
 import Foundation
 
 /// Lays the year overview out as a spreadsheet: the issuer block, the table
-/// of issued invoices, and the SKUPAJ line.
+/// of issued invoices, and the TOTAL line.
 ///
 /// The total is written as a value rather than a `=SUM()` formula, because
 /// cancelled invoices are listed (their numbers are part of the sequence) but
 /// not counted — a formula over the column would silently disagree with the
 /// app.
 nonisolated enum YearOverviewXLSX {
-    /// Verbatim Slovenian, like the printed invoice — the sheet goes to a
-    /// Slovenian accountant whatever language the app is running in.
+    /// Resolved through `DocumentText`, like the printed invoice — the sheet
+    /// goes to a Slovenian accountant whatever language the app is running in.
     static let columnHeaders: [String] = [
-        "Stranka",
-        "Račun št.",
-        "Datum",
-        "Valuta",
-        "Datum opravljene storitve",
-        "Vrednost",
-        "Prejem plačila",
+        DocumentText.string("Client"),
+        DocumentText.string("Invoice no."),
+        DocumentText.string("Date"),
+        DocumentText.string("Due date"),
+        DocumentText.string("Date of service"),
+        DocumentText.string("Amount"),
+        DocumentText.string("Payment received"),
     ]
 
     private static let columnWidths: [Double] = [34, 12, 12, 12, 28, 16, 16]
 
     static func suggestedFilename(for overview: YearOverview) -> String {
-        "Izdani-racuni-\(overview.year)"
+        DocumentText.string("Issued-invoices-\(String(overview.year))")
     }
 
     static func data(for overview: YearOverview) -> Data {
@@ -32,7 +32,7 @@ nonisolated enum YearOverviewXLSX {
 
     static func sheet(for overview: YearOverview) -> XLSXWriter.Sheet {
         var rows: [[XLSXWriter.Cell]] = [
-            [.text("IZDANI RAČUNI ZA LETO \(overview.year)", style: .bold)],
+            [.text(DocumentText.string("INVOICES ISSUED IN \(String(overview.year))"), style: .bold)],
             [],
         ]
 
@@ -44,18 +44,18 @@ nonisolated enum YearOverviewXLSX {
             rows.append([.text(line)])
         }
         if !issuer.taxNumber.isEmpty {
-            rows.append([.text("Davčna številka: \(issuer.taxNumber)")])
+            rows.append([.text(DocumentText.string("Tax number: \(issuer.taxNumber)"))])
         }
         rows.append([])
 
         var headers = columnHeaders
-        headers[5] = "\(headers[5]) v \(overview.currencyCode)"
+        headers[5] = DocumentText.string("Amount in \(overview.currencyCode)")
         rows.append(headers.map { .text($0, style: .header) })
         let frozenRows = rows.count
 
         for row in overview.rows {
             rows.append([
-                .text(row.clientName ?? "Brez stranke", style: .cell),
+                .text(row.clientName ?? DocumentText.string("No client"), style: .cell),
                 .text(row.number, style: .cell),
                 XLSXWriter.Cell(.date(row.issueDate), style: .cellDate),
                 XLSXWriter.Cell(.date(row.dueDate), style: .cellDate),
@@ -69,12 +69,12 @@ nonisolated enum YearOverviewXLSX {
         var total: [XLSXWriter.Cell] = Array(
             repeating: XLSXWriter.Cell(.empty, style: .totalText), count: columnHeaders.count
         )
-        total[0] = .text("SKUPAJ", style: .totalText)
+        total[0] = .text(DocumentText.string("TOTAL"), style: .totalText)
         total[5] = XLSXWriter.Cell(.number(overview.total), style: .totalMoney)
         rows.append(total)
 
         return XLSXWriter.Sheet(
-            name: "Računi \(overview.year)",
+            name: DocumentText.string("Invoices \(String(overview.year))"),
             rows: rows,
             columnWidths: columnWidths,
             frozenRows: frozenRows
@@ -84,7 +84,7 @@ nonisolated enum YearOverviewXLSX {
     /// A real date when the invoice was paid, so the column stays sortable;
     /// otherwise the reason there is no date, or nothing at all.
     private static func paymentCell(for row: YearOverviewRow) -> XLSXWriter.Cell {
-        if row.isCancelled { return .text("Storniran", style: .cell) }
+        if row.isCancelled { return .text(DocumentText.string("Cancelled"), style: .cell) }
         if let paidDate = row.paidDate {
             return XLSXWriter.Cell(.date(paidDate), style: .cellDate)
         }

@@ -1,7 +1,7 @@
 import Foundation
 
 /// Once an invoice is issued its content is fixed — a mistake is corrected
-/// with a storno or a dobropis, never by editing the original.
+/// with a cancellation or a credit note, never by editing the original.
 nonisolated enum InvoiceStatus: String, Codable, CaseIterable, Identifiable, Sendable {
     case draft
     case issued
