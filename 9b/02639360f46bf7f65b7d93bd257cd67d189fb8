@@ -1,0 +1,78 @@
+Invoices/Core/XLSXWriter.swift
+  s_0af983e3ef05fe::t_83f9c301a68a70 101-104
+  s_0af983e3ef05fe::t_94c194fdd4bd11 97-100,105-110,121-132
+Invoices/Features/YearOverview/YearOverviewView.swift
+  s_0af983e3ef05fe::t_916a70a499aab2 9,35-39,47,49-51
+  s_0af983e3ef05fe::t_abd40718e56cea 48
+Invoices/Features/Import/SpreadsheetImportFlow.swift
+  s_0af983e3ef05fe::t_3cde17c729573f 1-101
+Invoices/Core/ZIPArchive.swift
+  s_0af983e3ef05fe::t_e68788c71f1983 98
+  s_0af983e3ef05fe::t_94c194fdd4bd11 95-97,99-179
+Tests/InvoicesTests/InvoiceImportTests.swift
+  s_0af983e3ef05fe::t_feb0587726010d 1-174,177-260
+  s_0af983e3ef05fe::t_67b0925b6c1ca4 175-176
+Invoices/Core/Spreadsheet.swift
+  s_0af983e3ef05fe::t_e68788c71f1983 57,95,181
+  s_0af983e3ef05fe::t_2510ae44c3f8d3 1-56,58-94,96-180,182-294,297-309
+  s_0af983e3ef05fe::t_fea4922f71aacb 295-296
+Invoices/Features/Import/ImportSession.swift
+  s_0af983e3ef05fe::t_28a7fb6bd06007 1-136
+Invoices/Core/InvoiceImport.swift
+  s_0af983e3ef05fe::t_2690fcc5c32f2e 1-52,54-97,104-174,177-186,189-289,291-293,295-340,342-350,352-367
+  s_0af983e3ef05fe::t_67b0925b6c1ca4 175-176,187-188,290,294
+  s_0af983e3ef05fe::t_91f049ca681ac3 53,98-103
+  s_0af983e3ef05fe::t_e68788c71f1983 351
+Invoices/Features/Import/SpreadsheetImportView.swift
+  s_0af983e3ef05fe::t_abd40718e56cea 91
+  s_0af983e3ef05fe::t_4e290c5434b644 33
+  s_0af983e3ef05fe::t_9773f60c8b0a05 1-32,34-90,92-152
+Tests/InvoicesTests/SpreadsheetReaderTests.swift
+  s_0af983e3ef05fe::t_d06a18e7695a26 16,20,79,106,109,116,118,198,216
+  s_0af983e3ef05fe::t_029340cab63e09 119
+  s_0af983e3ef05fe::t_8997e29ce8ff8a 1-15,17-19,21-78,80-105,107-108,110-115,117,120-197,199-215,217-240
+Invoices/Features/Import/ImportColumnsStep.swift
+  s_0af983e3ef05fe::t_2d261c7dbd5b6e 10-14,16-17,20,33-43
+  s_0af983e3ef05fe::t_f9d9b12b1a6b99 1-9,15,18-19,21-32,44-99
+CONTEXT.md
+  s_0af983e3ef05fe::t_9d23d22cdd4d82 73-86
+Invoices/Resources/Localizable.xcstrings
+  s_0af983e3ef05fe::t_abd40718e56cea 2340,2587-2638
+  s_0af983e3ef05fe::t_67b0925b6c1ca4 2547-2586
+  s_0af983e3ef05fe::t_debe476c4091d1 2034-2339,2341-2546
+Invoices/Features/Import/ImportReviewStep.swift
+  s_0af983e3ef05fe::t_b1ba0c4807f95c 1-86,88-95,97-110,112-116,118-122,124-131,133-138,140-164,166-169
+  s_0af983e3ef05fe::t_4e290c5434b644 87,96,111,117,123,132,139
+  s_0af983e3ef05fe::t_67b0925b6c1ca4 165
+Invoices/Services/Ledger.swift
+  s_0af983e3ef05fe::t_91f049ca681ac3 132-217
+Invoices/Features/Invoices/InvoiceListView.swift
+  s_0af983e3ef05fe::t_916a70a499aab2 6,19,22-24
+Tests/InvoicesTests/LocalizationTests.swift
+  s_0af983e3ef05fe::t_9e8e98e5186b11 72-73
+README.md
+  s_0af983e3ef05fe::t_9d23d22cdd4d82 17-24,41-44,121-122,136-140
+Invoices/App/ContentView.swift
+  s_0af983e3ef05fe::t_916a70a499aab2 5-9,38-42
+Invoices/Features/Import/ImportClientsStep.swift
+  s_0af983e3ef05fe::t_ec1328893e6bbb 1-36,39-40
+  s_0af983e3ef05fe::t_debe476c4091d1 37-38
+Invoices/App/InvoicesApp.swift
+  s_0af983e3ef05fe::t_916a70a499aab2 30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "9b02639360f46bf7f65b7d93bd257cd67d189fb8",
+  "prompts": {},
+  "sessions": {
+    "s_0af983e3ef05fe": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "80dd2b81-0a66-43a1-9c98-9d15941d28b8",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
