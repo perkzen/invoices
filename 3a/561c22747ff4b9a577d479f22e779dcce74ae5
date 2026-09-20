@@ -1,0 +1,41 @@
+Invoices/App/UpdaterCommands.swift
+  s_9414a4e87e8106::t_353152b72edb5d 1-52
+project.yml
+  s_9414a4e87e8106::t_f3047f9394bdc1 33-34
+  s_9414a4e87e8106::t_5386a52eb9b470 19-23
+  s_9414a4e87e8106::t_fa5e6f81abd082 70-77
+  s_9414a4e87e8106::t_735e732bc3f7a6 12
+Scripts/install-release.sh
+  s_9414a4e87e8106::t_451bc129202162 22-28,35
+.github/workflows/release.yml
+  s_9414a4e87e8106::t_f8d489b1dfcd61 1-189
+README.md
+  s_9414a4e87e8106::t_92956143849d4d 109-196
+  s_9414a4e87e8106::t_4a1eb92592cf31 88
+  s_9414a4e87e8106::t_962b7198808887 229
+  s_9414a4e87e8106::t_05e98efd592f2d 52-54
+Invoices/App/Invoices.entitlements
+  s_9414a4e87e8106::t_b3be5d30b76b44 11-23
+Invoices/App/InvoicesApp.swift
+  s_9414a4e87e8106::t_28ab811a8f6e91 28-30
+CLAUDE.md
+  s_9414a4e87e8106::t_25dee8ce6899a0 26-29
+Invoices/Resources/Localizable.xcstrings
+  s_9414a4e87e8106::t_a16d3052c24083 209-215
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "3a561c22747ff4b9a577d479f22e779dcce74ae5",
+  "prompts": {},
+  "sessions": {
+    "s_9414a4e87e8106": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "458c8859-470e-4b2a-a806-8682831bea13",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
