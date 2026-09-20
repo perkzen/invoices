@@ -1,0 +1,72 @@
+Invoices/Models/Invoice.swift
+  s_5a14b5343019f4::t_645277826f2bb3 14
+Invoices/Features/YearOverview/YearOverviewView.swift
+  s_5a14b5343019f4::t_645277826f2bb3 4
+Tests/InvoicesTests/InvoiceMathTests.swift
+  s_5a14b5343019f4::t_645277826f2bb3 5,67
+  s_5a14b5343019f4::t_ef5b50d09c59b8 76
+Invoices/Services/Ledger.swift
+  s_5a14b5343019f4::t_10771b3f101a7c 4-5,12,124-125
+Invoices/Models/Client.swift
+  s_5a14b5343019f4::t_645277826f2bb3 11,13
+Invoices/Models/InvoiceStatus.swift
+  s_5a14b5343019f4::t_645277826f2bb3 4
+README.md
+  s_5a14b5343019f4::t_645277826f2bb3 22-28
+Tests/InvoicesTests/PrintedInvoiceTests.swift
+  s_5a14b5343019f4::t_ef5b50d09c59b8 6,21,27,37,48,60,63-64,70-71,76,93,97,108,110,115,118,120-124,126,133-134,137,142,158,164
+Invoices/Core/InvoiceMath.swift
+  s_5a14b5343019f4::t_645277826f2bb3 36
+Invoices/Models/VatRate.swift
+  s_5a14b5343019f4::t_645277826f2bb3 3-4,11,34-35,39,41
+Invoices/Core/Formatting.swift
+  s_5a14b5343019f4::t_02721b0263f6e8 10
+  s_5a14b5343019f4::t_645277826f2bb3 4,39-42
+Invoices/Core/PrintedInvoice.swift
+  s_5a14b5343019f4::t_10771b3f101a7c 3,9,16,33,64,74,91,97-98,104-105,110,118,124-125,127-129
+Invoices/Features/Clients/ClientDetailView.swift
+  s_5a14b5343019f4::t_645277826f2bb3 16
+Tests/InvoicesTests/LocalizationTests.swift
+  s_5a14b5343019f4::t_645277826f2bb3 5,12-19,22-25,29-30,33-35,49-77,79-81,85-101,103-104,111-115,117-122
+Invoices/Core/YearOverviewXLSX.swift
+  s_5a14b5343019f4::t_645277826f2bb3 4,11-12,14-20,26,35,47,52,58,72,77,87
+Invoices/Models/InvoiceLine.swift
+  s_5a14b5343019f4::t_645277826f2bb3 8
+Invoices/Resources/Localizable.xcstrings
+  s_5a14b5343019f4::t_645277826f2bb3 102-113,174-185,267-278,399-410,431-442,463-474,545-556,567-578,609-620,681,741-752,803-814,825-848,859-871,921-944,1005,1095-1106,1177-1188,1279-1290,1381-1392,1423-1446,1457-1468,1549-1560,1571-1582,1603-1614,1625,1645-1656,1677,1747,1827-1838,1849-1872,1883-1894,1925-1936,1947,1957,1995,2000,2005,2010
+Scripts/render-app-icon.swift
+  s_5a14b5343019f4::t_645277826f2bb3 206
+Invoices/Core/DocumentText.swift
+  s_5a14b5343019f4::t_645277826f2bb3 1-26
+Tests/InvoicesTests/XLSXWriterTests.swift
+  s_5a14b5343019f4::t_645277826f2bb3 6,62,71,78,95,103
+Invoices/App/PrivacyMode.swift
+  s_5a14b5343019f4::t_645277826f2bb3 8
+Invoices/Services/InvoiceNumbering.swift
+  s_5a14b5343019f4::t_10771b3f101a7c 13-15,17
+Tests/InvoicesTests/InvoiceTemplateTests.swift
+  s_5a14b5343019f4::t_ef5b50d09c59b8 66-75
+  s_5a14b5343019f4::t_645277826f2bb3 5,9-10,12,16-35,42-47
+Tests/InvoicesTests/LedgerTests.swift
+  s_5a14b5343019f4::t_ef5b50d09c59b8 7,24,151
+Invoices/Core/YearOverview.swift
+  s_5a14b5343019f4::t_645277826f2bb3 14,54
+CONTEXT.md
+  s_5a14b5343019f4::t_d26b14f24ee276 3-5,9,14,17,21,26,30,35,39,43,46,59,67,70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "df3c00f32578d592313d6eced72fdbc32699cb91",
+  "prompts": {},
+  "sessions": {
+    "s_5a14b5343019f4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b41eb2a3-1144-47a7-974f-d57b39fab8f6",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
