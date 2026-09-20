@@ -63,7 +63,7 @@ struct InvoiceDetailView: View {
                 }
             }
             ToolbarItem(placement: .primaryAction) {
-                Button("Export PDF", systemImage: "square.and.arrow.down", action: exportPDF)
+                Button("Export PDF", systemImage: "square.and.arrow.up", action: exportPDF)
                     .help("Save the invoice as a PDF")
             }
             ToolbarItem(placement: .primaryAction) {

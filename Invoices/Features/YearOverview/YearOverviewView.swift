@@ -34,7 +34,7 @@ struct YearOverviewView: View {
                     .navigationTitle(overview.title)
                     .toolbar {
                         ToolbarItem(placement: .primaryAction) {
-                            Button("Export XLSX", systemImage: "tablecells.badge.ellipsis") {
+                            Button("Export XLSX", systemImage: "square.and.arrow.up") {
                                 exportSheet(overview)
                             }
                             .help("Save the overview as an Excel spreadsheet")
