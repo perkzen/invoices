@@ -1,0 +1,57 @@
+Invoices/Features/Invoices/InvoiceDetailView.swift
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 1-318
+README.md
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 54-55,58-88,115-122,124,127-133,144-145
+  s_ed137e6e2b8efe::t_13626df19a0069 32,113
+CLAUDE.md
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 1-31
+Invoices/App/SensitiveField.swift
+  s_ed137e6e2b8efe::t_46d60f24372c73 1-22
+Invoices/App/AppSection.swift
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 1-30
+Invoices/Services/InvoicePDF.swift
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 1-118
+Invoices/Services/InvoiceNumbering.swift
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 1-31
+Invoices/Services/XLSXFile.swift
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 1-32
+Scripts/install-release.sh
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 1-43
+Invoices/Services/PDFFile.swift
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 1-25
+Invoices/App/PrivacyCommands.swift
+  s_ed137e6e2b8efe::t_46d60f24372c73 1-15
+Invoices/Features/Invoices/InvoiceListView.swift
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 4,6-8,12,14,16,18,22-24,26,32-33,35,38-39,41-42,46-47,49,54-66,74-77,79-80,84,86-88,91-92,94-95,102-103,110,112,116-119,125-134,136-143,146
+Invoices/Features/YearOverview/YearOverviewView.swift
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 1-209
+Invoices/Features/Clients/ClientDetailView.swift
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 1-15,18-33
+  s_ed137e6e2b8efe::t_ae61d26b41c119 16-17
+Invoices/Services/InvoicePDFPage.swift
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 1-313
+Invoices/Services/ImageData.swift
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 1-36
+Invoices/Features/Settings/SampleInvoice.swift
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 1-58
+project.yml
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 30-32,41-52,56-57,75-81
+Invoices/Features/Invoices/InvoicePreview.swift
+  s_ed137e6e2b8efe::t_ee5dfe89e49e7a 1-142
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "f0f78b93875f368ed75f8b885d7b8dd91a7ad5ca",
+  "prompts": {},
+  "sessions": {
+    "s_ed137e6e2b8efe": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60497683-4e1f-49ce-94e2-57700e7426d3",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
