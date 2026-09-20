@@ -1,0 +1,33 @@
+project.yml
+  s_7465894342ffbe::t_28ccc76022802b 41,47,49-50,52
+  s_7465894342ffbe::t_2d09fda4ce1a97 42-46,48,51,56-57,75-81
+Scripts/install-release.sh
+  s_7f3ffac3e327b3::t_cbed01ad05e825 35-42
+  s_7465894342ffbe::t_a9b8e57e284b95 1-34,43
+CLAUDE.md
+  s_7465894342ffbe::t_fdcb0acf9395cd 1-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "cc58c43122fc4e3b2ad269324da8db44696eb371",
+  "prompts": {},
+  "sessions": {
+    "s_7465894342ffbe": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a0552250-6281-45d8-a3eb-14184e0e6b40",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    },
+    "s_7f3ffac3e327b3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "43d91ce5-eef0-4a95-8507-99563f7e35b4",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
