@@ -2,7 +2,7 @@ import Foundation
 
 /// Net / VAT / gross for a single amount. Plain values so the arithmetic
 /// can be tested without a SwiftData container.
-nonisolated struct Amounts: Equatable, Sendable {
+nonisolated struct Amounts: Hashable, Sendable {
     var net: Decimal = 0
     var vat: Decimal = 0
 

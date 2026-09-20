@@ -103,10 +103,12 @@ against `SUPublicEDKey`, so every update after that is unattended.
 ```
 project.yml              target, build settings, Info.plist
 Invoices/
-  App/                   entry point, sidebar shell, private mode, Sparkle updater
+  App/                   entry point, sidebar shell, private mode, Sparkle updater,
+                         view helpers shared by every feature (export, alerts, rows)
   Models/                SwiftData @Model types
   Core/                  pure value logic — imports Foundation and nothing else
-  Services/              the framework edge: SwiftData, AppKit, PDF and file export
+  Services/              the framework edge: the ledger over SwiftData, the PDF renderer,
+                         AppKit images
   Features/              one folder per sidebar section
   Resources/             asset catalog, Localizable.xcstrings
 Tests/InvoicesTests/     Swift Testing
@@ -116,6 +118,14 @@ Scripts/                 app icon renderer, release installer
 Anything in `Core/` is testable without a `ModelContainer`, a window or a run loop; that
 is what the Foundation-only rule buys. The app icon is drawn in code — rerun
 `swift Scripts/render-app-icon.swift` only after changing the artwork.
+
+Two seams carry most of the app. Every change to an invoice's life — a new draft, issuing,
+payment, cancellation, and whether a draft or a client may be deleted — goes through
+`Services/Ledger.swift`, so each rule is tested once and the views only ask. Everything the
+printed invoice shows is fixed first as `Core/PrintedInvoice.swift`, a plain value built
+from the models; the PDF page, the pagination budget, the live preview and the settings
+sample all render from it, and the preview re-renders because the value changed, not
+because a view listed what to watch.
 
 ## Decisions
 

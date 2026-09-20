@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+import UniformTypeIdentifiers
 @testable import Invoices
 
 @Suite("XLSX writer")
@@ -103,7 +104,7 @@ struct XLSXWriterTests {
     }
 
     @Test func `the exported document declares the xlsx type`() {
-        #expect(XLSXFile.contentType.preferredFilenameExtension == "xlsx")
+        #expect(UTType.xlsx.preferredFilenameExtension == "xlsx")
     }
 
     /// The parts are stored uncompressed, so the sheet XML can be read

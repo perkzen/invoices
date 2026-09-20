@@ -1,6 +1,36 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Add a line item before issuing the invoice": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pred izdajo računa dodaj vsaj eno postavko"
+          }
+        }
+      }
+    },
+    "Choose a client before issuing the invoice": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pred izdajo računa izberi stranko"
+          }
+        }
+      }
+    },
+    "Only a draft can be issued": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izdati je mogoče le osnutek"
+          }
+        }
+      }
+    },
     "": {
       "shouldTranslate": false
     },

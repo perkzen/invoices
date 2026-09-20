@@ -5,6 +5,16 @@ import Foundation
 nonisolated enum Formatting {
     static let locale = Locale(identifier: "sl_SI")
 
+    /// Every date calculation in the app runs on this calendar — the year an
+    /// invoice is numbered in, a due date, the month a sentence names — so a
+    /// Mac set to a non-Gregorian calendar cannot move an invoice into another
+    /// year.
+    static let calendar: Calendar = {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.locale = locale
+        return calendar
+    }()
+
     static func money(_ amount: Decimal, currencyCode: String = "EUR") -> String {
         amount.formatted(.currency(code: currencyCode).locale(locale))
     }
@@ -36,5 +46,12 @@ nonisolated enum Formatting {
 
     static func date(_ date: Date) -> String {
         date.formatted(Date.FormatStyle(date: .numeric, time: .omitted).locale(locale))
+    }
+
+    /// "1. 8. 2026 – 31. 8. 2026", or just the one date when the service did
+    /// not span a period.
+    static func period(_ start: Date, to end: Date?) -> String {
+        guard let end else { return date(start) }
+        return "\(date(start)) – \(date(end))"
     }
 }

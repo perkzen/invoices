@@ -46,4 +46,40 @@ struct InvoiceTemplateTests {
         #expect(InvoiceTemplate.upperMonthName(of: date) == calendar.standaloneMonthSymbols[7].uppercased())
         #expect(InvoiceTemplate.monthName(of: date) != "August")
     }
+
+    private var context: InvoiceTemplate.Context {
+        var components = DateComponents()
+        components.year = 2026; components.month = 8; components.day = 31
+        let serviceEnd = Formatting.calendar.date(from: components)!
+        components.month = 9; components.day = 9
+        return InvoiceTemplate.Context(
+            serviceDate: serviceEnd,
+            clientName: "Parakeet",
+            number: "2026-001",
+            iban: "SI56 1910 0000 1234 567",
+            reference: "SI00 2026-001",
+            dueDate: Formatting.calendar.date(from: components)!
+        )
+    }
+
+    @Test func `a template resolves against the invoice's facts`() {
+        let month = InvoiceTemplate.upperMonthName(of: context.serviceDate)
+        let intro = InvoiceTemplate.resolve(InvoiceTemplate.defaultIntro, in: context)
+        #expect(intro.contains("\(month) 2026"))
+        #expect(!intro.contains("{"))
+        let payment = InvoiceTemplate.resolve(InvoiceTemplate.defaultPaymentNote, in: context)
+        #expect(payment.contains("SI56 1910 0000 1234 567"))
+        #expect(payment.contains("SI00 2026-001"))
+        #expect(InvoiceTemplate.resolve("{client} until {due}", in: context) == "Parakeet until 9. 9. 2026")
+        // A sentence saved before the rename resolves the same way.
+        #expect(InvoiceTemplate.resolve("{stranka} until {valuta}", in: context) == "Parakeet until 9. 9. 2026")
+    }
+
+    /// The editor lists `Placeholder.allCases`; the resolver must fill every
+    /// one of them, or a token would print literally on a legal document.
+    @Test func `every placeholder the editor lists is filled by the resolver`() {
+        let filled = Set(InvoiceTemplate.values(for: context).keys)
+        #expect(filled == Set(InvoiceTemplate.Placeholder.allCases))
+        #expect(InvoiceTemplate.Placeholder.allCases.allSatisfy { !$0.meaning.isEmpty })
+    }
 }

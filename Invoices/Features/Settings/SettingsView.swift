@@ -1,7 +1,6 @@
 import AppKit
 import SwiftData
 import SwiftUI
-import UniformTypeIdentifiers
 
 /// The ⌘, window. The same content also lives in the sidebar under
 /// Settings, so nobody has to know the shortcut to find it.
@@ -16,48 +15,32 @@ struct SettingsView: View {
 /// preview of a sample invoice so every change is seen where it lands.
 struct SettingsContent: View {
     @Environment(\.modelContext) private var context
-    @State private var profile: BusinessProfile?
-    @State private var sample: SampleInvoice?
 
     var body: some View {
-        Group {
-            if let profile, let sample {
-                HStack(spacing: 0) {
-                    TabView {
-                        Tab("My business", systemImage: "building.2") {
-                            BusinessProfileForm(profile: profile)
-                        }
-                        Tab("Invoice template", systemImage: "doc.richtext") {
-                            InvoiceTemplateForm(profile: profile)
-                        }
-                    }
-                    .frame(width: 470)
-                    Divider()
-                    VStack(spacing: 0) {
-                        Text("Preview on a sample invoice")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .frame(maxWidth: .infinity)
-                            .padding(6)
-                        InvoicePreview(invoice: sample.invoice, profile: profile)
-                    }
-                    .frame(minWidth: 400)
+        let profile = Ledger(context).profile
+
+        HStack(spacing: 0) {
+            TabView {
+                Tab("My business", systemImage: "building.2") {
+                    BusinessProfileForm(profile: profile)
                 }
-                // The sample's lines carry the profile's default VAT rate, so
-                // flipping the VAT toggle rebuilds it with the right rate.
-                .onChange(of: profile.isVatRegistered) {
-                    self.sample = try? SampleInvoice(matching: profile)
+                Tab("Invoice template", systemImage: "doc.richtext") {
+                    InvoiceTemplateForm(profile: profile)
                 }
-            } else {
-                ProgressView()
             }
-        }
-        .task {
-            if profile == nil {
-                let current = BusinessProfile.current(in: context)
-                profile = current
-                sample = try? SampleInvoice(matching: current)
+            .frame(width: 470)
+            Divider()
+            VStack(spacing: 0) {
+                Text("Preview on a sample invoice")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity)
+                    .padding(6)
+                // Built in `body`, so every edit to the profile — the VAT
+                // toggle included — re-renders the sample.
+                InvoicePreview(printed: PrintedInvoice.sample(matching: profile))
             }
+            .frame(minWidth: 400)
         }
     }
 }
@@ -205,7 +188,7 @@ private struct InvoiceTemplateForm: View {
                 TextField("Closing sentence", text: $profile.closingNote, axis: .vertical)
                     .lineLimit(1...3)
                 DisclosureGroup("Placeholders filled in automatically") {
-                    ForEach(InvoiceTemplate.placeholders, id: \.token) { placeholder in
+                    ForEach(InvoiceTemplate.Placeholder.allCases, id: \.self) { placeholder in
                         HStack {
                             Text(verbatim: placeholder.token).monospaced()
                             Spacer()
@@ -275,14 +258,7 @@ private struct ImageWell: View {
                 importError = error.localizedDescription
             }
         }
-        .alert(
-            "The image could not be loaded",
-            isPresented: Binding(get: { importError != nil }, set: { if !$0 { importError = nil } })
-        ) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text(importError ?? "")
-        }
+        .errorAlert("The image could not be loaded", message: $importError)
     }
 
     private func load(_ url: URL) {

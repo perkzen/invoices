@@ -171,7 +171,7 @@ struct YearOverviewTests {
 
     @Test func `the issuer block joins the name and the activity line`() throws {
         let context = try makeContext()
-        let profile = BusinessProfile.current(in: context)
+        let profile = Ledger(context).profile
         profile.name = "Domen Perko"
         profile.activityLine = "IT services and consulting"
         profile.street = "Ihova 51 a"

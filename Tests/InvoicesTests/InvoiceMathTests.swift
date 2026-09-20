@@ -70,4 +70,9 @@ struct InvoiceNumberingTests {
         #expect(InvoiceNumbering.format(year: 2026, sequence: 1) == "2026-001")
         #expect(InvoiceNumbering.format(year: 2026, sequence: 142) == "2026-142")
     }
+
+    @Test func `the default reference is the SI00 model over the number`() {
+        #expect(InvoiceNumbering.defaultReference(number: "2026-001") == "SI00 2026-001")
+        #expect(InvoiceNumbering.defaultReference(number: "") == DocumentText.string("SI00 (invoice number)"))
+    }
 }
