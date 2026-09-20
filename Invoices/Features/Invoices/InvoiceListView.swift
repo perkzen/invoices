@@ -11,11 +11,11 @@ struct InvoiceListView: View {
         Group {
             if invoices.isEmpty {
                 ContentUnavailableView {
-                    Label("Ni računov", systemImage: "doc.text")
+                    Label("No invoices", systemImage: "doc.text")
                 } description: {
-                    Text("Ustvari prvi osnutek računa.")
+                    Text("Create your first draft invoice.")
                 } actions: {
-                    Button("Nov račun", action: newInvoice)
+                    Button("New invoice", action: newInvoice)
                 }
             } else {
                 List {
@@ -29,22 +29,22 @@ struct InvoiceListView: View {
                 }
             }
         }
-        .navigationTitle("Računi")
+        .navigationTitle("Invoices")
         .navigationDestination(for: Invoice.self) { InvoiceDetailView(invoice: $0) }
         .confirmationDialog(
-            "Izbrišem osnutek?",
+            "Delete draft?",
             isPresented: isConfirming,
             presenting: pendingDelete
         ) { invoice in
-            Button("Izbriši", role: .destructive) { delete(invoice) }
-            Button("Prekliči", role: .cancel) {}
+            Button("Delete", role: .destructive) { delete(invoice) }
+            Button("Cancel", role: .cancel) {}
         } message: { _ in
-            Text("Osnutek in vse njegove postavke bodo trajno izbrisani.")
+            Text("The draft and all of its line items will be permanently deleted.")
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: newInvoice) {
-                    Label("Nov račun", systemImage: "plus")
+                    Label("New invoice", systemImage: "plus")
                 }
                 .keyboardShortcut("n")
             }
@@ -73,11 +73,11 @@ struct InvoiceListView: View {
     @ViewBuilder
     private func deleteMenu(for invoice: Invoice) -> some View {
         if invoice.status.isEditable {
-            Button("Izbriši osnutek", systemImage: "trash", role: .destructive) {
+            Button("Delete draft", systemImage: "trash", role: .destructive) {
                 pendingDelete = invoice
             }
         } else {
-            Text("Izdanega računa ni mogoče izbrisati")
+            Text("An issued invoice cannot be deleted")
         }
     }
 
@@ -109,14 +109,14 @@ private struct InvoiceRow: View {
         HStack(spacing: 8) {
             NavigationLink(value: invoice) { content }
 
-            Button("Izbriši osnutek", systemImage: "trash", action: onDelete)
+            Button("Delete draft", systemImage: "trash", action: onDelete)
                 .labelStyle(.iconOnly)
                 .buttonStyle(.borderless)
                 .tint(.red)
                 .disabled(!invoice.status.isEditable)
                 .help(invoice.status.isEditable
-                      ? "Izbriši osnutek"
-                      : "Izdanega računa ni mogoče izbrisati")
+                      ? "Delete draft"
+                      : "An issued invoice cannot be deleted")
                 .opacity(isHovering ? 1 : 0)
         }
         .onHover { isHovering = $0 }
@@ -127,9 +127,9 @@ private struct InvoiceRow: View {
             Image(systemName: invoice.status.symbol)
                 .foregroundStyle(invoice.isOverdue ? .red : .secondary)
             VStack(alignment: .leading, spacing: 2) {
-                Text(invoice.number.isEmpty ? String(localized: "Osnutek") : invoice.number)
+                Text(invoice.number.isEmpty ? String(localized: "Draft") : invoice.number)
                     .font(.headline)
-                Text(invoice.client?.displayName ?? String(localized: "Brez stranke"))
+                Text(invoice.client?.displayName ?? String(localized: "No client"))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }

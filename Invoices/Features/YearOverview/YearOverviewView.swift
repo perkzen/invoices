@@ -31,19 +31,19 @@ struct YearOverviewView: View {
         Group {
             if years.isEmpty {
                 ContentUnavailableView {
-                    Label("Ni izdanih računov", systemImage: "tablecells")
+                    Label("No invoices issued", systemImage: "tablecells")
                 } description: {
-                    Text("Pregled pokaže račune, ko je prvi od njih izdan.")
+                    Text("The overview lists invoices once the first one has been issued.")
                 }
             } else {
                 content(for: overview)
             }
         }
-        .navigationTitle("Pregled")
+        .navigationTitle("Overview")
         .toolbar {
             if !years.isEmpty {
                 ToolbarItem(placement: .principal) {
-                    Picker("Leto", selection: Binding(get: { year }, set: { selectedYear = $0 })) {
+                    Picker("Year", selection: Binding(get: { year }, set: { selectedYear = $0 })) {
                         ForEach(years, id: \.self) { year in
                             Text(verbatim: String(year)).tag(year)
                         }
@@ -52,8 +52,8 @@ struct YearOverviewView: View {
                     .frame(minWidth: 90)
                 }
                 ToolbarItem(placement: .primaryAction) {
-                    Button("Izvozi XLSX", systemImage: "tablecells.badge.ellipsis", action: exportSheet)
-                        .help("Shrani pregled kot Excelovo preglednico")
+                    Button("Export XLSX", systemImage: "tablecells.badge.ellipsis", action: exportSheet)
+                        .help("Save the overview as an Excel spreadsheet")
                 }
             }
         }
@@ -68,10 +68,10 @@ struct YearOverviewView: View {
             }
         }
         .alert(
-            "Izvoz ni uspel",
+            "Export failed",
             isPresented: Binding(get: { exportError != nil }, set: { if !$0 { exportError = nil } })
         ) {
-            Button("V redu", role: .cancel) { exportError = nil }
+            Button("OK", role: .cancel) { exportError = nil }
         } message: {
             Text(exportError ?? "")
         }
@@ -112,7 +112,7 @@ private struct IssuerHeader: View {
             }
             if !overview.issuer.taxNumber.isEmpty {
                 HStack(spacing: 4) {
-                    Text("Davčna št.:")
+                    Text("Tax number:")
                     Text(overview.issuer.taxNumber).sensitiveValue()
                 }
             }
@@ -131,32 +131,32 @@ private struct OverviewTable: View {
 
     var body: some View {
         Table(rows) {
-            TableColumn("Stranka") { row in
+            TableColumn("Client") { row in
                 Text(row.clientLabel).strikethrough(row.isCancelled)
             }
             .width(min: 160, ideal: 240)
 
-            TableColumn("Račun št.") { row in
+            TableColumn("Invoice no.") { row in
                 Text(row.number).monospacedDigit()
             }
             .width(min: 80, ideal: 90)
 
-            TableColumn("Datum") { row in
+            TableColumn("Date") { row in
                 Text(Formatting.date(row.issueDate)).monospacedDigit()
             }
             .width(min: 80, ideal: 95)
 
-            TableColumn("Valuta") { row in
+            TableColumn("Due date") { row in
                 Text(Formatting.date(row.dueDate)).monospacedDigit()
             }
             .width(min: 80, ideal: 95)
 
-            TableColumn("Datum opravljene storitve") { row in
+            TableColumn("Date of service") { row in
                 Text(row.servicePeriod).monospacedDigit()
             }
             .width(min: 150, ideal: 200)
 
-            TableColumn("Vrednost v \(currencyCode)") { row in
+            TableColumn("Amount in \(currencyCode)") { row in
                 Text(Formatting.money(row.amount, currencyCode: row.currencyCode))
                     .monospacedDigit()
                     .strikethrough(row.isCancelled)
@@ -166,8 +166,8 @@ private struct OverviewTable: View {
             .width(min: 90, ideal: 120)
             .alignment(.trailing)
 
-            TableColumn("Prejem plačila") { row in
-                Text(row.paymentNote.isEmpty ? String(localized: "Neplačano") : row.paymentNote)
+            TableColumn("Payment received") { row in
+                Text(row.paymentNote.isEmpty ? String(localized: "Unpaid") : row.paymentNote)
                     .monospacedDigit()
                     .foregroundStyle(row.isPaid ? AnyShapeStyle(.primary) : AnyShapeStyle(.secondary))
             }
@@ -185,9 +185,9 @@ private struct OverviewSummary: View {
             Label(Formatting.invoiceCount(overview.countedRows.count), systemImage: "doc.text")
                 .foregroundStyle(.secondary)
             Spacer()
-            amount("Plačano", overview.paidTotal, style: .secondary)
-            amount("Odprto", overview.outstandingTotal, style: .secondary)
-            amount("SKUPAJ", overview.total, style: .primary)
+            amount("Paid", overview.paidTotal, style: .secondary)
+            amount("Outstanding", overview.outstandingTotal, style: .secondary)
+            amount("TOTAL", overview.total, style: .primary)
                 .font(.headline)
         }
         .padding(.horizontal, 20)

@@ -6,8 +6,8 @@ SwiftUI desktop app (macOS) for managing invoices for a Slovenian **s.p.**
 
 v0 scaffold. It builds, runs, and persists data. What works today:
 
-Screens are named here in English; the interface still ships Slovenian labels, given in
-brackets where you would go looking for one.
+Screens are named in English, as the source is; the Slovenian label each one carries on
+a Slovenian Mac is given in brackets.
 
 - **Clients** [Stranke] — client list with address and tax details (davčna številka,
   ID za DDV)
@@ -38,10 +38,16 @@ brackets where you would go looking for one.
   and the printed račun carry the real values whether it is on or off. Mark a new value
   with `.sensitiveValue()`; `.privacyRedacted()` at the root of the window blanks it —
   see `App/PrivacyMode.swift`
-- **Slovenian / English** — the interface follows the Mac's language, or the picker in
-  Settings › Jezik. Strings live in `Resources/Localizable.xcstrings` with Slovenian as
-  the source language. The printed invoice is always Slovenian; wrap any new string on
-  the PDF page in `Text(verbatim:)` so it never lands in the catalog
+- **English / Slovenian** — the interface follows the Mac's language, or the picker in
+  Settings › Language. Strings live in `Resources/Localizable.xcstrings` with **English as
+  the source language**: write the English text as the key in code, and Slovenian is the
+  translation hanging off it. Three kinds of string deliberately stay out of the catalog,
+  because they are Slovenian documents rather than interface — the printed račun (wrap any
+  new string on the PDF page in `Text(verbatim:)`), the .xlsx headers in
+  `Core/YearOverviewXLSX.swift`, and the invoice-count nouns in `Core/Formatting.swift`,
+  which decline four ways. Where one English word covers two Slovenian ones, use a symbolic
+  key: `InvoiceStatus.paid` is `"invoiceStatus.paid"` because an invoice is *plačan* while
+  a year's receipts are *plačano*, and both are "Paid"
 
 Not built yet: printing, e-računi, expenses, search and filtering.
 

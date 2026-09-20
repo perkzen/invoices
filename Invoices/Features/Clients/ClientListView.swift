@@ -10,11 +10,11 @@ struct ClientListView: View {
         Group {
             if clients.isEmpty {
                 ContentUnavailableView {
-                    Label("Ni strank", systemImage: "person.2")
+                    Label("No clients", systemImage: "person.2")
                 } description: {
-                    Text("Dodaj stranko, da ji lahko izdaš račun.")
+                    Text("Add a client so you can invoice them.")
                 } actions: {
-                    Button("Nova stranka", action: newClient)
+                    Button("New client", action: newClient)
                 }
             } else {
                 List {
@@ -28,22 +28,22 @@ struct ClientListView: View {
                 }
             }
         }
-        .navigationTitle("Stranke")
+        .navigationTitle("Clients")
         .navigationDestination(for: Client.self) { ClientDetailView(client: $0) }
         .confirmationDialog(
-            "Izbrišem stranko?",
+            "Delete client?",
             isPresented: isConfirming,
             presenting: pendingDelete
         ) { client in
-            Button("Izbriši", role: .destructive) { delete(client) }
-            Button("Prekliči", role: .cancel) {}
+            Button("Delete", role: .destructive) { delete(client) }
+            Button("Cancel", role: .cancel) {}
         } message: { client in
-            Text("\(client.displayName) bo trajno izbrisana.")
+            Text("\(client.displayName) will be permanently deleted.")
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: newClient) {
-                    Label("Nova stranka", systemImage: "plus")
+                    Label("New client", systemImage: "plus")
                 }
             }
         }
@@ -67,9 +67,9 @@ struct ClientListView: View {
     @ViewBuilder
     private func deleteMenu(for client: Client) -> some View {
         if hasRecords(client) {
-            Text("Ima izdane račune in je ni mogoče izbrisati")
+            Text("Has issued invoices and cannot be deleted")
         } else {
-            Button("Izbriši stranko", systemImage: "trash", role: .destructive) {
+            Button("Delete client", systemImage: "trash", role: .destructive) {
                 pendingDelete = client
             }
         }
@@ -110,12 +110,12 @@ private struct ClientRow: View {
                 }
             }
 
-            Button("Izbriši stranko", systemImage: "trash", action: onDelete)
+            Button("Delete client", systemImage: "trash", action: onDelete)
                 .labelStyle(.iconOnly)
                 .buttonStyle(.borderless)
                 .tint(.red)
                 .disabled(isBlocked)
-                .help(isBlocked ? "Ima izdane račune in je ni mogoče izbrisati" : "Izbriši stranko")
+                .help(isBlocked ? "Has issued invoices and cannot be deleted" : "Delete client")
                 .opacity(isHovering ? 1 : 0)
         }
         .onHover { isHovering = $0 }

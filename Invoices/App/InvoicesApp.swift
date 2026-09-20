@@ -11,7 +11,7 @@ struct InvoicesApp: App {
                 for: Invoice.self, InvoiceLine.self, Client.self, BusinessProfile.self
             )
         } catch {
-            fatalError("Baze ni bilo mogoče odpreti: \(error)")
+            fatalError("Could not open the store: \(error)")
         }
     }
 

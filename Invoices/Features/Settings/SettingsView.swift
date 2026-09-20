@@ -24,17 +24,17 @@ struct SettingsContent: View {
             if let profile, let sample {
                 HStack(spacing: 0) {
                     TabView {
-                        Tab("Moj s.p.", systemImage: "building.2") {
+                        Tab("My s.p.", systemImage: "building.2") {
                             BusinessProfileForm(profile: profile)
                         }
-                        Tab("Predloga računa", systemImage: "doc.richtext") {
+                        Tab("Invoice template", systemImage: "doc.richtext") {
                             InvoiceTemplateForm(profile: profile)
                         }
                     }
                     .frame(width: 470)
                     Divider()
                     VStack(spacing: 0) {
-                        Text("Predogled na vzorčnem računu")
+                        Text("Preview on a sample invoice")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                             .frame(maxWidth: .infinity)
@@ -68,52 +68,52 @@ private struct BusinessProfileForm: View {
     var body: some View {
         Form {
             Section {
-                TextField("Naziv s.p.", text: $profile.name, prompt: Text("npr. Domen Perko, s.p."))
-                TextField("Ime in priimek", text: $profile.signerName, prompt: Text("nosilec dejavnosti"))
-                TextField("E-pošta", text: $profile.email)
-                TextField("Telefon", text: $profile.phone)
+                TextField("Business name", text: $profile.name, prompt: Text("e.g. Domen Perko, s.p."))
+                TextField("Full name", text: $profile.signerName, prompt: Text("the business owner"))
+                TextField("Email", text: $profile.email)
+                TextField("Phone", text: $profile.phone)
             } header: {
-                Text("Moj s.p.")
+                Text("My s.p.")
             } footer: {
-                Text("Naziv se natisne v glavi računa, ime in priimek pod »Račun izdal«.")
+                Text("The business name is printed in the invoice header, the full name under “Račun izdal” (issued by).")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
-            Section("Naslov") {
-                TextField("Ulica in hišna številka", text: $profile.street)
-                TextField("Poštna številka", text: $profile.postalCode)
-                TextField("Kraj", text: $profile.city)
-                TextField("Država (ISO)", text: $profile.countryCode)
+            Section("Address") {
+                TextField("Street and number", text: $profile.street)
+                TextField("Postal code", text: $profile.postalCode)
+                TextField("City", text: $profile.city)
+                TextField("Country (ISO code)", text: $profile.countryCode)
             }
             Section {
-                SensitiveField("Davčna številka", text: $profile.taxNumber)
-                Toggle("Zavezanec za DDV", isOn: $profile.isVatRegistered)
+                SensitiveField("Tax number (davčna številka)", text: $profile.taxNumber)
+                Toggle("VAT registered", isOn: $profile.isVatRegistered)
                 if profile.isVatRegistered {
-                    SensitiveField("ID za DDV", text: $profile.vatID)
+                    SensitiveField("VAT ID", text: $profile.vatID)
                 }
-                Toggle("Normiranec (normirani odhodki)", isOn: $profile.isFlatRate)
+                Toggle("Flat-rate expenses (normiranec)", isOn: $profile.isFlatRate)
             } header: {
-                Text("Davčni status")
+                Text("Tax status")
             } footer: {
                 Text(profile.isVatRegistered
-                     ? "Računi prikazujejo stopnje DDV in obračun po stopnjah."
-                     : "Računi ne obračunavajo DDV in nosijo klavzulo po 94. členu ZDDV-1. Vklopi stikalo, če se registriraš za DDV.")
+                     ? "Invoices show VAT rates and a breakdown per rate."
+                     : "Invoices charge no VAT and carry the exemption clause under 94. člen ZDDV-1. Turn this on once you register for VAT.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
             }
-            Section("Bančni račun") {
-                SensitiveField("IBAN (TRR)", text: $profile.iban)
-                TextField("Banka", text: $profile.bankName)
+            Section("Bank account") {
+                SensitiveField("IBAN", text: $profile.iban)
+                TextField("Bank", text: $profile.bankName)
                 SensitiveField("BIC / SWIFT", text: $profile.bic)
                 Stepper(
-                    "Privzeti rok plačila: \(profile.defaultPaymentTermDays) dni",
+                    "Default payment term: \(profile.defaultPaymentTermDays) days",
                     value: $profile.defaultPaymentTermDays,
                     in: 0...120
                 )
             }
-            Section("Na računu") {
-                TextField("Registracija (npr. AJPES)", text: $profile.registrationNote)
-                TextField("Opomba v nogi", text: $profile.invoiceFooter, axis: .vertical)
+            Section("On the invoice") {
+                TextField("Registration (e.g. AJPES)", text: $profile.registrationNote)
+                TextField("Footer note", text: $profile.invoiceFooter, axis: .vertical)
                     .lineLimit(2...5)
             }
             PrivacySection()
@@ -130,11 +130,11 @@ private struct PrivacySection: View {
 
     var body: some View {
         Section {
-            Toggle("Skrij občutljive podatke", isOn: $hidesSensitiveValues)
+            Toggle("Hide sensitive values", isOn: $hidesSensitiveValues)
         } header: {
-            Text("Zasebnost")
+            Text("Privacy")
         } footer: {
-            Text("Zakrije davčne številke, IBAN in vse zneske v vmesniku — za deljenje zaslona ali pogled čez ramo. Izvožen PDF, preglednica in natisnjen račun ostanejo nespremenjeni. Bližnjica: ⇧⌘H.")
+            Text("Blanks tax numbers, the IBAN and every amount in the interface — for screen sharing, or a look over your shoulder. The exported PDF, the spreadsheet and the printed invoice are unchanged. Shortcut: ⇧⌘H.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }
@@ -149,8 +149,8 @@ private struct LanguageSection: View {
 
     var body: some View {
         Section {
-            Picker("Jezik aplikacije", selection: $language) {
-                Text("Kot sistem").tag("system")
+            Picker("App language", selection: $language) {
+                Text("Same as system").tag("system")
                 Text(verbatim: "Slovenščina").tag("sl")
                 Text(verbatim: "English").tag("en")
             }
@@ -163,17 +163,17 @@ private struct LanguageSection: View {
                 needsRelaunch = true
             }
         } header: {
-            Text("Jezik")
+            Text("Language")
         } footer: {
-            Text("Velja za vmesnik aplikacije. Računi so vedno v slovenščini.")
+            Text("Applies to the app interface. Invoices are always in Slovenian.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }
-        .alert("Sprememba jezika velja po ponovnem zagonu", isPresented: $needsRelaunch) {
-            Button("Zapri aplikacijo") { NSApp.terminate(nil) }
-            Button("Pozneje", role: .cancel) {}
+        .alert("The language change takes effect after a relaunch", isPresented: $needsRelaunch) {
+            Button("Quit app") { NSApp.terminate(nil) }
+            Button("Later", role: .cancel) {}
         } message: {
-            Text("Zapri in znova odpri Invoices, da se vmesnik prikaže v izbranem jeziku.")
+            Text("Quit and reopen Invoices to see the interface in the selected language.")
         }
     }
 }
@@ -185,19 +185,19 @@ private struct InvoiceTemplateForm: View {
 
     var body: some View {
         Form {
-            Section("Glava") {
-                ImageWell(title: "Logotip", data: $profile.logoData)
-                TextField("Dejavnost", text: $profile.activityLine,
-                          prompt: Text("npr. IT STORITVE IN SVETOVANJE"))
+            Section("Header") {
+                ImageWell(title: "Logo", data: $profile.logoData)
+                TextField("Line of business", text: $profile.activityLine,
+                          prompt: Text("e.g. IT STORITVE IN SVETOVANJE"))
             }
             Section {
-                TextField("Uvodni stavek", text: $profile.introTemplate, axis: .vertical)
+                TextField("Intro sentence", text: $profile.introTemplate, axis: .vertical)
                     .lineLimit(1...3)
-                TextField("Navodilo za plačilo", text: $profile.paymentNoteTemplate, axis: .vertical)
+                TextField("Payment instruction", text: $profile.paymentNoteTemplate, axis: .vertical)
                     .lineLimit(1...3)
-                TextField("Zaključni stavek", text: $profile.closingNote, axis: .vertical)
+                TextField("Closing sentence", text: $profile.closingNote, axis: .vertical)
                     .lineLimit(1...3)
-                DisclosureGroup("Oznake, ki se izpolnijo samodejno") {
+                DisclosureGroup("Placeholders filled in automatically") {
                     ForEach(InvoiceTemplate.placeholders, id: \.token) { placeholder in
                         HStack {
                             Text(verbatim: placeholder.token).monospaced()
@@ -208,18 +208,18 @@ private struct InvoiceTemplateForm: View {
                     }
                 }
             } header: {
-                Text("Besedilo")
+                Text("Text")
             } footer: {
-                Text("Uvodni stavek lahko na posameznem računu prepišeš. Navodilo za plačilo se izpiše le, če je vpisan IBAN.")
+                Text("The intro sentence can be overridden on each invoice. The payment instruction is printed only when an IBAN is set.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
             Section {
-                ImageWell(title: "Podpis", data: $profile.signatureData)
+                ImageWell(title: "Signature", data: $profile.signatureData)
             } header: {
-                Text("Podpis")
+                Text("Signature")
             } footer: {
-                Text("Ime pod podpisom je »Ime in priimek« z zavihka Moj s.p.")
+                Text("The name under the signature is “Full name” from the My s.p. tab.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -251,9 +251,9 @@ private struct ImageWell: View {
                 .background(.white, in: RoundedRectangle(cornerRadius: 4))
                 .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(.separator))
 
-                Button("Izberi…") { isImporting = true }
+                Button("Choose…") { isImporting = true }
                 if data != nil {
-                    Button("Odstrani", role: .destructive) { data = nil }
+                    Button("Remove", role: .destructive) { data = nil }
                 }
             }
         }
@@ -269,10 +269,10 @@ private struct ImageWell: View {
             }
         }
         .alert(
-            "Slike ni bilo mogoče naložiti",
+            "The image could not be loaded",
             isPresented: Binding(get: { importError != nil }, set: { if !$0 { importError = nil } })
         ) {
-            Button("V redu", role: .cancel) {}
+            Button("OK", role: .cancel) {}
         } message: {
             Text(importError ?? "")
         }
@@ -283,7 +283,7 @@ private struct ImageWell: View {
         let scoped = url.startAccessingSecurityScopedResource()
         defer { if scoped { url.stopAccessingSecurityScopedResource() } }
         guard let raw = try? Data(contentsOf: url), let png = ImageData.normalized(raw) else {
-            importError = String(localized: "Datoteka ni slika, ki bi jo znal prebrati.")
+            importError = String(localized: "The file is not an image that can be read.")
             return
         }
         data = png

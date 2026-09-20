@@ -27,13 +27,15 @@ nonisolated enum Formatting {
     }
 
     /// Slovenian counts in four forms — 1 račun, 2 računa, 3 računi,
-    /// 5 računov — and the dual is not optional in writing.
+    /// 5 računov — and the dual is not optional in writing. Verbatim, like
+    /// the sheet and the printed račun: these were `String(localized:)` with
+    /// no catalog entries behind them, so they always read Slovenian anyway.
     static func invoiceCount(_ count: Int) -> String {
         let noun = switch abs(count) % 100 {
-        case 1: String(localized: "račun")
-        case 2: String(localized: "računa")
-        case 3, 4: String(localized: "računi")
-        default: String(localized: "računov")
+        case 1: "račun"
+        case 2: "računa"
+        case 3, 4: "računi"
+        default: "računov"
         }
         return "\(count) \(noun)"
     }

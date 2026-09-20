@@ -24,7 +24,7 @@ nonisolated struct YearOverviewRow: Identifiable, Sendable, Equatable {
     var id: String { number }
 
     /// The name as the screen shows it.
-    var clientLabel: String { clientName ?? String(localized: "Brez stranke") }
+    var clientLabel: String { clientName ?? String(localized: "No client") }
 
     /// "1. 8. 2026 – 31. 8. 2026", or the single date when the service did
     /// not span a period.
@@ -37,7 +37,7 @@ nonisolated struct YearOverviewRow: Identifiable, Sendable, Equatable {
     /// the payment column says why no money arrived. On screen only — the
     /// spreadsheet words its own cell, in Slovenian.
     var paymentNote: String {
-        if isCancelled { return String(localized: "Storniran") }
+        if isCancelled { return String(localized: "Cancelled") }
         guard let paidDate else { return "" }
         return Formatting.date(paidDate)
     }
@@ -65,7 +65,7 @@ nonisolated struct YearOverview: Sendable {
     /// Ordered by invoice number, the order the numbers were issued in.
     var rows: [YearOverviewRow]
 
-    var title: String { String(localized: "IZDANI RAČUNI ZA LETO \(String(year))") }
+    var title: String { String(localized: "INVOICES ISSUED IN \(String(year))") }
 
     /// The app issues in EUR; a foreign currency would need converting before
     /// it could be summed, so the total below only claims one currency.

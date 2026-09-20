@@ -1,1585 +1,1575 @@
 {
-  "sourceLanguage": "sl",
+  "sourceLanguage": "en",
   "strings": {
     "": {
       "shouldTranslate": false
     },
-    "%@ bo trajno izbrisana.": {
+    "%@ will be permanently deleted.": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ will be permanently deleted."
+            "value": "%@ bo trajno izbrisana."
           }
         }
       }
     },
-    "0 %": {
+    "0 %": {},
+    "22 % (standard)": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "0 %"
+            "value": "22 % (splošna)"
           }
         }
       }
     },
-    "22 % (splošna)": {
+    "5 % (special reduced)": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "22 % (standard)"
+            "value": "5 % (posebna nižja)"
           }
         }
       }
     },
-    "5 % (posebna nižja)": {
+    "9.5 % (reduced)": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "5 % (special reduced)"
+            "value": "9,5 % (nižja)"
           }
         }
       }
     },
-    "9,5 % (nižja)": {
+    "Add a client so you can invoice them.": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "9.5 % (reduced)"
+            "value": "Dodaj stranko, da ji lahko izdaš račun."
           }
         }
       }
     },
-    "BIC / SWIFT": {
+    "Add line item": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "BIC / SWIFT"
+            "value": "Dodaj postavko"
           }
         }
       }
     },
-    "Banka": {
+    "Address": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bank"
+            "value": "Naslov"
           }
         }
       }
     },
-    "Bančni račun": {
+    "Amount due": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bank account"
+            "value": "Za plačilo"
           }
         }
       }
     },
-    "Besedilo": {
+    "Amount in %@": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Text"
+            "value": "Vrednost v %@"
           }
         }
       }
     },
-    "Brez stranke": {
+    "An empty intro sentence uses the template from Settings. Notes are printed below the clauses.": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "No client"
+            "value": "Prazen uvodni stavek uporabi predlogo iz Nastavitev. Opombe se natisnejo pod klavzulami."
           }
         }
       }
     },
-    "Cena": {
+    "An issued invoice cannot be deleted": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Price"
+            "value": "Izdanega računa ni mogoče izbrisati"
           }
         }
       }
     },
-    "DDV": {
+    "App language": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "VAT"
+            "value": "Jezik aplikacije"
           }
         }
       }
     },
-    "DDV %@": {
+    "Applies to the app interface. Invoices are always in Slovenian.": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "VAT %@"
+            "value": "Velja za vmesnik aplikacije. Računi so vedno v slovenščini."
           }
         }
       }
     },
-    "Datoteka ni slika, ki bi jo znal prebrati.": {
+    "BIC / SWIFT": {},
+    "Bank": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "The file is not an image that can be read."
+            "value": "Banka"
           }
         }
       }
     },
-    "Datum": {
+    "Bank account": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Date"
+            "value": "Bančni račun"
           }
         }
       }
     },
-    "Datum izdaje": {
+    "Blanks tax numbers, the IBAN and every amount in the interface — for screen sharing, or a look over your shoulder. The exported PDF, the spreadsheet and the printed invoice are unchanged. Shortcut: ⇧⌘H.": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Issue date"
+            "value": "Zakrije davčne številke, IBAN in vse zneske v vmesniku — za deljenje zaslona ali pogled čez ramo. Izvožen PDF, preglednica in natisnjen račun ostanejo nespremenjeni. Bližnjica: ⇧⌘H."
           }
         }
       }
     },
-    "Datum opravljene storitve": {
+    "Business name": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Date of service"
+            "value": "Naziv s.p."
           }
         }
       }
     },
-    "Datum storitve": {
+    "Cancel": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Service date"
+            "value": "Prekliči"
           }
         }
       }
     },
-    "Davčna št.:": {
+    "Cancel invoice": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tax number:"
+            "value": "Storniraj"
           }
         }
       }
     },
-    "Davčna številka": {
+    "Cancelled": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tax number (davčna številka)"
+            "value": "Storniran"
           }
         }
       }
     },
-    "Davčni podatki": {
+    "Choose a section": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tax details"
+            "value": "Izberi razdelek"
           }
         }
       }
     },
-    "Davčni status": {
+    "Choose…": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tax status"
+            "value": "Izberi…"
           }
         }
       }
     },
-    "Dejavnost": {
+    "City": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Line of business"
+            "value": "Kraj"
           }
         }
       }
     },
-    "Dodaj postavko": {
+    "Client": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Add line item"
+            "value": "Stranka"
           }
         }
       }
     },
-    "Dodaj stranko, da ji lahko izdaš račun.": {
+    "Clients": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Add a client so you can invoice them."
+            "value": "Stranke"
           }
         }
       }
     },
-    "Država (ISO)": {
+    "Closing sentence": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Country (ISO code)"
+            "value": "Zaključni stavek"
           }
         }
       }
     },
-    "E-pošta": {
+    "Country (ISO code)": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Email"
+            "value": "Država (ISO)"
           }
         }
       }
     },
-    "EM": {
+    "Create your first draft invoice.": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Unit"
+            "value": "Ustvari prvi osnutek računa."
           }
         }
       }
     },
-    "Glava": {
+    "Date": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Header"
+            "value": "Datum"
           }
         }
       }
     },
-    "IBAN (TRR)": {
+    "Date of service": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "IBAN"
+            "value": "Datum opravljene storitve"
           }
         }
       }
     },
-    "ID za DDV": {
+    "Default payment term: %lld days": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "VAT ID"
+            "value": "Privzeti rok plačila: %lld dni"
           }
         }
       }
     },
-    "IZDANI RAČUNI ZA LETO %@": {
+    "Delete": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "INVOICES ISSUED IN %@"
+            "value": "Izbriši"
           }
         }
       }
     },
-    "Ima izdane račune in je ni mogoče izbrisati": {
+    "Delete client": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Has issued invoices and cannot be deleted"
+            "value": "Izbriši stranko"
           }
         }
       }
     },
-    "Ime in priimek": {
+    "Delete client?": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Full name"
+            "value": "Izbrišem stranko?"
           }
         }
       }
     },
-    "Ime pod podpisom je »Ime in priimek« z zavihka Moj s.p.": {
+    "Delete draft": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "The name under the signature is “Full name” from the My s.p. tab."
+            "value": "Izbriši osnutek"
           }
         }
       }
     },
-    "Izberi razdelek": {
+    "Delete draft?": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Choose a section"
+            "value": "Izbrišem osnutek?"
           }
         }
       }
     },
-    "Izberi…": {
+    "Description": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Choose…"
+            "value": "Opis storitve"
           }
         }
       }
     },
-    "Izbrišem osnutek?": {
+    "Details": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Delete draft?"
+            "value": "Podatki"
           }
         }
       }
     },
-    "Izbrišem stranko?": {
+    "Discount %": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Delete client?"
+            "value": "Popust %"
           }
         }
       }
     },
-    "Izbriši": {
+    "Draft": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Delete"
+            "value": "Osnutek"
           }
         }
       }
     },
-    "Izbriši osnutek": {
+    "Draft invoice": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Delete draft"
+            "value": "Osnutek računa"
           }
         }
       }
     },
-    "Izbriši stranko": {
+    "Due date": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Delete client"
+            "value": "Valuta"
           }
         }
       }
     },
-    "Izdaj račun": {
+    "Email": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Issue invoice"
+            "value": "E-pošta"
           }
         }
       }
     },
-    "Izdan": {
+    "Exempt / not VAT registered": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Issued"
+            "value": "Oproščeno / ni zavezanec"
           }
         }
       }
     },
-    "Izdanega računa ni mogoče izbrisati": {
+    "Export PDF": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "An issued invoice cannot be deleted"
+            "value": "Izvozi PDF"
           }
         }
       }
     },
-    "Izvoz ni uspel": {
+    "Export XLSX": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Export failed"
+            "value": "Izvozi XLSX"
           }
         }
       }
     },
-    "Izvozi PDF": {
+    "Export failed": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Export PDF"
+            "value": "Izvoz ni uspel"
           }
         }
       }
     },
-    "Izvozi XLSX": {
+    "Flat-rate expenses (normiranec)": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Export XLSX"
+            "value": "Normiranec (normirani odhodki)"
           }
         }
       }
     },
-    "Jezik": {
+    "Footer note": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Language"
+            "value": "Opomba v nogi"
           }
         }
       }
     },
-    "Jezik aplikacije": {
+    "Full name": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "App language"
+            "value": "Ime in priimek"
           }
         }
       }
     },
-    "Količina": {
+    "Has issued invoices and cannot be deleted": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Quantity"
+            "value": "Ima izdane račune in je ni mogoče izbrisati"
           }
         }
       }
     },
-    "Kot sistem": {
+    "Header": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Same as system"
+            "value": "Glava"
           }
         }
       }
     },
-    "Kraj": {
+    "Hide sensitive values": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "City"
+            "value": "Skrij občutljive podatke"
           }
         }
       }
     },
-    "Kraj izdaje": {
+    "IBAN": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Place of issue"
+            "value": "IBAN (TRR)"
           }
         }
       }
     },
-    "Leto": {
+    "INVOICES ISSUED IN %@": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Year"
+            "value": "IZDANI RAČUNI ZA LETO %@"
           }
         }
       }
     },
-    "Logotip": {
+    "Intro sentence": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Logo"
+            "value": "Uvodni stavek"
           }
         }
       }
     },
-    "Moj s.p.": {
+    "Invoice": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "My s.p."
+            "value": "Račun"
           }
         }
       }
     },
-    "Na računu": {
+    "Invoice no.": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the invoice"
+            "value": "Račun št."
           }
         }
       }
     },
-    "Naslov": {
+    "Invoice template": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Address"
+            "value": "Predloga računa"
           }
         }
       }
     },
-    "Nastavitve": {
+    "Invoices": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Settings"
+            "value": "Računi"
           }
         }
       }
     },
-    "Navodilo za plačilo": {
+    "Invoices charge no VAT and carry the exemption clause under 94. člen ZDDV-1. Turn this on once you register for VAT.": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Payment instruction"
+            "value": "Računi ne obračunavajo DDV in nosijo klavzulo po 94. členu ZDDV-1. Vklopi stikalo, če se registriraš za DDV."
           }
         }
       }
     },
-    "Naziv": {
+    "Invoices show VAT rates and a breakdown per rate.": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Name"
+            "value": "Računi prikazujejo stopnje DDV in obračun po stopnjah."
           }
         }
       }
     },
-    "Naziv s.p.": {
+    "Issue date": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Business name"
+            "value": "Datum izdaje"
           }
         }
       }
     },
-    "Naziv se natisne v glavi računa, ime in priimek pod »Račun izdal«.": {
+    "Issue invoice": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "The business name is printed in the invoice header, the full name under “Račun izdal” (issued by)."
+            "value": "Izdaj račun"
           }
         }
       }
     },
-    "Neimenovana stranka": {
+    "Issued": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Unnamed client"
+            "value": "Izdan"
           }
         }
       }
     },
-    "Neplačano": {
+    "Language": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Unpaid"
+            "value": "Jezik"
           }
         }
       }
     },
-    "Neto": {
+    "Later": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Net"
+            "value": "Pozneje"
           }
         }
       }
     },
-    "Ni izdanih računov": {
+    "Line items": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "No invoices issued"
+            "value": "Postavke"
           }
         }
       }
     },
-    "Ni računov": {
+    "Line of business": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "No invoices"
+            "value": "Dejavnost"
           }
         }
       }
     },
-    "Ni strank": {
+    "Logo": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "No clients"
+            "value": "Logotip"
           }
         }
       }
     },
-    "Normiranec (normirani odhodki)": {
+    "Mark as paid": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Flat-rate expenses (normiranec)"
+            "value": "Označi kot plačan"
           }
         }
       }
     },
-    "Nov račun": {
+    "My s.p.": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "New invoice"
+            "value": "Moj s.p."
           }
         }
       }
     },
-    "Nova stranka": {
+    "Name": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "New client"
+            "value": "Naziv"
           }
         }
       }
     },
-    "Odprto": {
+    "Net": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Outstanding"
+            "value": "Neto"
           }
         }
       }
     },
-    "Odstrani": {
+    "New client": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Remove"
+            "value": "Nova stranka"
           }
         }
       }
     },
-    "Odstrani postavko": {
+    "New invoice": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Remove line item"
+            "value": "Nov račun"
           }
         }
       }
     },
-    "Opis storitve": {
+    "No client": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Description"
+            "value": "Brez stranke"
           }
         }
       }
     },
-    "Opomba v nogi": {
+    "No clients": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Footer note"
+            "value": "Ni strank"
           }
         }
       }
     },
-    "Opombe": {
+    "No invoices": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Notes"
+            "value": "Ni računov"
           }
         }
       }
     },
-    "Oproščeno / ni zavezanec": {
+    "No invoices issued": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Exempt / not VAT registered"
+            "value": "Ni izdanih računov"
           }
         }
       }
     },
-    "Osnutek": {
+    "Notes": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Draft"
+            "value": "Opombe"
           }
         }
       }
     },
-    "Osnutek in vse njegove postavke bodo trajno izbrisani.": {
+    "Number": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "The draft and all of its line items will be permanently deleted."
+            "value": "Številka"
           }
         }
       }
     },
-    "Osnutek računa": {
+    "OK": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Draft invoice"
+            "value": "V redu"
           }
         }
       }
     },
-    "Ostalo": {
+    "On the invoice": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Other"
+            "value": "Na računu"
           }
         }
       }
     },
-    "Oznake, ki se izpolnijo samodejno": {
+    "Other": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Placeholders filled in automatically"
+            "value": "Ostalo"
           }
         }
       }
     },
-    "Označi kot plačan": {
+    "Outstanding": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mark as paid"
+            "value": "Odprto"
           }
         }
       }
     },
-    "Plačan": {
+    "Overview": {
       "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pregled"
+          }
+        }
+      }
+    },
+    "Paid": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plačano"
+          }
+        }
+      }
+    },
+    "Payment due": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rok plačila"
+          }
+        }
+      }
+    },
+    "Payment instruction": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Navodilo za plačilo"
+          }
+        }
+      }
+    },
+    "Payment received": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prejem plačila"
+          }
+        }
+      }
+    },
+    "Payment reference": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sklic"
+          }
+        }
+      }
+    },
+    "Payment term: %lld days": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rok plačila: %lld dni"
+          }
+        }
+      }
+    },
+    "Phone": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telefon"
+          }
+        }
+      }
+    },
+    "Place of issue": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kraj izdaje"
+          }
+        }
+      }
+    },
+    "Placeholders filled in automatically": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oznake, ki se izpolnijo samodejno"
+          }
+        }
+      }
+    },
+    "Postal code": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poštna številka"
+          }
+        }
+      }
+    },
+    "Preview": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Predogled"
+          }
+        }
+      }
+    },
+    "Preview hidden": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Predogled je zakrit"
+          }
+        }
+      }
+    },
+    "Preview on a sample invoice": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Predogled na vzorčnem računu"
+          }
+        }
+      }
+    },
+    "Price": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cena"
+          }
+        }
+      }
+    },
+    "Privacy": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zasebnost"
+          }
+        }
+      }
+    },
+    "Quantity": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Količina"
+          }
+        }
+      }
+    },
+    "Quit and reopen Invoices to see the interface in the selected language.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapri in znova odpri Invoices, da se vmesnik prikaže v izbranem jeziku."
+          }
+        }
+      }
+    },
+    "Quit app": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapri aplikacijo"
+          }
+        }
+      }
+    },
+    "Registration (e.g. AJPES)": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registracija (npr. AJPES)"
+          }
+        }
+      }
+    },
+    "Remove": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odstrani"
+          }
+        }
+      }
+    },
+    "Remove line item": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odstrani postavko"
+          }
+        }
+      }
+    },
+    "Same as system": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kot sistem"
+          }
+        }
+      }
+    },
+    "Save the overview as an Excel spreadsheet": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shrani pregled kot Excelovo preglednico"
+          }
+        }
+      }
+    },
+    "Service covers a period": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Storitev za obdobje"
+          }
+        }
+      }
+    },
+    "Service date": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datum storitve"
+          }
+        }
+      }
+    },
+    "Service from": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Storitev od"
+          }
+        }
+      }
+    },
+    "Service until": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Storitev do"
+          }
+        }
+      }
+    },
+    "Settings": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nastavitve"
+          }
+        }
+      }
+    },
+    "Show or hide the invoice preview": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pokaži ali skrij predogled računa"
+          }
+        }
+      }
+    },
+    "Signature": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Podpis"
+          }
+        }
+      }
+    },
+    "Street and number": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ulica in hišna številka"
+          }
+        }
+      }
+    },
+    "Summary": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Povzetek"
+          }
+        }
+      }
+    },
+    "TOTAL": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SKUPAJ"
+          }
+        }
+      }
+    },
+    "Tax details": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Davčni podatki"
+          }
+        }
+      }
+    },
+    "Tax number (davčna številka)": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Davčna številka"
+          }
+        }
+      }
+    },
+    "Tax number:": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Davčna št.:"
+          }
+        }
+      }
+    },
+    "Tax status": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Davčni status"
+          }
+        }
+      }
+    },
+    "Text": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Besedilo"
+          }
+        }
+      }
+    },
+    "The business name is printed in the invoice header, the full name under “Račun izdal” (issued by).": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naziv se natisne v glavi računa, ime in priimek pod »Račun izdal«."
+          }
+        }
+      }
+    },
+    "The draft and all of its line items will be permanently deleted.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Osnutek in vse njegove postavke bodo trajno izbrisani."
+          }
+        }
+      }
+    },
+    "The file is not an image that can be read.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datoteka ni slika, ki bi jo znal prebrati."
+          }
+        }
+      }
+    },
+    "The image could not be loaded": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slike ni bilo mogoče naložiti"
+          }
+        }
+      }
+    },
+    "The intro sentence can be overridden on each invoice. The payment instruction is printed only when an IBAN is set.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uvodni stavek lahko na posameznem računu prepišeš. Navodilo za plačilo se izpiše le, če je vpisan IBAN."
+          }
+        }
+      }
+    },
+    "The invoice could not be rendered.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Računa ni bilo mogoče upodobiti."
+          }
+        }
+      }
+    },
+    "The language change takes effect after a relaunch": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprememba jezika velja po ponovnem zagonu"
+          }
+        }
+      }
+    },
+    "The name under the signature is “Full name” from the My s.p. tab.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ime pod podpisom je »Ime in priimek« z zavihka Moj s.p."
+          }
+        }
+      }
+    },
+    "The overview lists invoices once the first one has been issued.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pregled pokaže račune, ko je prvi od njih izdan."
+          }
+        }
+      }
+    },
+    "Total": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skupaj"
+          }
+        }
+      }
+    },
+    "Unit": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "EM"
+          }
+        }
+      }
+    },
+    "Unnamed client": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neimenovana stranka"
+          }
+        }
+      }
+    },
+    "Unpaid": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neplačano"
+          }
+        }
+      }
+    },
+    "VAT": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DDV"
+          }
+        }
+      }
+    },
+    "VAT %@": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DDV %@"
+          }
+        }
+      }
+    },
+    "VAT ID": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ID za DDV"
+          }
+        }
+      }
+    },
+    "VAT registered": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zavezanec za DDV"
+          }
+        }
+      }
+    },
+    "Year": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leto"
+          }
+        }
+      }
+    },
+    "assigned on issue": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "dodeljena ob izdaji"
+          }
+        }
+      }
+    },
+    "client name": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "naziv stranke"
+          }
+        }
+      }
+    },
+    "due date": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rok plačila"
+          }
+        }
+      }
+    },
+    "e.g. Domen Perko, s.p.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "npr. Domen Perko, s.p."
+          }
+        }
+      }
+    },
+    "e.g. IT STORITVE IN SVETOVANJE": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "npr. IT STORITVE IN SVETOVANJE"
+          }
+        }
+      }
+    },
+    "invoice number": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "številka računa"
+          }
+        }
+      }
+    },
+    "invoiceStatus.paid": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plačan"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Paid"
           }
         }
-      }
-    },
-    "Plačano": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Paid"
-          }
-        }
-      }
-    },
-    "Podatki": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Details"
-          }
-        }
-      }
-    },
-    "Podpis": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Signature"
-          }
-        }
-      }
-    },
-    "Pokaži ali skrij predogled računa": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show or hide the invoice preview"
-          }
-        }
-      }
-    },
-    "Popust %": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Discount %"
-          }
-        }
-      }
-    },
-    "Postavke": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Line items"
-          }
-        }
-      }
-    },
-    "Povzetek": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Summary"
-          }
-        }
-      }
-    },
-    "Pozneje": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Later"
-          }
-        }
-      }
-    },
-    "Poštna številka": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Postal code"
-          }
-        }
-      }
-    },
-    "Prazen uvodni stavek uporabi predlogo iz Nastavitev. Opombe se natisnejo pod klavzulami.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "An empty intro sentence uses the template from Settings. Notes are printed below the clauses."
-          }
-        }
-      }
-    },
-    "Predloga računa": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Invoice template"
-          }
-        }
-      }
-    },
-    "Predogled": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Preview"
-          }
-        }
-      }
-    },
-    "Predogled je zakrit": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Preview hidden"
-          }
-        }
-      }
-    },
-    "Predogled na vzorčnem računu": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Preview on a sample invoice"
-          }
-        }
-      }
-    },
-    "Pregled": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Overview"
-          }
-        }
-      }
-    },
-    "Pregled pokaže račune, ko je prvi od njih izdan.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The overview lists invoices once the first one has been issued."
-          }
-        }
-      }
-    },
-    "Prejem plačila": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Payment received"
-          }
-        }
-      }
-    },
-    "Prekliči": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancel"
-          }
-        }
-      }
-    },
-    "Privzeti rok plačila: %lld dni": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Default payment term: %lld days"
-          }
-        }
-      }
-    },
-    "Račun": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Invoice"
-          }
-        }
-      }
-    },
-    "Račun št.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Invoice no."
-          }
-        }
-      }
-    },
-    "Računa ni bilo mogoče upodobiti.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The invoice could not be rendered."
-          }
-        }
-      }
-    },
-    "Računi": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Invoices"
-          }
-        }
-      }
-    },
-    "Računi ne obračunavajo DDV in nosijo klavzulo po 94. členu ZDDV-1. Vklopi stikalo, če se registriraš za DDV.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Invoices charge no VAT and carry the exemption clause under 94. člen ZDDV-1. Turn this on once you register for VAT."
-          }
-        }
-      }
-    },
-    "Računi prikazujejo stopnje DDV in obračun po stopnjah.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Invoices show VAT rates and a breakdown per rate."
-          }
-        }
-      }
-    },
-    "Registracija (npr. AJPES)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Registration (e.g. AJPES)"
-          }
-        }
-      }
-    },
-    "Rok plačila": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Due date"
-          }
-        }
-      }
-    },
-    "Rok plačila: %lld dni": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Payment term: %lld days"
-          }
-        }
-      }
-    },
-    "SKUPAJ": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "TOTAL"
-          }
-        }
-      }
-    },
-    "Shrani pregled kot Excelovo preglednico": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Save the overview as an Excel spreadsheet"
-          }
-        }
-      }
-    },
-    "Sklic": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Payment reference"
-          }
-        }
-      }
-    },
-    "Skrij občutljive podatke": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hide sensitive values"
-          }
-        }
-      }
-    },
-    "Skupaj": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Total"
-          }
-        }
-      }
-    },
-    "Slike ni bilo mogoče naložiti": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The image could not be loaded"
-          }
-        }
-      }
-    },
-    "Sprememba jezika velja po ponovnem zagonu": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The language change takes effect after a relaunch"
-          }
-        }
-      }
-    },
-    "Storitev do": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Service until"
-          }
-        }
-      }
-    },
-    "Storitev od": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Service from"
-          }
-        }
-      }
-    },
-    "Storitev za obdobje": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Service covers a period"
-          }
-        }
-      }
-    },
-    "Storniraj": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancel invoice"
-          }
-        }
-      }
-    },
-    "Storniran": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancelled"
-          }
-        }
-      }
-    },
-    "Stranka": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Client"
-          }
-        }
-      }
-    },
-    "Stranke": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Clients"
-          }
-        }
-      }
-    },
-    "Telefon": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Phone"
-          }
-        }
-      }
-    },
-    "Ulica in hišna številka": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Street and number"
-          }
-        }
-      }
-    },
-    "Ustvari prvi osnutek računa.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Create your first draft invoice."
-          }
-        }
-      }
-    },
-    "Uvodni stavek": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Intro sentence"
-          }
-        }
-      }
-    },
-    "Uvodni stavek lahko na posameznem računu prepišeš. Navodilo za plačilo se izpiše le, če je vpisan IBAN.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The intro sentence can be overridden on each invoice. The payment instruction is printed only when an IBAN is set."
-          }
-        }
-      }
-    },
-    "V redu": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OK"
-          }
-        }
-      }
-    },
-    "Valuta": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Due date"
-          }
-        }
-      }
-    },
-    "Velja za vmesnik aplikacije. Računi so vedno v slovenščini.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Applies to the app interface. Invoices are always in Slovenian."
-          }
-        }
-      }
-    },
-    "Vrednost v %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Amount in %@"
-          }
-        }
-      }
-    },
-    "Za plačilo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Amount due"
-          }
-        }
-      }
-    },
-    "Zaključni stavek": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Closing sentence"
-          }
-        }
-      }
-    },
-    "Zakrije davčne številke, IBAN in vse zneske v vmesniku — za deljenje zaslona ali pogled čez ramo. Izvožen PDF, preglednica in natisnjen račun ostanejo nespremenjeni. Bližnjica: ⇧⌘H.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Blanks tax numbers, the IBAN and every amount in the interface — for screen sharing, or a look over your shoulder. The exported PDF, the spreadsheet and the printed invoice are unchanged. Shortcut: ⇧⌘H."
-          }
-        }
-      }
-    },
-    "Zapri aplikacijo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quit app"
-          }
-        }
-      }
-    },
-    "Zapri in znova odpri Invoices, da se vmesnik prikaže v izbranem jeziku.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quit and reopen Invoices to see the interface in the selected language."
-          }
-        }
-      }
-    },
-    "Zasebnost": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Privacy"
-          }
-        }
-      }
-    },
-    "Zavezanec za DDV": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "VAT registered"
-          }
-        }
-      }
-    },
-    "dodeljena ob izdaji": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "assigned on issue"
-          }
-        }
-      }
-    },
-    "leto storitve": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "year of service"
-          }
-        }
-      }
-    },
-    "mesec storitve (AVGUST)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "month of service, in Slovenian (AVGUST)"
-          }
-        }
-      }
-    },
-    "mesec storitve (avgust)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "month of service, in Slovenian (avgust)"
-          }
-        }
-      }
-    },
-    "naziv stranke": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "client name"
-          }
-        }
-      }
-    },
-    "nosilec dejavnosti": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "the business owner"
-          }
-        }
-      }
-    },
-    "npr. Domen Perko, s.p.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e.g. Domen Perko, s.p."
-          }
-        }
-      }
+      },
+      "comment": "Status of a single invoice. Slovenian declines it as \"Plačan\", unlike the year overview total.",
+      "extractionState": "manual"
     },
-    "npr. IT STORITVE IN SVETOVANJE": {
+    "month of service, in Slovenian (AVGUST)": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "e.g. IT STORITVE IN SVETOVANJE"
+            "value": "mesec storitve (AVGUST)"
           }
         }
       }
     },
-    "referenčna številka": {
+    "month of service, in Slovenian (avgust)": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "payment reference"
+            "value": "mesec storitve (avgust)"
           }
         }
       }
     },
-    "rok plačila": {
+    "payment reference": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "due date"
+            "value": "referenčna številka"
           }
         }
       }
     },
-    "vaš IBAN": {
+    "the business owner": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "your IBAN"
+            "value": "nosilec dejavnosti"
           }
         }
       }
     },
-    "Številka": {
+    "year of service": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Number"
+            "value": "leto storitve"
           }
         }
       }
     },
-    "številka računa": {
+    "your IBAN": {
       "localizations": {
-        "en": {
+        "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "invoice number"
+            "value": "vaš IBAN"
           }
         }
       }

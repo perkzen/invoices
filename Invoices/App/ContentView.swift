@@ -26,7 +26,7 @@ struct ContentView: View {
                         .navigationTitle(AppSection.settings.title)
                 }
             case nil:
-                ContentUnavailableView("Izberi razdelek", systemImage: "sidebar.left")
+                ContentUnavailableView("Choose a section", systemImage: "sidebar.left")
             }
         }
         .frame(minWidth: 1100, minHeight: 600)

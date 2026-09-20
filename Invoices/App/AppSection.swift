@@ -12,10 +12,10 @@ enum AppSection: String, CaseIterable, Identifiable, Hashable {
 
     var title: String {
         switch self {
-        case .invoices: String(localized: "Računi")
-        case .clients: String(localized: "Stranke")
-        case .overview: String(localized: "Pregled")
-        case .settings: String(localized: "Nastavitve")
+        case .invoices: String(localized: "Invoices")
+        case .clients: String(localized: "Clients")
+        case .overview: String(localized: "Overview")
+        case .settings: String(localized: "Settings")
         }
     }
 

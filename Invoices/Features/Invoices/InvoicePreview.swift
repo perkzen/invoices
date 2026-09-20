@@ -1,7 +1,7 @@
 import PDFKit
 import SwiftUI
 
-/// The invoice exactly as "Izvozi PDF" will write it, re-rendered whenever
+/// The invoice exactly as "Export PDF" will write it, re-rendered whenever
 /// anything printed on it changes.
 struct InvoicePreview: View {
     let invoice: Invoice
@@ -19,7 +19,7 @@ struct InvoicePreview: View {
             .blur(radius: hidesSensitiveValues ? 14 : 0)
             .overlay {
                 if hidesSensitiveValues {
-                    Label("Predogled je zakrit", systemImage: "eye.slash")
+                    Label("Preview hidden", systemImage: "eye.slash")
                         .font(.callout)
                         .foregroundStyle(.secondary)
                         .padding(.horizontal, 14)
