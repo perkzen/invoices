@@ -1,60 +1,56 @@
 # Invoices
 
-SwiftUI desktop app (macOS) for managing invoices for a Slovenian **s.p.**
+A macOS app, written in SwiftUI, for issuing and tracking invoices as a Slovenian sole
+proprietor.
 
 ## Status
 
-v0 scaffold. It builds, runs, and persists data. What works today:
+v0.0.1. It builds, runs, persists data and ships as a self-updating release. What works
+today:
 
-Screens are named in English, as the source is; the Slovenian label each one carries on
-a Slovenian Mac is given in brackets.
-
-- **Clients** [Stranke] — client list with address and tax details (davčna številka,
-  ID za DDV)
-- **Invoices** [Računi] — draft invoices with line items, quantity/price/discount per
-  line and live totals (VAT columns appear only when the DDV toggle in Settings is on)
-- **Issuing** [Izdaja] — issuing a draft assigns the next sequential number (`2026-001`)
-  and locks the invoice
-- **PDF export** [Izvoz PDF] — A4 invoice with the mandatory Slovenian fields, paginated
-  for long invoices; drafts carry an OSNUTEK watermark so one cannot be mistaken for a
-  real invoice
-- **Preview** [Predogled] — the invoice editor shows the PDF live in a trailing inspector,
-  re-rendered as you type; Settings shows the same preview on a sample invoice
-- **Year overview** [Pregled] — every issued invoice of one calendar year in one table,
-  with a year picker and the SKUPAJ line, and **XLSX export** [Izvoz XLSX] writing the
-  same table as a real Excel workbook — dates and amounts as values, not text, so the
-  accountant can sort and sum them. The sheet keeps its Slovenian headers (stranka,
-  številka, datum, valuta, obdobje storitve, vrednost, prejem plačila): it is written
-  for the accountant, not for the app
-- **Invoice template** [Predloga računa] — logo, tagline, signature and the three
-  sentences (intro, payment instruction, closing) live in Settings › Predloga računa.
-  Sentences take placeholders such as `{MESEC}`, `{leto}`, `{trr}`, `{sklic}`; see
-  `Core/InvoiceTemplate.swift`
-- **Settings** [Nastavitve] — your own s.p. details (name, address, bank account, tax
-  status, IBAN, default payment term, footer note), in the sidebar and under ⌘,
-- **Private mode** [Zasebni način] — View › Skrij občutljive podatke (⇧⌘H) blanks the tax
-  numbers, the IBAN and every amount in the interface, for a screen share or a look over
-  your shoulder. It is a view preference, not a fact: the exported PDF, the spreadsheet
-  and the printed račun carry the real values whether it is on or off. Mark a new value
-  with `.sensitiveValue()`; `.privacyRedacted()` at the root of the window blanks it —
-  see `App/PrivacyMode.swift`
-- **English / Slovenian** — the interface follows the Mac's language, or the picker in
+- **Clients** — client list with address and tax details (tax number, VAT ID)
+- **Invoices** — draft invoices with line items, quantity/price/discount per line and
+  live totals (VAT columns appear only when the VAT toggle in Settings is on)
+- **Issuing** — issuing a draft assigns the next sequential number (`2026-001`) and locks
+  the invoice
+- **PDF export** — an A4 invoice carrying the fields Slovenian law requires, paginated for
+  long invoices; drafts are stamped with a draft watermark so one cannot be mistaken for
+  a real invoice
+- **Live preview** — the invoice editor shows the PDF in a trailing inspector, re-rendered
+  as you type; Settings shows the same preview on a sample invoice
+- **Year overview** — every issued invoice of one calendar year in one table, with a year
+  picker and a total row, plus **XLSX export** writing the same table as a real Excel
+  workbook — dates and amounts as values, not text, so the accountant can sort and sum
+  them. The sheet keeps its Slovenian column headers: it is written for the accountant,
+  not for the app
+- **Invoice template** — logo, tagline, signature and the three sentences (intro, payment
+  instruction, closing) live in Settings › Invoice template. The sentences take
+  placeholders for the month and year of service, your IBAN and the payment reference;
+  the token list is in `Core/InvoiceTemplate.swift`
+- **Settings** — your own business details (name, address, bank account, tax status, IBAN,
+  default payment term, footer note), reachable from the sidebar and under ⌘,
+- **Private mode** — View › Hide sensitive values (⇧⌘H) blanks the tax numbers, the IBAN
+  and every amount in the interface, for a screen share or a look over your shoulder. It
+  is a view preference, not a fact: the exported PDF, the spreadsheet and the printed
+  invoice carry the real values whether it is on or off. Mark a new value with
+  `.sensitiveValue()`; `.privacyRedacted()` at the root of the window blanks it — see
+  `App/PrivacyMode.swift`
+- **English and Slovenian** — the interface follows the Mac's language, or the picker in
   Settings › Language. Strings live in `Resources/Localizable.xcstrings` with **English as
   the source language**: write the English text as the key in code, and Slovenian is the
   translation hanging off it. Two kinds of string deliberately stay out of the catalog,
-  because they are Slovenian documents rather than interface — the printed račun (wrap any
-  new string on the PDF page in `Text(verbatim:)`) and the .xlsx headers in
+  because they are Slovenian documents rather than interface — the printed invoice (wrap
+  any new string on the PDF page in `Text(verbatim:)`) and the spreadsheet headers in
   `Core/YearOverviewXLSX.swift`. Counts go through the catalog's plural rules rather than
   an `if`: Slovenian needs `one` / `two` / `few` / `other` where English needs two, and
   `Formatting.invoiceCount` is the worked example. Where one English word covers two
-  Slovenian ones, use a symbolic
-  key: `InvoiceStatus.paid` is `"invoiceStatus.paid"` because an invoice is *plačan* while
-  a year's receipts are *plačano*, and both are "Paid"
-
+  Slovenian ones, use a symbolic key — `InvoiceStatus.paid` is `"invoiceStatus.paid"`
+  because a paid invoice and a year's received payments are two different words in
+  Slovenian and one word in English
 - **Updates** — the release build updates itself over Sparkle; pushing a `v*` tag
   publishes a signed DMG and its appcast to GitHub Releases
 
-Not built yet: printing, e-računi, expenses, search and filtering.
+Not built yet: printing, electronic invoicing, expenses, search and filtering.
 
 ## Requirements
 
@@ -178,7 +174,8 @@ choose **Open Anyway**.
 
 That applies once, to the DMG you download by hand. Sparkle verifies its own downloads
 against `SUPublicEDKey` and installs them without going through Gatekeeper quarantine, so
-updates after that first install are unattended.
+updates after that first install are unattended. Anything installed before v0.0.1 has no
+Sparkle in it at all and has to be replaced by hand the same way.
 
 The ad-hoc signature is also why the release workflow passes `ENABLE_HARDENED_RUNTIME=NO`.
 Hardened runtime enables library validation, which requires an embedded framework to
@@ -187,14 +184,6 @@ load and the app dies at launch. `project.yml` keeps `ENABLE_HARDENED_RUNTIME: Y
 the signed case; the workflow overrides it, and that override goes away with a Developer
 ID. Moving to a notarized build later changes only the workflow's signing step — nothing
 in the app or the appcast.
-
-### The first release is a manual install
-
-Whatever is installed today has no Sparkle in it at all, so it cannot be offered an
-update: the first release has to be downloaded and dragged across by hand. That also
-sidesteps a version-comparison trap — the current build reports `CFBundleVersion` `1`,
-and Sparkle reads `1` as *newer* than `0.0.1`. From the first release onwards every
-version comes from a tag, so the comparison is consistent and updates flow on their own.
 
 ## App icon
 
@@ -218,7 +207,8 @@ changing the artwork.
 ```
 project.yml              target, build settings, Info.plist
 Invoices/
-  App/                   @main entry point, Settings scene, sidebar shell, private mode, entitlements
+  App/                   @main entry point, Settings scene, sidebar shell, private mode,
+                         Sparkle updater (release only), entitlements
   Models/                SwiftData @Model types + VatRate / InvoiceStatus enums
   Core/                  pure value logic — imports Foundation and nothing else
   Services/              the framework edge: SwiftData, AppKit, PDF and file export
@@ -226,11 +216,12 @@ Invoices/
     Invoices/            list, editor, live preview
     Clients/             list and detail form
     YearOverview/        the year's table and its export
-    Settings/            s.p. profile, invoice template, sample invoice
+    Settings/            business profile, invoice template, sample invoice
   Resources/             asset catalog, Localizable.xcstrings
-  App/UpdaterCommands.swift  Sparkle updater + Check for Updates… (release only)
-Tests/InvoicesTests/     Swift Testing, covers the money arithmetic
+Tests/InvoicesTests/     Swift Testing — money arithmetic, PDF layout, invoice template,
+                         year overview, XLSX writer, localization
 Scripts/                 app icon renderer, release installer (not part of any target)
+.github/workflows/       CI on every push and pull request, release on a v* tag
 ```
 
 The split between `Core/` and `Services/` is enforceable by reading the imports: a file
@@ -242,57 +233,61 @@ framework — `InvoiceNumbering` for its `ModelContext` fetch, `InvoicePDF` for
 
 `Core/XLSXWriter.swift` writes the .xlsx by hand — the OOXML parts plus a stored
 (uncompressed) ZIP in `Core/ZIPArchive.swift` — so the app stays dependency-free. The
-sheet a year overview fills is laid out in `Core/YearOverviewXLSX.swift`. The SKUPAJ
-line is a value rather than a `=SUM()` formula, because cancelled invoices are listed
-(their numbers belong to the sequence) but not counted, and a formula over the column
-would quietly disagree with the app.
+sheet a year overview fills is laid out in `Core/YearOverviewXLSX.swift`. The total row is
+a value rather than a `=SUM()` formula, because cancelled invoices are listed (their
+numbers belong to the sequence) but not counted, and a formula over the column would
+quietly disagree with the app.
 
 The money arithmetic lives in `Core/InvoiceMath.swift` as plain `Decimal` functions
 rather than on the `@Model` classes, so it is testable without a `ModelContainer`.
 
 `Services/InvoicePDF.swift` renders `Services/InvoicePDFPage.swift` through
-`ImageRenderer` into a CGPDF context, one A4 page at a time. Pagination is a budget in layout units, not a row
-count: a row costs 2 units of padding plus one per wrapped line of its description, so a
-long description cannot silently push the last row off the page. Continuation pages get a
-slim header — with the full one they would not fit the rows the budget assumes. The
-40-character wrap estimate is a heuristic, not a measurement; `lineLimit(2)` means a wrong
-guess truncates a description rather than overflowing the page.
+`ImageRenderer` into a CGPDF context, one A4 page at a time. Pagination is a budget in
+layout units, not a row count: a row costs 2 units of padding plus one per wrapped line of
+its description, so a long description cannot silently push the last row off the page.
+Continuation pages get a slim header — with the full one they would not fit the rows the
+budget assumes. The 40-character wrap estimate is a heuristic, not a measurement;
+`lineLimit(2)` means a wrong guess truncates a description rather than overflowing the
+page.
 
 ## Domain rules already encoded
 
 - **Sequential numbering.** Numbers run unbroken within a calendar year and are only
   assigned when an invoice is issued, so drafts cannot punch gaps into the sequence.
 - **Issued invoices are immutable.** `InvoiceStatus.isEditable` is true only for drafts;
-  the editor disables itself otherwise. Corrections belong in a storno or dobropis.
-- **Service date** (datum opravljene storitve) is stored separately from the issue date,
-  since both are mandatory and frequently differ.
-- **Non-zavezanec.** `VatRate.exempt` charges 0 % and carries the clause
-  *"DDV ni obračunan na podlagi 1. odstavka 94. člena ZDDV-1."*, printed under the totals.
+  the editor disables itself otherwise. Corrections belong in a cancellation invoice or a
+  credit note.
+- **Service date** is stored separately from the issue date, since Slovenian law requires
+  both and they frequently differ.
+- **Not VAT-registered.** `VatRate.exempt` charges 0 % and carries the exemption clause
+  required by Article 94(1) of the Slovenian VAT Act, printed under the totals.
 - **Money is `Decimal`**, rounded half-up to cents once per line, then summed.
 - **Only drafts can be deleted or edited.** An issued number stays in the list even if
   the invoice is cancelled, so the sequence has no unexplainable gaps.
-- **Storno is a v0 simplification.** Today "Storniraj" flips the invoice to `.cancelled`.
-  Properly, a storno is its own numbered document (storno račun / dobropis) that references
-  the original — worth fixing before this is used for real bookkeeping.
+- **Cancellation is a v0 simplification.** Today cancelling an invoice flips it to
+  `.cancelled`. Properly, it is its own numbered document — a cancellation invoice or a
+  credit note that references the original — worth fixing before this is used for real
+  bookkeeping.
 - **Formatting is pinned to `sl_SI`**, not the system locale — an invoice is a Slovenian
   document even if the Mac is in English.
 
 ## Tax setup (decided 2026-09-18)
 
-- **Normiranec** — flat-rate expenses, so the app does not need to track actual costs.
-  Only revenue matters.
-- **Not a DDV zavezanec** — invoices charge no VAT. The VAT rate picker and the VAT recap
-  stay hidden, and every invoice carries the 94. člen ZDDV-1 exemption clause.
-- **Bank transfer only** — no cash, so davčno potrjevanje računov does not apply and is
-  permanently out of scope.
+- **Flat-rate expenses**, so the app does not need to track actual costs. Only revenue
+  matters.
+- **Not VAT-registered** — invoices charge no VAT. The VAT rate picker and the VAT recap
+  stay hidden, and every invoice carries the Article 94 exemption clause.
+- **Bank transfer only** — no cash, so fiscal verification of receipts does not apply and
+  is permanently out of scope.
 
-The DDV toggle in Settings stays, because the status changes the day the turnover
+The VAT toggle in Settings stays, because the status changes the day the turnover
 threshold is crossed. Flipping it brings back the per-line rate picker and the VAT recap —
 the model already stores a `VatRate` per line.
 
 ## Open questions
 
-1. **Any public-sector clients?** Those require e-računi in eSLOG 2.0 via UJP — a real
-   chunk of work, worth knowing up front.
-2. **Invoice language** — Slovenian only, or Slovenian + English for foreign clients?
+1. **Any public-sector clients?** Those require electronic invoices in the eSLOG 2.0
+   format, submitted through the state payment administration — a real chunk of work,
+   worth knowing up front.
+2. **Invoice language** — Slovenian only, or Slovenian and English for foreign clients?
 3. **Storage** — local SwiftData store (today) or iCloud sync across machines?
