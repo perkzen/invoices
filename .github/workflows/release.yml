@@ -1,0 +1,189 @@
+name: Release
+
+# Pushing a version tag publishes a release. Nothing else does:
+#   git tag v0.2.0 && git push origin v0.2.0
+on:
+  push:
+    tags: ["v*"]
+
+# gh release create writes to the repository.
+permissions:
+  contents: write
+
+env:
+  SPARKLE_VERSION: "2.10.0"
+
+jobs:
+  release:
+    name: Build, package and publish
+    runs-on: macos-26
+
+    steps:
+      - uses: actions/checkout@v5
+
+      # Kept in step with ci.yml — bump both together.
+      - name: Select Xcode
+        run: sudo xcode-select -switch /Applications/Xcode_26.6.app
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      # v0.2.0 -> 0.2.0. The tag is the single source of the version number;
+      # the MARKETING_VERSION in project.yml is only the placeholder used by
+      # local builds.
+      - name: Read version from the tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Generate project
+        run: xcodegen generate
+
+      # CURRENT_PROJECT_VERSION is what Sparkle compares (sparkle:version), so
+      # it has to move with every release — the "1" in project.yml never would.
+      # Setting both to the tag keeps the comparison honest and dotted versions
+      # are what Sparkle's standard comparator expects.
+      #
+      # CODE_SIGN_IDENTITY="-" is an ad-hoc signature: no Apple Developer
+      # Program membership needed. It carries the sandbox entitlements, which
+      # Sparkle's XPC services require, but it is not notarized — see README
+      # for what that means on first install.
+      #
+      # ENABLE_HARDENED_RUNTIME=NO is required *because* the signature is
+      # ad-hoc. Hardened runtime turns on library validation, which demands
+      # that an embedded framework share the app's Team ID; ad-hoc signatures
+      # have no Team ID at all, so dyld refuses to load Sparkle.framework and
+      # the app dies at launch with "different Team IDs". The project keeps
+      # ENABLE_HARDENED_RUNTIME=YES for the day this is signed with a real
+      # Developer ID — then Xcode re-signs Sparkle with the same team, library
+      # validation passes, and this override should be deleted.
+      - name: Build
+        run: |
+          xcodebuild build \
+            -project Invoices.xcodeproj \
+            -scheme Invoices \
+            -configuration Release \
+            -destination 'platform=macOS' \
+            -derivedDataPath build \
+            MARKETING_VERSION="${{ steps.version.outputs.version }}" \
+            CURRENT_PROJECT_VERSION="${{ steps.version.outputs.version }}" \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=YES \
+            CODE_SIGNING_ALLOWED=YES \
+            DEVELOPMENT_TEAM="" \
+            ENABLE_HARDENED_RUNTIME=NO
+
+      - name: Verify the signature and the embedded update settings
+        run: |
+          APP="build/Build/Products/Release/Invoices.app"
+          codesign --verify --deep --strict --verbose=2 "$APP"
+          # A missing feed URL or public key builds and launches fine, and then
+          # silently never updates. Fail the release instead.
+          plutil -extract SUFeedURL raw "$APP/Contents/Info.plist"
+          plutil -extract SUPublicEDKey raw "$APP/Contents/Info.plist"
+          test -d "$APP/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc"
+          # The app dies at launch if the embedded framework cannot be loaded,
+          # which a static signature check does not catch. Launching is not
+          # possible on a headless runner, so assert the condition that caused
+          # it: hardened runtime must be off while the signature is ad-hoc.
+          if codesign -dv --verbose=4 "$APP" 2>&1 | grep -q "adhoc" \
+             && codesign -dv --verbose=4 "$APP" 2>&1 | grep -q "runtime"; then
+            echo "::error::Ad-hoc signature with hardened runtime enabled —" \
+                 "library validation will stop Sparkle.framework from loading."
+            exit 1
+          fi
+
+      - name: Build the disk image
+        id: dmg
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          mkdir -p dmg
+          cp -R "build/Build/Products/Release/Invoices.app" dmg/
+          # So the image opens with the usual drag-here-to-install layout.
+          ln -s /Applications dmg/Applications
+          hdiutil create \
+            -volname "Invoices $VERSION" \
+            -srcfolder dmg \
+            -ov -format UDZO \
+            "Invoices-$VERSION.dmg"
+          echo "name=Invoices-$VERSION.dmg" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch Sparkle's signing tools
+        run: |
+          curl -fsSL -o sparkle.tar.xz \
+            "https://github.com/sparkle-project/Sparkle/releases/download/$SPARKLE_VERSION/Sparkle-$SPARKLE_VERSION.tar.xz"
+          mkdir -p sparkle
+          tar -xf sparkle.tar.xz -C sparkle
+
+      # The EdDSA signature is what the installed app checks before it will
+      # install this image — it is the whole of the update's security, since
+      # the build is not notarized. The private key never leaves the secret:
+      # --ed-key-file - reads it from stdin rather than the CI keychain.
+      - name: Sign the disk image and write the appcast
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SPARKLE_PRIVATE_KEY:-}" ]; then
+            echo "::error::SPARKLE_PRIVATE_KEY is not set. Without it the release" \
+                 "would publish an update that no installed app can verify."
+            exit 1
+          fi
+
+          VERSION="${{ steps.version.outputs.version }}"
+          DMG="${{ steps.dmg.outputs.name }}"
+          REPO_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
+
+          SIGNATURE=$(printf '%s' "$SPARKLE_PRIVATE_KEY" \
+            | ./sparkle/bin/sign_update --ed-key-file - -p "$DMG")
+          LENGTH=$(stat -f%z "$DMG")
+          MIN_OS=$(plutil -extract LSMinimumSystemVersion raw \
+            "build/Build/Products/Release/Invoices.app/Contents/Info.plist")
+          PUB_DATE=$(LC_ALL=C date -u "+%a, %d %b %Y %H:%M:%S +0000")
+
+          # One item, regenerated each release: Sparkle only needs the newest
+          # version to decide whether to offer an update, and a single-item feed
+          # cannot drift out of step with what is actually on the release.
+          cat > appcast.xml <<EOF
+          <?xml version="1.0" encoding="utf-8"?>
+          <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+              <channel>
+                  <title>Invoices</title>
+                  <link>${REPO_URL}/releases/latest/download/appcast.xml</link>
+                  <description>Posodobitve aplikacije Invoices</description>
+                  <language>sl</language>
+                  <item>
+                      <title>${VERSION}</title>
+                      <link>${REPO_URL}/releases/tag/${GITHUB_REF_NAME}</link>
+                      <pubDate>${PUB_DATE}</pubDate>
+                      <sparkle:version>${VERSION}</sparkle:version>
+                      <sparkle:shortVersionString>${VERSION}</sparkle:shortVersionString>
+                      <sparkle:minimumSystemVersion>${MIN_OS}</sparkle:minimumSystemVersion>
+                      <enclosure
+                          url="${REPO_URL}/releases/download/${GITHUB_REF_NAME}/${DMG}"
+                          length="${LENGTH}"
+                          type="application/octet-stream"
+                          sparkle:edSignature="${SIGNATURE}" />
+                  </item>
+              </channel>
+          </rss>
+          EOF
+
+          # Reject a feed that the app would refuse, rather than shipping it.
+          printf '%s' "$SPARKLE_PRIVATE_KEY" \
+            | ./sparkle/bin/sign_update --ed-key-file - --verify "$DMG" "$SIGNATURE"
+          xmllint --noout appcast.xml
+          cat appcast.xml
+
+      # appcast.xml is an asset on every release so that the fixed
+      # /releases/latest/download/appcast.xml URL baked into the app always
+      # redirects to the newest one.
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            "${{ steps.dmg.outputs.name }}" \
+            appcast.xml \
+            --title "$GITHUB_REF_NAME" \
+            --generate-notes

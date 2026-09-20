@@ -19,12 +19,20 @@ BUILT_APP="$DERIVED_DATA/Build/Products/Release/Invoices.app"
 
 xcodegen generate
 
+# Without a Developer ID this build is signed ad-hoc, and hardened runtime
+# turns on library validation, which requires an embedded framework to carry
+# the same Team ID as the app. An ad-hoc signature has no Team ID at all, so
+# dyld refuses to load Sparkle.framework and the app dies at launch with
+# "different Team IDs". project.yml keeps ENABLE_HARDENED_RUNTIME: YES for the
+# day this is signed properly; drop this override then. The release workflow
+# does the same thing for the same reason.
 xcodebuild \
   -project Invoices.xcodeproj \
   -scheme Invoices \
   -configuration Release \
   -destination 'platform=macOS' \
   -derivedDataPath "$DERIVED_DATA" \
+  ENABLE_HARDENED_RUNTIME=NO \
   build
 
 # ditto merges into an existing bundle rather than replacing it, which leaves

@@ -49,6 +49,9 @@ a Slovenian Mac is given in brackets.
   key: `InvoiceStatus.paid` is `"invoiceStatus.paid"` because an invoice is *plačan* while
   a year's receipts are *plačano*, and both are "Paid"
 
+- **Updates** — the release build updates itself over Sparkle; pushing a `v*` tag
+  publishes a signed DMG and its appcast to GitHub Releases
+
 Not built yet: printing, e-računi, expenses, search and filtering.
 
 ## Requirements
@@ -82,6 +85,7 @@ The two configurations build two separate applications, on purpose:
 | Bundle id | `com.domenperko.Invoices.dev` | `com.domenperko.Invoices` |
 | Data | its own sandbox container, empty at first | `~/Library/Containers/com.domenperko.Invoices` — the real invoices |
 | Where it lives | wherever you built it | `/Applications` |
+| Updates itself | no | yes, over Sparkle |
 
 Debug is what Xcode runs. It carries a different name because Spotlight labels an app by
 its file name, and a different bundle id so that a half-finished feature can never write
@@ -101,6 +105,94 @@ Services they are gone:
 ```bash
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -u "/path/to/stale/Invoices Dev.app"
 ```
+
+## Updates
+
+The release build updates itself with [Sparkle](https://sparkle-project.org). It checks
+on its own schedule, and *Invoices › Check for Updates…* checks on demand. The debug
+build does not: it is a different app, so installing a release over it would silently
+replace the development build with the production one — hence the `#if !DEBUG` in
+`App/UpdaterCommands.swift`.
+
+The feed is `…/releases/latest/download/appcast.xml`. GitHub redirects that fixed path
+to whichever release is newest, so the URL compiled into the app never has to change and
+there is no branch or server to host.
+
+Because the app is sandboxed it cannot replace its own bundle, so Sparkle does it from
+two XPC services inside `Sparkle.framework`. That is what the
+`com.apple.security.temporary-exception.mach-lookup.global-name` entitlements and
+`SUEnableInstallerLauncherService` are for — without them an update downloads fine and
+then fails at install time, which is easy to miss.
+
+`Scripts/install-release.sh` and the DMG are not alternatives: the script is the local
+path, building Release from your own checkout straight into `/Applications`, and the DMG
+is how the app reaches a machine that is not this one.
+
+## Releasing
+
+```bash
+git tag v0.0.2 && git push origin v0.0.2
+```
+
+`.github/workflows/release.yml` builds Release, packages `Invoices.app` into a DMG, signs
+it with the EdDSA key, writes `appcast.xml`, and publishes both as assets on a GitHub
+release. The tag is the only source of the version number — `MARKETING_VERSION` in
+`project.yml` is just the placeholder local builds use. `CURRENT_PROJECT_VERSION` comes
+from the tag too, because that is the field Sparkle compares; left at `1` no update would
+ever be offered.
+
+The appcast holds a single item, rewritten on every release. Sparkle only needs the
+newest version to decide whether to offer an update, and a one-item feed cannot drift out
+of step with what is actually attached to the release.
+
+### One-time setup
+
+The EdDSA key pair is what makes an update trustworthy — it is the whole of the security
+here, since the build is not notarized. The private key lives in the login keychain of
+whoever set this up. Sparkle's tools come down with the package, so they are on disk
+after any build:
+
+```bash
+build/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_keys -x sparkle-private-key.txt
+gh secret set SPARKLE_PRIVATE_KEY < sparkle-private-key.txt
+rm -P sparkle-private-key.txt
+```
+
+Piping the file straight into `gh` keeps the key out of the terminal and out of shell
+history. Without `gh`, paste the file into *Settings › Secrets and variables › Actions ›
+New repository secret*, named `SPARKLE_PRIVATE_KEY`. The matching public key is already
+in `project.yml` as `SUPublicEDKey`.
+
+**Keep a backup of that private key.** It is not recoverable, and installed copies of the
+app will only accept updates signed with it — losing it means every existing install has
+to be replaced by hand.
+
+### Gatekeeper on first install
+
+The DMG is ad-hoc signed, not signed with an Apple Developer ID and not notarized (that
+needs the paid Developer Program). So the **first** install is refused on a double-click:
+open *System Settings › Privacy & Security*, find the blocked app near the bottom and
+choose **Open Anyway**.
+
+That applies once, to the DMG you download by hand. Sparkle verifies its own downloads
+against `SUPublicEDKey` and installs them without going through Gatekeeper quarantine, so
+updates after that first install are unattended.
+
+The ad-hoc signature is also why the release workflow passes `ENABLE_HARDENED_RUNTIME=NO`.
+Hardened runtime enables library validation, which requires an embedded framework to
+share the app's Team ID — an ad-hoc signature has none, so `Sparkle.framework` fails to
+load and the app dies at launch. `project.yml` keeps `ENABLE_HARDENED_RUNTIME: YES` for
+the signed case; the workflow overrides it, and that override goes away with a Developer
+ID. Moving to a notarized build later changes only the workflow's signing step — nothing
+in the app or the appcast.
+
+### The first release is a manual install
+
+Whatever is installed today has no Sparkle in it at all, so it cannot be offered an
+update: the first release has to be downloaded and dragged across by hand. That also
+sidesteps a version-comparison trap — the current build reports `CFBundleVersion` `1`,
+and Sparkle reads `1` as *newer* than `0.0.1`. From the first release onwards every
+version comes from a tag, so the comparison is consistent and updates flow on their own.
 
 ## App icon
 
@@ -134,6 +226,7 @@ Invoices/
     YearOverview/        the year's table and its export
     Settings/            s.p. profile, invoice template, sample invoice
   Resources/             asset catalog, Localizable.xcstrings
+  App/UpdaterCommands.swift  Sparkle updater + Check for Updates… (release only)
 Tests/InvoicesTests/     Swift Testing, covers the money arithmetic
 Scripts/                 app icon renderer, release installer (not part of any target)
 ```
