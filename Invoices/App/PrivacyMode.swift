@@ -12,7 +12,7 @@ enum PrivacyMode {
     /// What stands in for a hidden value, in the interface and on the
     /// rendered page alike. One mask everywhere: a hidden value reads as a
     /// value withheld, and never as a blank where something failed to load.
-    static let mask = "••••"
+    static let mask = "****"
 }
 
 extension View {
