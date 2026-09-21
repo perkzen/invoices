@@ -37,7 +37,7 @@ struct InvoiceTemplateForm: View {
                     .foregroundStyle(.secondary)
             }
             Section {
-                ImageWell(title: "Signature", data: $profile.signatureData)
+                ImageWell(data: $profile.signatureData, symbol: "signature")
             } header: {
                 Text("Signature")
             } footer: {

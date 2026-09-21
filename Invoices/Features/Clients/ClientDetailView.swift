@@ -6,7 +6,7 @@ struct ClientDetailView: View {
     var body: some View {
         Form {
             Section {
-                ImageWell(title: "Logo", data: $client.logoData)
+                ImageWell(data: $client.logoData)
             } header: {
                 Text("Logo")
             } footer: {

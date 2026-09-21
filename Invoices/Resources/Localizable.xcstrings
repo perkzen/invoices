@@ -396,12 +396,32 @@
         }
       }
     },
+    "Choose an image": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izberi sliko"
+          }
+        }
+      }
+    },
     "Choose an invoice from the list, or create a new one.": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "Izberi račun s seznama ali ustvari novega."
+          }
+        }
+      }
+    },
+    "Choose another image": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izberi drugo sliko"
           }
         }
       }
@@ -684,6 +704,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Osnutki"
+          }
+        }
+      }
+    },
+    "Drop an image here, or click to choose": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Povleci sliko sem ali klikni za izbiro"
           }
         }
       }
@@ -1990,6 +2020,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Osnutek in vse njegove postavke bodo trajno izbrisani."
+          }
+        }
+      }
+    },
+    "The file could not be read.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datoteke ni bilo mogoče prebrati."
           }
         }
       }
