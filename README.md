@@ -119,9 +119,11 @@ against `SUPublicEDKey`, so every update after that is unattended.
 ```
 project.yml              target, build settings, Info.plist
 Invoices/
-  App/                   entry point, the three-column shell, private mode, Sparkle
-                         updater, view helpers shared by every feature (export, alerts,
-                         deletion, avatars, status badges)
+  App/                   entry point, the three-column shell, private mode, menu
+                         commands, Sparkle updater
+  UI/                    the view vocabulary every feature reuses: client avatars,
+                         status badges, image wells, and the modifiers for exporting a
+                         file, alerting on failure and confirming a deletion
   Models/                SwiftData @Model types
   Core/                  pure value logic — imports Foundation and nothing else,
                          including the .xlsx writer and reader and the import planner
