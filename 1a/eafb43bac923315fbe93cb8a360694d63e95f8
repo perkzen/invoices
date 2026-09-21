@@ -1,0 +1,25 @@
+Invoices/App/ContentView.swift
+  s_c5595a7759f84a::t_fdfb18ac09bcf3 17
+Invoices/Features/Template/InvoiceTemplateForm.swift
+  s_c5595a7759f84a::t_7ecb8aa978c27a 10-12,15-25,54-65
+Invoices/Resources/Localizable.xcstrings
+  s_c5595a7759f84a::t_7ecb8aa978c27a 1987-1996
+Invoices/Features/Settings/SettingsView.swift
+  s_c5595a7759f84a::t_fdfb18ac09bcf3 10,46,68-70,76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "1aeafb43bac923315fbe93cb8a360694d63e95f8",
+  "prompts": {},
+  "sessions": {
+    "s_c5595a7759f84a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4e50920c-a177-4332-bbb9-950d410104fa",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
