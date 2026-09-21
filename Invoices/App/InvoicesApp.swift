@@ -27,7 +27,6 @@ struct InvoicesApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .privacyRedacted()
         }
         .modelContainer(container)
         .defaultSize(width: 1400, height: 860)
@@ -43,7 +42,6 @@ struct InvoicesApp: App {
         Settings {
             SettingsView()
                 .modelContainer(container)
-                .privacyRedacted()
         }
     }
 }

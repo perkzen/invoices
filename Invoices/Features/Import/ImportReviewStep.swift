@@ -51,8 +51,8 @@ private struct Summary: View {
                     Text("TOTAL")
                         .foregroundStyle(.secondary)
                     Text(Formatting.money(plan.total, currencyCode: plan.currencyCode))
-                        .monospacedDigit()
                         .sensitiveValue()
+                        .monospacedDigit()
                 }
                 .font(.headline)
             }
@@ -124,10 +124,10 @@ private struct CandidateTable: View {
 
             TableColumn("Amount") { candidate in
                 Text(candidate.row.map { Formatting.money($0.amount, currencyCode: currencyCode) } ?? "")
-                    .monospacedDigit()
                     .strikethrough(candidate.row?.isCancelled ?? false)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
                     .sensitiveValue()
+                    .monospacedDigit()
+                    .frame(maxWidth: .infinity, alignment: .trailing)
             }
             .width(min: 90, ideal: 104)
             .alignment(.trailing)

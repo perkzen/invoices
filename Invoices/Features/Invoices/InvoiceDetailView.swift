@@ -10,13 +10,25 @@ struct InvoiceDetailView: View {
 
     @State private var export: FileExport?
     @State private var exportError: String?
+    @State private var emailError: String?
     @State private var showsPreview = true
     @State private var isConfirmingCancel = false
     @State private var isMarkingPaid = false
+    @State private var isOfferingEmail = false
+    @AppStorage(EmailComposer.Client.storageKey) private var emailClient = EmailComposer.Client.appleMail
 
     private var ledger: Ledger { Ledger(context) }
     private var isLocked: Bool { !invoice.status.isEditable }
     private var issueProblem: Ledger.IssueProblem? { ledger.issueProblem(for: invoice) }
+    /// Why the invoice cannot go out by email right now, or nil when it can.
+    private var emailProblem: String? {
+        if invoice.status.isEditable { return String(localized: "Issue the invoice before sending it") }
+        if clientEmail.isEmpty { return String(localized: "The client has no email address") }
+        return nil
+    }
+    private var clientEmail: String {
+        invoice.client?.email.trimmingCharacters(in: .whitespaces) ?? ""
+    }
     private var title: String {
         invoice.number.isEmpty ? String(localized: "Draft invoice") : invoice.number
     }
@@ -82,15 +94,15 @@ struct InvoiceDetailView: View {
         let printed = PrintedInvoice.make(invoice: invoice, profile: ledger.profile)
 
         form(printed)
-            // The rendered page in an inspector: a pane of the window with
-            // the toolbar broken at its edge, the way Pages and Xcode hang
-            // theirs, rather than a split view drawing its seam up through
-            // the toolbar between the title and the tools.
-            .inspector(isPresented: $showsPreview) {
-                InvoicePreview(printed: printed)
-                    .inspectorColumnWidth(min: 280, ideal: 340, max: 520)
-            }
-            .navigationTitle(title)
+        // The rendered page in an inspector: a pane of the window with the
+        // toolbar broken at its edge, the way Pages and Xcode hang theirs,
+        // rather than a split view drawing its seam up through the toolbar
+        // between the title and the tools.
+        .inspector(isPresented: $showsPreview) {
+            InvoicePreview(printed: printed)
+                .inspectorColumnWidth(min: 280, ideal: 340, max: 520)
+        }
+        .navigationTitle(title)
         .toolbar {
             // A three-column window shows only the list's title, so the
             // editor names its own invoice here. The status is the first
@@ -108,13 +120,18 @@ struct InvoiceDetailView: View {
                 // the tools. The other changes of status are the pop-up at
                 // the top of the form.
                 if invoice.status == .draft {
-                    Button("Issue invoice", systemImage: "paperplane", action: issue)
+                    // The seal: the paper plane is sending, which comes after.
+                    Button("Issue invoice", systemImage: "checkmark.seal", action: issue)
                         .disabled(issueProblem != nil)
                         .help(issueProblem.map { Text(verbatim: $0.message) }
                               ?? Text("Issue the invoice: assign the next number and lock it"))
                 }
                 Button("Export PDF", systemImage: "square.and.arrow.up") { exportPDF(printed) }
                     .help("Save the invoice as a PDF")
+                Button("Send by email", systemImage: "paperplane", action: sendEmail)
+                    .disabled(emailProblem != nil)
+                    .help(emailProblem.map { Text(verbatim: $0) }
+                          ?? Text("Open a new email to the client with the invoice PDF attached"))
                 Toggle("Preview", systemImage: "sidebar.trailing", isOn: $showsPreview)
                     .help("Show or hide the invoice preview")
             }
@@ -128,8 +145,17 @@ struct InvoiceDetailView: View {
         } message: {
             Text("The number stays in the sequence and the invoice is listed as cancelled. This cannot be undone.")
         }
+        // Offered once, right after issuing — the moment the invoice is
+        // final and the client is waiting for it. "Later" is the toolbar button.
+        .confirmationDialog("Send the invoice by email?", isPresented: $isOfferingEmail) {
+            Button("Send now", action: sendEmail)
+            Button("Later", role: .cancel) {}
+        } message: {
+            Text("The invoice is issued. You can send it to \(clientEmail) now, or later with the Send by email button.")
+        }
         .fileExport($export)
         .errorAlert("Export failed", message: $exportError)
+        .errorAlert("The email could not be prepared", message: $emailError)
     }
 
     private func form(_ printed: PrintedInvoice) -> some View {
@@ -216,9 +242,9 @@ struct InvoiceDetailView: View {
                 }
                 LabeledContent("Amount due") {
                     Text(Formatting.money(printed.totals.gross, currencyCode: printed.currencyCode))
+                        .sensitiveValue()
                         .font(.headline)
                         .monospacedDigit()
-                        .sensitiveValue()
                 }
                 ForEach(printed.exemptionClauses, id: \.self) { clause in
                     Text(clause)
@@ -260,7 +286,26 @@ struct InvoiceDetailView: View {
     /// The button is disabled while the ledger has an objection, so the
     /// throw cannot reach here from the toolbar.
     private func issue() {
-        try? ledger.issue(invoice)
+        guard (try? ledger.issue(invoice)) != nil else { return }
+        // Nothing to offer without an address; the button's help says why.
+        if !clientEmail.isEmpty { isOfferingEmail = true }
+    }
+
+    /// Built from the models here rather than handed the `printed` the body
+    /// made: the dialog's "Send now" fires after issuing changed the number.
+    private func sendEmail() {
+        let profile = ledger.profile
+        let printed = PrintedInvoice.make(invoice: invoice, profile: profile)
+        guard let data = InvoicePDF.render(printed) else {
+            emailError = String(localized: "The invoice could not be rendered.")
+            return
+        }
+        let email = InvoiceEmail.make(invoice: invoice, profile: profile, printed: printed)
+        do {
+            try EmailComposer.compose(email, attachment: data, via: emailClient)
+        } catch {
+            emailError = error.message
+        }
     }
 }
 
@@ -376,11 +421,10 @@ private struct InvoiceLineRows: View {
                     .frame(width: LineColumns.quantity)
                 TextField("Unit", text: $line.unit)
                     .frame(width: LineColumns.unit)
-                SensitiveValue(Formatting.number(line.unitPrice)) {
-                    TextField("Price", value: $line.unitPrice, format: .number)
-                        .multilineTextAlignment(.trailing)
-                }
-                .frame(width: LineColumns.price, alignment: .trailing)
+                TextField("Price", value: $line.unitPrice, format: .number)
+                    .multilineTextAlignment(.trailing)
+                    .sensitiveValue()
+                    .frame(width: LineColumns.price, alignment: .trailing)
                 TextField("Discount %", value: $line.discountPercent, format: .number)
                     .multilineTextAlignment(.trailing)
                     .frame(width: LineColumns.discount)
@@ -394,8 +438,8 @@ private struct InvoiceLineRows: View {
                 }
                 Spacer(minLength: 0)
                 Text(Formatting.money(line.amounts.gross, currencyCode: currencyCode))
-                    .monospacedDigit()
                     .sensitiveValue()
+                    .monospacedDigit()
             }
         }
     }

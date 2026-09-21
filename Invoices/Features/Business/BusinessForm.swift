@@ -98,6 +98,17 @@ struct BusinessForm: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
+            Section {
+                TextField("Email subject", text: $profile.emailSubjectTemplate)
+                TextField("Email message", text: $profile.emailBodyTemplate, axis: .vertical)
+                    .lineLimit(3...8)
+            } header: {
+                Text("Email")
+            } footer: {
+                Text("The message an invoice is sent with, the PDF attached. The placeholders above apply here too; add your name where the message signs off.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
             Section("On the invoice") {
                 TextField("Registration (e.g. AJPES)", text: $profile.registrationNote)
                 TextField("Footer note", text: $profile.invoiceFooter, axis: .vertical)

@@ -47,8 +47,8 @@ struct ClientDetailView: View {
                     }
                     LabeledContent("Outstanding") {
                         Text(Formatting.money(client.outstandingTotal))
-                            .monospacedDigit()
                             .sensitiveValue()
+                            .monospacedDigit()
                     }
                 }
             }

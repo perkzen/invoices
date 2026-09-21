@@ -53,8 +53,8 @@ struct LocalizationTests {
     /// through `DocumentText`. Add to it when a document gains a label.
     private static let documentKeys = [
         // InvoicePDFPage
-        "DRAFT", "Tax number: %@", "VAT ID: %@", "Bank account: %@", "Invoice", "draft", "Date",
-        "Due date", "Place of issue", "Date of service, abbreviated", "Reference number",
+        "Tax number: %@", "VAT ID: %@", "Bank account: %@", "Invoice", "draft", "Date", "Due date",
+        "Place of issue", "Date of service, abbreviated", "Reference number",
         "Invoice – continued", "Invoice no. %@ – continued", "No.", "Description of goods or services",
         "Quantity", "Unit", "Price", "Discount", "VAT", "Amount", "Subtotal excl. VAT:", "VAT %@:",
         "TOTAL DUE %@:", "Issued by:", "Page %lld / %lld",
@@ -66,6 +66,8 @@ struct LocalizationTests {
         "I am invoicing you for services in the month of {MONTH} {year}:",
         "When paying to bank account {iban}, quote the reference {reference}.",
         "Please settle the invoice by the due date.", "SI00 (invoice number)",
+        "Invoice {number}",
+        "Hello,\n\nplease find attached invoice {number} for {month} {year}. Payment is due by {due}.\n\nKind regards",
         "VAT not charged under Article 94(1) of the VAT Act (ZDDV-1).",
         "Reverse charge / exempt under the VAT Act (ZDDV-1).",
         "Sample Company Ltd.", "1 Sample Street", "Software development", "Consulting and support",
