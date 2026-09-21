@@ -1,0 +1,26 @@
+Invoices/Services/InvoicePDFPage.swift
+  s_7b1086a6dd1620::t_9db86668408032 15-16
+  s_7b1086a6dd1620::t_b573bab5452f2b 93-95,97
+README.md
+  s_7b1086a6dd1620::t_b573bab5452f2b 51-52
+Tests/InvoicesTests/LocalizationTests.swift
+  s_7b1086a6dd1620::t_b573bab5452f2b 56-57
+Tests/InvoicesTests/InvoicePDFTests.swift
+  s_7b1086a6dd1620::t_e0e1b873ee5e44 86-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "56d2102a80cd2c2d7425c7300c28777464890ef9",
+  "prompts": {},
+  "sessions": {
+    "s_7b1086a6dd1620": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "34c6ef33-0e8a-407a-8f13-06a92e90bfd7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
