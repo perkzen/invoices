@@ -6,8 +6,8 @@ import UniformTypeIdentifiers
 /// a click, with Choose and Remove beneath it. A logo or a signature is drawn
 /// for paper, so once set it sits on a white plate whatever the appearance.
 struct ImageWell: View {
-    /// A row label, when the well shares a section with other rows. Left
-    /// out when the section header already names it.
+    /// A row label, for a well that is a form row. Left out when the plate
+    /// stands on its own outside a form.
     let title: LocalizedStringKey?
     @Binding var data: Data?
     /// The glyph on the empty plate: what kind of picture belongs here.
@@ -32,12 +32,7 @@ struct ImageWell: View {
             if let title {
                 LabeledContent(title) { well }
             } else {
-                // Alone in its section, the plate is the row: no box around
-                // it, the section header names it.
                 well
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets())
             }
         }
         .fileImporter(isPresented: $isImporting, allowedContentTypes: Self.acceptedTypes) { result in
