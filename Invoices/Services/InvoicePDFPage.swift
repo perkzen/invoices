@@ -274,12 +274,15 @@ struct InvoicePDFPage: View {
                 Text(verbatim: DocumentText.string("Issued by:"))
                 Text(printed.signerName)
                 if let image = issuer.signature.flatMap(NSImage.init(data:)) {
+                    // About as wide as the name above it. A signature scanned
+                    // at any size lands here, and left to 140x44 a wide one
+                    // towered over the block it signs.
                     Image(nsImage: image)
                         .resizable()
                         .scaledToFit()
-                        .frame(maxWidth: 140, maxHeight: 44, alignment: .leading)
+                        .frame(maxWidth: 100, maxHeight: 32, alignment: .leading)
                 } else {
-                    gap(44)
+                    gap(32)
                 }
             }
             .frame(width: 250, alignment: .leading)
