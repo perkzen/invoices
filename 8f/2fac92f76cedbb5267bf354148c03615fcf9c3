@@ -1,0 +1,61 @@
+Tests/InvoicesTests/LocalizationTests.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 56-57,69-70
+Invoices/App/PrivacyMode.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 3,12-15,19-31,33,37,41-45
+Invoices/Features/Invoices/InvoiceListView.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 136-137,140-141
+Invoices/Features/YearOverview/YearListView.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 57
+Invoices/Features/YearOverview/YearOverviewView.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 169-170,218
+README.md
+  s_4efbbc5c171f4f::t_8d71c6a0148837 16-23,38-39,41-43,51-52,153
+Invoices/Core/InvoiceTemplate.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 21-28
+Invoices/Features/Invoices/InvoiceDetailView.swift
+  s_4efbbc5c171f4f::t_ed8f2633bdcc49 97-105,123-124
+Invoices/Core/InvoiceEmail.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 1-42
+Invoices/Features/Import/ImportReviewStep.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 55,129-130
+Invoices/App/SensitiveField.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 3,5,17-19
+Invoices/Services/EmailComposer.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 1-139
+Tests/InvoicesTests/InvoiceEmailTests.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 1-84
+Invoices/App/Invoices.entitlements
+  s_4efbbc5c171f4f::t_8d71c6a0148837 11-14
+Invoices/Features/Clients/ClientDetailView.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 51
+Invoices/Services/InvoicePDFPage.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 15-16,93-95,97
+Invoices/Core/PrintedInvoice.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 136,171-184
+Invoices/Models/BusinessProfile.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 39-42
+Tests/InvoicesTests/InvoicePDFTests.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 86-95
+Tests/InvoicesTests/InvoiceTemplateTests.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 31-34
+Invoices/Features/Settings/SettingsView.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 17-19,24,50-65
+Invoices/Features/Business/BusinessForm.swift
+  s_4efbbc5c171f4f::t_8d71c6a0148837 101-111
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "8f2fac92f76cedbb5267bf354148c03615fcf9c3",
+  "prompts": {},
+  "sessions": {
+    "s_4efbbc5c171f4f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e47dc4a8-1c48-40e3-bb38-296755a665e5",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
