@@ -1,0 +1,19 @@
+Invoices/Features/Settings/SettingsView.swift
+  s_c5595a7759f84a::t_0cb1c96fbcdc41 52-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "b3b1ea5d4b012cbe035164b0961d6eadbea3a0d5",
+  "prompts": {},
+  "sessions": {
+    "s_c5595a7759f84a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4e50920c-a177-4332-bbb9-950d410104fa",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
