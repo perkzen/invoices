@@ -1,0 +1,25 @@
+Invoices/Services/Ledger.swift
+  s_c5595a7759f84a::t_1de58eb101093b 35-51
+Invoices/App/InvoicesApp.swift
+  s_c5595a7759f84a::t_1de58eb101093b 19-21
+Tests/InvoicesTests/TemplateMigrationTests.swift
+  s_c5595a7759f84a::t_1de58eb101093b 1-37
+Invoices/Core/InvoiceTemplate.swift
+  s_c5595a7759f84a::t_1de58eb101093b 101-104,109-113
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "5d7704362dfd7579581d3b5b614149380d9af3f9",
+  "prompts": {},
+  "sessions": {
+    "s_c5595a7759f84a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4e50920c-a177-4332-bbb9-950d410104fa",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
