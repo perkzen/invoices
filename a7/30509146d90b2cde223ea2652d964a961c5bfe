@@ -1,0 +1,19 @@
+Invoices/App/PrivacyMode.swift
+  s_883866b4c74061::t_780dd1a975d94a 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "a730509146d90b2cde223ea2652d964a961c5bfe",
+  "prompts": {},
+  "sessions": {
+    "s_883866b4c74061": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f6e07dfc-83b1-4511-8163-9b5203429e0a",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
