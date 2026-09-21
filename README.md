@@ -30,8 +30,9 @@ proprietor.
   line of business and the three standard sentences, with placeholders for the month,
   year, IBAN and payment reference. The form fills one column and a live sample invoice
   the next, so every change is seen where it lands
-- **Private mode** — *View › Hide sensitive values* (⇧⌘H) blanks tax numbers, the IBAN
-  and every amount on screen, for a screen share. Exports keep the real values
+- **Private mode** — *View › Hide sensitive values* (⇧⌘H) masks tax numbers, the IBAN
+  and every amount, on screen and in the invoice preview alike, for a screen share.
+  Exports keep the real values
 - **English and Slovenian** — follows the Mac's language, or *Settings › Language*.
   English is the source language and the only language in the repository: Slovenian
   exists solely as translations in `Resources/Localizable.xcstrings`. The printed
