@@ -64,11 +64,11 @@ struct InvoiceListView: View {
                     }
                 }
                 .pickerStyle(.menu)
-                // The toolbar's capsule hugs the picker's bounds; give the
-                // label room to breathe inside it.
-                .padding(.horizontal, 8)
                 .help("Show only invoices in one state")
             }
+            // The picker draws its own pop-up control, spaced like every
+            // other pop-up; the toolbar's glass around it only crowded it.
+            .sharedBackgroundVisibility(.hidden)
             ToolbarItem {
                 Button("Delete draft", systemImage: "trash") { requestDelete(selected) }
                     .disabled(selected.map { ledger.deletionProblem(for: $0) != nil } ?? true)
