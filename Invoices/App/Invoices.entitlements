@@ -8,6 +8,10 @@
 	<true/>
 	<key>com.apple.security.print</key>
 	<true/>
+	<!-- Gmail in the browser cannot be handed an attachment, so "Send by
+	     email" drops the PDF into Downloads for the user to drag in. -->
+	<key>com.apple.security.files.downloads.read-write</key>
+	<true/>
 	<!-- Sparkle downloads the update itself; without this it would need its
 	     Downloader.xpc service instead. -->
 	<key>com.apple.security.network.client</key>

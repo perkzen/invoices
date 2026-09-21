@@ -9,12 +9,24 @@ struct InvoiceDetailView: View {
 
     @State private var export: FileExport?
     @State private var exportError: String?
+    @State private var emailError: String?
     @State private var showsPreview = true
     @State private var isConfirmingCancel = false
+    @State private var isOfferingEmail = false
+    @AppStorage(EmailComposer.Client.storageKey) private var emailClient = EmailComposer.Client.appleMail
 
     private var ledger: Ledger { Ledger(context) }
     private var isLocked: Bool { !invoice.status.isEditable }
     private var issueProblem: Ledger.IssueProblem? { ledger.issueProblem(for: invoice) }
+    /// Why the invoice cannot go out by email right now, or nil when it can.
+    private var emailProblem: String? {
+        if invoice.status.isEditable { return String(localized: "Issue the invoice before sending it") }
+        if clientEmail.isEmpty { return String(localized: "The client has no email address") }
+        return nil
+    }
+    private var clientEmail: String {
+        invoice.client?.email.trimmingCharacters(in: .whitespaces) ?? ""
+    }
     private var title: String {
         invoice.number.isEmpty ? String(localized: "Draft invoice") : invoice.number
     }
@@ -69,6 +81,12 @@ struct InvoiceDetailView: View {
                     .help("Save the invoice as a PDF")
             }
             ToolbarItem(placement: .primaryAction) {
+                Button("Send by email", systemImage: "paperplane", action: sendEmail)
+                    .disabled(emailProblem != nil)
+                    .help(emailProblem.map { Text(verbatim: $0) }
+                          ?? Text("Open a new email to the client with the invoice PDF attached"))
+            }
+            ToolbarItem(placement: .primaryAction) {
                 Toggle("Preview", systemImage: "sidebar.trailing", isOn: $showsPreview)
                     .help("Show or hide the invoice preview")
             }
@@ -93,8 +111,17 @@ struct InvoiceDetailView: View {
         } message: {
             Text("The number stays in the sequence and the invoice is listed as cancelled. This cannot be undone.")
         }
+        // Offered once, right after issuing — the moment the invoice is
+        // final and the client is waiting for it. "Later" is the toolbar button.
+        .confirmationDialog("Send the invoice by email?", isPresented: $isOfferingEmail) {
+            Button("Send now", action: sendEmail)
+            Button("Later", role: .cancel) {}
+        } message: {
+            Text("The invoice is issued. You can send it to \(clientEmail) now, or later with the Send by email button.")
+        }
         .fileExport($export)
         .errorAlert("Export failed", message: $exportError)
+        .errorAlert("The email could not be prepared", message: $emailError)
     }
 
     private func form(_ printed: PrintedInvoice) -> some View {
@@ -202,7 +229,26 @@ struct InvoiceDetailView: View {
     /// The button is disabled while the ledger has an objection, so the
     /// throw cannot reach here from the toolbar.
     private func issue() {
-        try? ledger.issue(invoice)
+        guard (try? ledger.issue(invoice)) != nil else { return }
+        // Nothing to offer without an address; the button's help says why.
+        if !clientEmail.isEmpty { isOfferingEmail = true }
+    }
+
+    /// Built from the models here rather than handed the `printed` the body
+    /// made: the dialog's "Send now" fires after issuing changed the number.
+    private func sendEmail() {
+        let profile = ledger.profile
+        let printed = PrintedInvoice.make(invoice: invoice, profile: profile)
+        guard let data = InvoicePDF.render(printed) else {
+            emailError = String(localized: "The invoice could not be rendered.")
+            return
+        }
+        let email = InvoiceEmail.make(invoice: invoice, profile: profile, printed: printed)
+        do {
+            try EmailComposer.compose(email, attachment: data, via: emailClient)
+        } catch {
+            emailError = error.message
+        }
     }
 }
 
