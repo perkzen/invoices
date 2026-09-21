@@ -158,9 +158,9 @@ struct InvoiceDetailView: View {
                 }
                 LabeledContent("Amount due") {
                     Text(Formatting.money(printed.totals.gross, currencyCode: printed.currencyCode))
+                        .sensitiveValue()
                         .font(.headline)
                         .monospacedDigit()
-                        .sensitiveValue()
                 }
                 ForEach(printed.exemptionClauses, id: \.self) { clause in
                     Text(clause)
@@ -285,11 +285,10 @@ private struct InvoiceLineRows: View {
                     .frame(width: LineColumns.quantity)
                 TextField("Unit", text: $line.unit)
                     .frame(width: LineColumns.unit)
-                SensitiveValue(Formatting.number(line.unitPrice)) {
-                    TextField("Price", value: $line.unitPrice, format: .number)
-                        .multilineTextAlignment(.trailing)
-                }
-                .frame(width: LineColumns.price, alignment: .trailing)
+                TextField("Price", value: $line.unitPrice, format: .number)
+                    .multilineTextAlignment(.trailing)
+                    .sensitiveValue()
+                    .frame(width: LineColumns.price, alignment: .trailing)
                 TextField("Discount %", value: $line.discountPercent, format: .number)
                     .multilineTextAlignment(.trailing)
                     .frame(width: LineColumns.discount)
@@ -303,8 +302,8 @@ private struct InvoiceLineRows: View {
                 }
                 Spacer(minLength: 0)
                 Text(Formatting.money(line.amounts.gross, currencyCode: currencyCode))
-                    .monospacedDigit()
                     .sensitiveValue()
+                    .monospacedDigit()
             }
         }
     }

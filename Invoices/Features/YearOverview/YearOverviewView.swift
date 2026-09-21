@@ -164,10 +164,10 @@ private struct OverviewTable: View {
 
             TableColumn("Amount in \(currencyCode)") { row in
                 Text(Formatting.money(row.amount, currencyCode: row.currencyCode))
+                    .sensitiveValue()
                     .monospacedDigit()
                     .strikethrough(row.isCancelled)
                     .frame(maxWidth: .infinity, alignment: .trailing)
-                    .sensitiveValue()
             }
             .width(min: 90, ideal: 100)
             .alignment(.trailing)
@@ -215,10 +215,10 @@ private struct OverviewHeadline: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             Text(Formatting.money(value, currencyCode: overview.currencyCode))
+                .sensitiveValue()
                 .font(.title2.weight(.semibold))
                 .monospacedDigit()
                 .foregroundStyle(tint)
-                .sensitiveValue()
             if let detail {
                 Text(detail)
                     .font(.caption)

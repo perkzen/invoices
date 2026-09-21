@@ -191,10 +191,10 @@ private struct InvoiceRow: View {
 
             VStack(alignment: .trailing, spacing: 3) {
                 Text(Formatting.money(invoice.totals.gross, currencyCode: invoice.currencyCode))
+                    .sensitiveValue()
                     .font(.body.weight(.medium))
                     .monospacedDigit()
                     .strikethrough(invoice.status == .cancelled)
-                    .sensitiveValue()
                 Text(Formatting.date(invoice.issueDate))
                     .font(.caption)
                     .foregroundStyle(.secondary)

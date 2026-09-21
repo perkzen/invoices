@@ -54,9 +54,9 @@ private struct YearRow: View {
             }
             Spacer(minLength: 8)
             Text(Formatting.money(overview.total, currencyCode: overview.currencyCode))
+                .sensitiveValue()
                 .font(.body.weight(.medium))
                 .monospacedDigit()
-                .sensitiveValue()
         }
         .padding(.vertical, 3)
     }
