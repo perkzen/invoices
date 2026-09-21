@@ -191,10 +191,12 @@ private struct InvoiceRow: View {
 
             VStack(alignment: .trailing, spacing: 3) {
                 Text(Formatting.money(invoice.totals.gross, currencyCode: invoice.currencyCode))
+                    // Inside the mask: a struck-through mask reads as a line
+                    // under four stars, and the cancelled row says so anyway.
+                    .strikethrough(invoice.status == .cancelled)
                     .sensitiveValue()
                     .font(.body.weight(.medium))
                     .monospacedDigit()
-                    .strikethrough(invoice.status == .cancelled)
                 Text(Formatting.date(invoice.issueDate))
                     .font(.caption)
                     .foregroundStyle(.secondary)

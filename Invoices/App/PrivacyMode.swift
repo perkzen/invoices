@@ -21,7 +21,8 @@ extension View {
     ///
     /// It goes directly on the value, ahead of the font, the colour and the
     /// frame around it, so the mask is styled and placed exactly as the value
-    /// it stands in for. Put it on the field itself where the value is
+    /// it stands in for — but behind a strikethrough, which belongs to the
+    /// value and not to the mask standing in for it. Put it on the field itself where the value is
     /// editable — the mask is read-only, which is the point: a number you
     /// cannot see is not one to type over.
     ///

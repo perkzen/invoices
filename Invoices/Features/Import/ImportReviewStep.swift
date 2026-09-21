@@ -124,9 +124,9 @@ private struct CandidateTable: View {
 
             TableColumn("Amount") { candidate in
                 Text(candidate.row.map { Formatting.money($0.amount, currencyCode: currencyCode) } ?? "")
+                    .strikethrough(candidate.row?.isCancelled ?? false)
                     .sensitiveValue()
                     .monospacedDigit()
-                    .strikethrough(candidate.row?.isCancelled ?? false)
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
             .width(min: 90, ideal: 104)

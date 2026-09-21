@@ -164,9 +164,9 @@ private struct OverviewTable: View {
 
             TableColumn("Amount in \(currencyCode)") { row in
                 Text(Formatting.money(row.amount, currencyCode: row.currencyCode))
+                    .strikethrough(row.isCancelled)
                     .sensitiveValue()
                     .monospacedDigit()
-                    .strikethrough(row.isCancelled)
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
             .width(min: 90, ideal: 100)
