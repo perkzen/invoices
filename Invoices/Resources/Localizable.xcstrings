@@ -367,6 +367,16 @@
         }
       }
     },
+    "Apple Mail": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Mail"
+          }
+        }
+      }
+    },
     "Applies to the app interface. Invoices are always in Slovenian.": {
       "localizations": {
         "sl": {
@@ -902,6 +912,26 @@
         }
       }
     },
+    "Email message": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Besedilo e-pošte"
+          }
+        }
+      }
+    },
+    "Email subject": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zadeva e-pošte"
+          }
+        }
+      }
+    },
     "Exempt": {
       "localizations": {
         "sl": {
@@ -1002,6 +1032,26 @@
         }
       }
     },
+    "Gmail could not be opened in the browser.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gmaila ni bilo mogoče odpreti v brskalniku."
+          }
+        }
+      }
+    },
+    "Gmail in the browser": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gmail v brskalniku"
+          }
+        }
+      }
+    },
     "Has issued invoices and cannot be deleted": {
       "localizations": {
         "sl": {
@@ -1018,6 +1068,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Glava"
+          }
+        }
+      }
+    },
+    "Hello,\n\nplease find attached invoice {number} for {month} {year}. Payment is due by {due}.\n\nKind regards": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pozdravljeni,\n\nv priponki vam pošiljam račun {number} za {month} {year}. Prosim za plačilo do {due}.\n\nLep pozdrav"
           }
         }
       }
@@ -1208,6 +1270,18 @@
         }
       }
     },
+    "Invoice {number}": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Račun {number}"
+          }
+        }
+      }
+    },
     "Invoice – continued": {
       "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
       "extractionState": "manual",
@@ -1300,6 +1374,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Izdaj račun"
+          }
+        }
+      }
+    },
+    "Issue the invoice before sending it": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pred pošiljanjem račun izdajte"
           }
         }
       }
@@ -1434,6 +1518,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Logotip"
+          }
+        }
+      }
+    },
+    "Mail has no account to send from. Add one in Mail › Settings › Accounts, or choose Gmail in Settings.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V aplikaciji Mail ni nastavljen noben račun. Dodajte ga v Mail › Nastavitve › Računi ali v Nastavitvah izberite Gmail."
           }
         }
       }
@@ -1726,6 +1820,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Odprti"
+          }
+        }
+      }
+    },
+    "Open a new email to the client with the invoice PDF attached": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpre novo e-poštno sporočilo stranki s priloženim PDF-jem računa"
           }
         }
       }
@@ -2172,6 +2276,66 @@
         }
       }
     },
+    "Send by email": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pošlji po e-pošti"
+          }
+        }
+      }
+    },
+    "Send by email opens a new Gmail message in your browser, addressed to the client and filled in. A browser cannot take the attachment from the app, so the PDF is saved to Downloads and copied to the clipboard: paste it into the message with ⌘V, or drag it in from Downloads.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pošlji po e-pošti v brskalniku odpre novo sporočilo Gmail, naslovljeno na stranko in izpolnjeno. Brskalnik priponke ne more prevzeti iz aplikacije, zato se PDF shrani v mapo Prenosi in kopira na odložišče: prilepite ga v sporočilo s ⌘V ali ga povlecite iz mape Prenosi."
+          }
+        }
+      }
+    },
+    "Send by email opens a new message in Mail, addressed to the client, with the invoice PDF attached. Nothing is sent until you press Send.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pošlji po e-pošti odpre novo sporočilo v aplikaciji Mail, naslovljeno na stranko, s priloženim PDF-jem računa. Nič se ne pošlje, dokler ne pritisnete Pošlji."
+          }
+        }
+      }
+    },
+    "Send invoices with": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pošiljanje računov z"
+          }
+        }
+      }
+    },
+    "Send now": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pošlji zdaj"
+          }
+        }
+      }
+    },
+    "Send the invoice by email?": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pošljem račun po e-pošti?"
+          }
+        }
+      }
+    },
     "Service covers a period": {
       "localizations": {
         "sl": {
@@ -2442,12 +2606,32 @@
         }
       }
     },
+    "The client has no email address": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stranka nima e-poštnega naslova"
+          }
+        }
+      }
+    },
     "The draft and all of its line items will be permanently deleted.": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "Osnutek in vse njegove postavke bodo trajno izbrisani."
+          }
+        }
+      }
+    },
+    "The email could not be prepared": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E-pošte ni bilo mogoče pripraviti"
           }
         }
       }
@@ -2532,6 +2716,16 @@
         }
       }
     },
+    "The invoice PDF could not be saved: %@": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF-ja računa ni bilo mogoče shraniti: %@"
+          }
+        }
+      }
+    },
     "The invoice could not be rendered.": {
       "localizations": {
         "sl": {
@@ -2542,12 +2736,32 @@
         }
       }
     },
+    "The invoice is issued. You can send it to %@ now, or later with the Send by email button.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Račun je izdan. Pošljete ga lahko zdaj na %@ ali pozneje z gumbom Pošlji po e-pošti."
+          }
+        }
+      }
+    },
     "The language change takes effect after a relaunch": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "Sprememba jezika velja po ponovnem zagonu"
+          }
+        }
+      }
+    },
+    "The message an invoice is sent with, the PDF attached. The placeholders above apply here too; add your name where the message signs off.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sporočilo, s katerim se pošlje račun s priloženim PDF-jem. Tudi tu veljajo zgornje označbe; na koncu dodajte svoje ime."
           }
         }
       }

@@ -14,12 +14,14 @@ struct SettingsView: View {
     }
 }
 
-/// Private mode and the interface language — the two preferences that are
-/// the app's own. Shown in the ⌘, window and in the sidebar's Settings row.
+/// Private mode, the mail client and the interface language — the
+/// preferences that are the app's own. Shown in the ⌘, window and in the
+/// sidebar's Settings row.
 struct GeneralSettingsForm: View {
     var body: some View {
         Form {
             PrivacySection()
+            EmailSection()
             LanguageSection()
         }
         .formStyle(.grouped)
@@ -39,6 +41,28 @@ private struct PrivacySection: View {
             Text("Privacy")
         } footer: {
             Text("Blanks tax numbers, the IBAN and every amount in the interface — for screen sharing, or a look over your shoulder. The exported PDF, the spreadsheet and the printed invoice are unchanged. Shortcut: ⇧⌘H.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        }
+    }
+}
+
+/// Which client "Send by email" composes in. The footer spells out the
+/// difference, because only Mail can be handed the attachment.
+private struct EmailSection: View {
+    @AppStorage(EmailComposer.Client.storageKey) private var client = EmailComposer.Client.appleMail
+
+    var body: some View {
+        Section {
+            Picker("Send invoices with", selection: $client) {
+                ForEach(EmailComposer.Client.allCases) { client in
+                    Text(client.label).tag(client)
+                }
+            }
+        } header: {
+            Text("Email")
+        } footer: {
+            Text(client.explanation)
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }

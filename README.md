@@ -13,6 +13,14 @@ proprietor.
   invoice; only drafts can be edited or deleted
 - **PDF export** — an A4 invoice carrying the fields Slovenian law requires, previewed
   live in the editor as you type; drafts are watermarked
+- **Send by email** — a toolbar button on an issued invoice, and an offer the moment
+  one is issued, opens the invoice as a new email to the client: subject and message from
+  two templates on the business page, the PDF attached. *Settings › Email* picks the
+  client. Apple Mail is handed everything, including the attachment. Gmail opens in the
+  browser with the address, subject and message filled in, but a browser cannot take a
+  file from the app, so the PDF is saved to Downloads and copied to the clipboard for a
+  paste or a drag. Nothing is sent until you press Send in the mail client. Clients keep
+  an email address for this; without one the button says so
 - **Year overview** — the year's invoiced, paid, outstanding and overdue amounts above a
   table of its invoices, each opening as its printed page beside the table; exported as a
   real Excel workbook with dates and amounts as values, so the accountant can sort and sum
@@ -27,8 +35,8 @@ proprietor.
   `.csv`; a Numbers document exports as either
 - **My business** — one sidebar section for everything an invoice is printed from and
   printed with: name, address, tax status and bank details, the logo, the signature, the
-  line of business and the three standard sentences, with placeholders for the month,
-  year, IBAN and payment reference. The form fills one column and a live sample invoice
+  line of business, the three standard sentences and the email an invoice is sent with,
+  all with placeholders for the month, year, IBAN and payment reference. The form fills one column and a live sample invoice
   the next, so every change is seen where it lands
 - **Private mode** — *View › Hide sensitive values* (⇧⌘H) blanks tax numbers, the IBAN
   and every amount on screen, for a screen share. Exports keep the real values
@@ -140,7 +148,7 @@ Invoices/
   Core/                  pure value logic — imports Foundation and nothing else,
                          including the .xlsx writer and reader and the import planner
   Services/              the framework edge: the ledger over SwiftData, the PDF renderer,
-                         AppKit images
+                         the mail composer, AppKit images
   Features/              one folder per sidebar section
   Resources/             asset catalog, Localizable.xcstrings
 Tests/InvoicesTests/     Swift Testing

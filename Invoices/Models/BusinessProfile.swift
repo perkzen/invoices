@@ -36,6 +36,10 @@ final class BusinessProfile {
     var introTemplate: String = InvoiceTemplate.defaultIntro
     var paymentNoteTemplate: String = InvoiceTemplate.defaultPaymentNote
     var closingNote: String = InvoiceTemplate.defaultClosingNote
+    /// The message the invoice is sent with, the PDF attached. Same
+    /// placeholders as the sentences above.
+    var emailSubjectTemplate: String = InvoiceTemplate.defaultEmailSubject
+    var emailBodyTemplate: String = InvoiceTemplate.defaultEmailBody
 
     init() {}
 

@@ -133,16 +133,7 @@ nonisolated struct PrintedInvoice: Hashable, Sendable {
 extension PrintedInvoice {
     /// The invoice as the models describe it right now.
     static func make(invoice: Invoice, profile: BusinessProfile) -> PrintedInvoice {
-        let context = InvoiceTemplate.Context(
-            serviceDate: invoice.serviceDateEnd ?? invoice.serviceDate,
-            clientName: invoice.client?.displayName ?? "",
-            number: invoice.number,
-            iban: profile.iban,
-            reference: invoice.paymentReference.isEmpty
-                ? InvoiceNumbering.defaultReference(number: invoice.number)
-                : invoice.paymentReference,
-            dueDate: invoice.dueDate
-        )
+        let context = InvoiceTemplate.Context(invoice: invoice, profile: profile)
         let introTemplate = invoice.introOverride.isEmpty ? profile.introTemplate : invoice.introOverride
 
         return PrintedInvoice(
@@ -173,6 +164,24 @@ extension PrintedInvoice {
             // The payment instruction only makes sense with an account to pay into.
             paymentNote: profile.iban.isEmpty ? "" : InvoiceTemplate.resolve(profile.paymentNoteTemplate, in: context),
             notes: invoice.notes
+        )
+    }
+}
+
+extension InvoiceTemplate.Context {
+    /// The facts of one invoice, as the printed page and the email it goes
+    /// out in both resolve their sentences against — one builder, so the
+    /// two cannot name a different month or due date.
+    init(invoice: Invoice, profile: BusinessProfile) {
+        self.init(
+            serviceDate: invoice.serviceDateEnd ?? invoice.serviceDate,
+            clientName: invoice.client?.displayName ?? "",
+            number: invoice.number,
+            iban: profile.iban,
+            reference: invoice.paymentReference.isEmpty
+                ? InvoiceNumbering.defaultReference(number: invoice.number)
+                : invoice.paymentReference,
+            dueDate: invoice.dueDate
         )
     }
 }

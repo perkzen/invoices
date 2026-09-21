@@ -28,7 +28,10 @@ struct InvoiceTemplateTests {
 
     @Test func `the default sentences use the current placeholders`() {
         let tokens = Set(InvoiceTemplate.placeholders.map(\.token))
-        for sentence in [InvoiceTemplate.defaultIntro, InvoiceTemplate.defaultPaymentNote] {
+        for sentence in [
+            InvoiceTemplate.defaultIntro, InvoiceTemplate.defaultPaymentNote,
+            InvoiceTemplate.defaultEmailSubject, InvoiceTemplate.defaultEmailBody,
+        ] {
             let used = sentence.matches(of: /\{[^}]+\}/).map { String($0.output) }
             #expect(!used.isEmpty)
             #expect(used.allSatisfy(tokens.contains), "\(sentence) uses a token the editor does not offer")

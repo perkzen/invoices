@@ -18,6 +18,14 @@ nonisolated enum InvoiceTemplate {
     static var defaultClosingNote: String {
         DocumentText.string("Please settle the invoice by the due date.")
     }
+    /// The email an invoice goes out in. Slovenian like the invoice it
+    /// carries: the client reads both.
+    static var defaultEmailSubject: String {
+        DocumentText.string("Invoice {number}")
+    }
+    static var defaultEmailBody: String {
+        DocumentText.string("Hello,\n\nplease find attached invoice {number} for {month} {year}. Payment is due by {due}.\n\nKind regards")
+    }
 
     /// Every token a template may use. The editor lists these and the
     /// resolver fills exactly these — one list, so the two cannot drift and
