@@ -14,7 +14,7 @@ struct ContentView: View {
     @State private var clientSelection: PersistentIdentifier?
     @State private var overviewYear: Int?
     @State private var templateSelection: String?
-    @State private var settingsPage: SettingsPage? = .business
+    @State private var settingsPage: SettingsPage? = .general
     @State private var isImporting = false
 
     private var importSpreadsheet: ImportSpreadsheetAction {

@@ -7,10 +7,22 @@ struct InvoiceTemplateForm: View {
 
     var body: some View {
         Form {
-            Section("Header") {
-                ImageWell(title: "Logo", data: $profile.logoData)
+            // The artwork sits above the wording, in the first section's
+            // header: never boxed, on the sections' own left edge.
+            Section {
                 TextField("Line of business", text: $profile.activityLine,
                           prompt: Text("e.g. IT SERVICES AND CONSULTING"))
+            } header: {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(alignment: .top, spacing: 32) {
+                        artwork("Logo", data: $profile.logoData, symbol: "photo.badge.plus",
+                                caption: "Printed top left on every invoice.")
+                        artwork("Signature", data: $profile.signatureData, symbol: "signature",
+                                caption: "The name under the signature is “Full name” from Settings › My business.")
+                    }
+                    Text("Header")
+                        .padding(.top, 16)
+                }
             }
             Section {
                 TextField("Intro sentence", text: $profile.introTemplate, axis: .vertical)
@@ -36,14 +48,20 @@ struct InvoiceTemplateForm: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
-            Section {
-                ImageWell(title: "Signature", data: $profile.signatureData, symbol: "signature")
-            } footer: {
-                Text("The name under the signature is “Full name” from Settings › My business.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
         }
         .formStyle(.grouped)
+    }
+
+    private func artwork(
+        _ title: LocalizedStringKey, data: Binding<Data?>, symbol: String, caption: LocalizedStringKey
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+            ImageWell(data: data, symbol: symbol)
+            Text(caption)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .frame(width: 200, alignment: .leading)
+        }
     }
 }

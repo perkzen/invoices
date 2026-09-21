@@ -1984,6 +1984,16 @@
         }
       }
     },
+    "Printed top left on every invoice.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Natisnjen zgoraj levo na vsakem računu."
+          }
+        }
+      }
+    },
     "Privacy": {
       "localizations": {
         "sl": {

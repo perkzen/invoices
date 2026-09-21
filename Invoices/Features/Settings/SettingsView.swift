@@ -6,8 +6,8 @@ import SwiftUI
 /// window and the sidebar of the ⌘, window, so both show the same forms.
 /// The invoice template is not one of them: it has its own sidebar section.
 enum SettingsPage: String, CaseIterable, Identifiable {
-    case business
     case general
+    case business
 
     var id: String { rawValue }
 
@@ -43,7 +43,7 @@ struct SettingsPageList: View {
 /// The ⌘, window. The same pages also live in the sidebar under Settings,
 /// so nobody has to know the shortcut to find them.
 struct SettingsView: View {
-    @State private var page: SettingsPage? = .business
+    @State private var page: SettingsPage? = .general
 
     var body: some View {
         NavigationSplitView {
@@ -65,15 +65,15 @@ struct SettingsContent: View {
     var body: some View {
         Group {
             switch page {
-            case .business, nil:
+            case .general, nil:
+                GeneralSettingsForm()
+            case .business:
                 ProfilePreviewSplit { profile in
                     BusinessProfileForm(profile: profile)
                 }
-            case .general:
-                GeneralSettingsForm()
             }
         }
-        .navigationTitle((page ?? .business).title)
+        .navigationTitle((page ?? .general).title)
     }
 }
 
