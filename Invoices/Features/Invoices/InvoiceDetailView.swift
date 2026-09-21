@@ -126,12 +126,18 @@ struct InvoiceDetailView: View {
                         .help(issueProblem.map { Text(verbatim: $0.message) }
                               ?? Text("Issue the invoice: assign the next number and lock it"))
                 }
-                Button("Export PDF", systemImage: "square.and.arrow.up") { exportPDF(printed) }
-                    .help("Save the invoice as a PDF")
+                // In the order the work happens: issue, send, keep a copy.
                 Button("Send by email", systemImage: "paperplane", action: sendEmail)
                     .disabled(emailProblem != nil)
                     .help(emailProblem.map { Text(verbatim: $0) }
                           ?? Text("Open a new email to the client with the invoice PDF attached"))
+                Button("Export PDF", systemImage: "square.and.arrow.up") { exportPDF(printed) }
+                    .help("Save the invoice as a PDF")
+            }
+            // What is done to the invoice, and apart from it what is shown
+            // of it: the pane toggle is a view control, in a capsule of its own.
+            ToolbarSpacer(.fixed, placement: .primaryAction)
+            ToolbarItem(placement: .primaryAction) {
                 Toggle("Preview", systemImage: "sidebar.trailing", isOn: $showsPreview)
                     .help("Show or hide the invoice preview")
             }

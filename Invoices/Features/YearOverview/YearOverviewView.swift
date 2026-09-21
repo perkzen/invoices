@@ -234,6 +234,9 @@ private struct OverviewPreviewPane: View {
     let invoice: Invoice
     let printed: PrintedInvoice
 
+    @State private var export: FileExport?
+    @State private var exportError: String?
+
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 10) {
@@ -249,11 +252,26 @@ private struct OverviewPreviewPane: View {
                 }
                 Spacer(minLength: 8)
                 InvoiceStatusBadge(invoice: invoice)
+                // The page is right here; so is the way to keep a copy.
+                Button("Export PDF", systemImage: "square.and.arrow.down", action: exportPDF)
+                    .labelStyle(.iconOnly)
+                    .buttonStyle(.borderless)
+                    .help("Save the invoice as a PDF")
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 10)
             Divider()
             InvoicePreview(printed: printed)
         }
+        .fileExport($export)
+        .errorAlert("Export failed", message: $exportError)
+    }
+
+    private func exportPDF() {
+        guard let data = InvoicePDF.render(printed) else {
+            exportError = String(localized: "The invoice could not be rendered.")
+            return
+        }
+        export = .pdf(data, named: printed.suggestedFilename)
     }
 }
