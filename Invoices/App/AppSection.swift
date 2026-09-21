@@ -7,21 +7,21 @@ enum AppSection: String, CaseIterable, Identifiable, Hashable {
     case invoices
     case clients
     case overview
-    case template
+    case business
     case settings
 
     var id: String { rawValue }
 
     /// The sections listed at the top of the sidebar. The overview opens
     /// first: it answers "how am I doing" before any one invoice is touched.
-    static let content: [AppSection] = [.overview, .invoices, .clients, .template]
+    static let content: [AppSection] = [.overview, .invoices, .clients, .business]
 
     var title: String {
         switch self {
         case .invoices: String(localized: "Invoices")
         case .clients: String(localized: "Clients")
         case .overview: String(localized: "Overview")
-        case .template: String(localized: "Invoice template")
+        case .business: String(localized: "My business")
         case .settings: String(localized: "Settings")
         }
     }
@@ -31,7 +31,7 @@ enum AppSection: String, CaseIterable, Identifiable, Hashable {
         case .invoices: "doc.text"
         case .clients: "person.2"
         case .overview: "tablecells"
-        case .template: "doc.richtext"
+        case .business: "building.2"
         case .settings: "gearshape"
         }
     }

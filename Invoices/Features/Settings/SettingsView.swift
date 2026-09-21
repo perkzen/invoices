@@ -2,181 +2,28 @@ import AppKit
 import SwiftData
 import SwiftUI
 
-/// The pages of Settings. They are rows in the middle column of the main
-/// window and the sidebar of the ⌘, window, so both show the same forms.
-/// The invoice template is not one of them: it has its own sidebar section.
-enum SettingsPage: String, CaseIterable, Identifiable {
-    case general
-    case business
-
-    var id: String { rawValue }
-
-    var title: String {
-        switch self {
-        case .business: String(localized: "My business")
-        case .general: String(localized: "General")
-        }
-    }
-
-    var symbol: String {
-        switch self {
-        case .business: "building.2"
-        case .general: "gearshape"
-        }
-    }
-}
-
-struct SettingsPageList: View {
-    @Binding var selection: SettingsPage?
-
-    var body: some View {
-        List(selection: $selection) {
-            ForEach(SettingsPage.allCases) { page in
-                Label(page.title, systemImage: page.symbol)
-                    .tag(page)
-            }
-        }
-        .navigationTitle("Settings")
-    }
-}
-
-/// The ⌘, window. The same pages also live in the sidebar under Settings,
-/// so nobody has to know the shortcut to find them.
+/// The ⌘, window: the preferences that are about the app rather than the
+/// business. What the invoice is printed from and printed with lives in the
+/// sidebar's own section, beside a preview of the invoice it produces.
 struct SettingsView: View {
-    @State private var page: SettingsPage? = .general
-
     var body: some View {
-        NavigationSplitView {
-            SettingsPageList(selection: $page)
-                .navigationSplitViewColumnWidth(min: 180, ideal: 200, max: 240)
-                // Nothing to reveal by collapsing two pages away.
-                .toolbar(removing: .sidebarToggle)
-        } detail: {
-            SettingsContent(page: page)
-        }
-        .frame(width: 1240, height: 720)
+        // Width only: the window takes its height from the form, so a
+        // longer translation of a footer cannot be cut off.
+        GeneralSettingsForm()
+            .frame(width: 520)
     }
 }
 
-/// One settings page. The business details sit beside the sample preview,
-/// since they are printed; the general preferences are not, so they stand
-/// alone.
-struct SettingsContent: View {
-    let page: SettingsPage?
-
-    var body: some View {
-        Group {
-            switch page {
-            case .general, nil:
-                GeneralSettingsForm()
-            case .business:
-                ProfilePreviewSplit { profile in
-                    BusinessProfileForm(profile: profile)
-                }
-            }
-        }
-        .navigationTitle((page ?? .general).title)
-    }
-}
-
-/// A form about the business profile beside a live preview of a sample
-/// invoice, so every change is seen where it lands. Shared by the business
-/// page and the invoice template.
-struct ProfilePreviewSplit<Content: View>: View {
-    @ViewBuilder let form: (BusinessProfile) -> Content
-
-    @Environment(\.modelContext) private var context
-
-    var body: some View {
-        let profile = Ledger(context).profile
-
-        HStack(spacing: 0) {
-            form(profile)
-                .frame(width: 470)
-            Divider()
-            VStack(spacing: 0) {
-                Text("Preview on a sample invoice")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity)
-                    .padding(6)
-                // Built in `body`, so every edit to the profile — the VAT
-                // toggle included — re-renders the sample.
-                InvoicePreview(printed: PrintedInvoice.sample(matching: profile))
-            }
-            .frame(minWidth: 400)
-        }
-    }
-}
-
-/// Preferences about the app rather than the business: private mode and
-/// the interface language.
-private struct GeneralSettingsForm: View {
+/// Private mode and the interface language — the two preferences that are
+/// the app's own. Shown in the ⌘, window and in the sidebar's Settings row.
+struct GeneralSettingsForm: View {
     var body: some View {
         Form {
             PrivacySection()
             LanguageSection()
         }
         .formStyle(.grouped)
-    }
-}
-
-private struct BusinessProfileForm: View {
-    @Bindable var profile: BusinessProfile
-
-    var body: some View {
-        Form {
-            Section {
-                TextField("Business name", text: $profile.name, prompt: Text("e.g. Domen Perko, sole trader"))
-                TextField("Full name", text: $profile.signerName, prompt: Text("the business owner"))
-                TextField("Email", text: $profile.email)
-                TextField("Phone", text: $profile.phone)
-            } header: {
-                Text("My business")
-            } footer: {
-                Text("The business name is printed in the invoice header, the full name under “Issued by”.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-            Section("Address") {
-                TextField("Street and number", text: $profile.street)
-                TextField("Postal code", text: $profile.postalCode)
-                TextField("City", text: $profile.city)
-                TextField("Country (ISO code)", text: $profile.countryCode)
-            }
-            Section {
-                SensitiveField("Tax number", text: $profile.taxNumber)
-                Toggle("VAT registered", isOn: $profile.isVatRegistered)
-                if profile.isVatRegistered {
-                    SensitiveField("VAT ID", text: $profile.vatID)
-                }
-                Toggle("Flat-rate expenses", isOn: $profile.isFlatRate)
-            } header: {
-                Text("Tax status")
-            } footer: {
-                Text(profile.isVatRegistered
-                     ? "Invoices show VAT rates and a breakdown per rate."
-                     : "Invoices charge no VAT and carry the exemption clause under Article 94 of the VAT Act (ZDDV-1). Turn this on once you register for VAT.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-            }
-            Section("Bank account") {
-                SensitiveField("IBAN", text: $profile.iban)
-                TextField("Bank", text: $profile.bankName)
-                SensitiveField("BIC / SWIFT", text: $profile.bic)
-                Stepper(
-                    "Default payment term: \(profile.defaultPaymentTermDays) days",
-                    value: $profile.defaultPaymentTermDays,
-                    in: 0...120
-                )
-            }
-            Section("On the invoice") {
-                TextField("Registration (e.g. AJPES)", text: $profile.registrationNote)
-                TextField("Footer note", text: $profile.invoiceFooter, axis: .vertical)
-                    .lineLimit(2...5)
-            }
-        }
-        .formStyle(.grouped)
+        .navigationTitle("Settings")
     }
 }
 

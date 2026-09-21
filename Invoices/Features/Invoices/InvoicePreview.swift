@@ -10,6 +10,11 @@ import SwiftUI
 /// watch.
 struct InvoicePreview: View {
     let printed: PrintedInvoice
+    /// Scale the whole page into the view rather than to its width. The
+    /// editor scrolls a preview that may run to a second page; the sample
+    /// beside the business form is one page and should be seen at once,
+    /// whatever the column's proportions.
+    var fitsPage = false
 
     /// `.redacted(reason: .privacy)` stops at the edge of an AppKit view, so
     /// the rendered page cannot be blanked the way the rest of the interface
@@ -19,7 +24,7 @@ struct InvoicePreview: View {
     @State private var pdfData: Data?
 
     var body: some View {
-        PDFDocumentView(data: pdfData)
+        PDFDocumentView(data: pdfData, fitsPage: fitsPage)
             .blur(radius: hidesSensitiveValues ? 14 : 0)
             .overlay {
                 if hidesSensitiveValues {
@@ -45,6 +50,7 @@ struct InvoicePreview: View {
 /// place on the page, so typing into a field does not jump the preview.
 struct PDFDocumentView: NSViewRepresentable {
     let data: Data?
+    var fitsPage = false
 
     final class Coordinator {
         var shownData: Data?
@@ -55,7 +61,9 @@ struct PDFDocumentView: NSViewRepresentable {
     func makeNSView(context: Context) -> PDFView {
         let view = PDFView()
         view.autoScales = true
-        view.displayMode = .singlePageContinuous
+        // .singlePage scales the page to fit the view in both directions;
+        // .singlePageContinuous fits its width and scrolls.
+        view.displayMode = fitsPage ? .singlePage : .singlePageContinuous
         view.displayDirection = .vertical
         view.pageShadowsEnabled = true
         view.backgroundColor = .underPageBackgroundColor

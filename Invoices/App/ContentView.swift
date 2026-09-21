@@ -9,12 +9,12 @@ import SwiftUI
 /// Selection is kept per section, so switching to Clients and back lands on
 /// the same invoice.
 struct ContentView: View {
+    @Environment(\.modelContext) private var context
+
     @State private var section: AppSection? = .overview
     @State private var invoiceSelection: PersistentIdentifier?
     @State private var clientSelection: PersistentIdentifier?
     @State private var overviewYear: Int?
-    @State private var templateSelection: String?
-    @State private var settingsPage: SettingsPage? = .general
     @State private var isImporting = false
 
     private var importSpreadsheet: ImportSpreadsheetAction {
@@ -22,6 +22,11 @@ struct ContentView: View {
     }
 
     var body: some View {
+        // One fetch per pass, for the two columns My business fills. The
+        // profile exists from the first launch on; reading it here never
+        // inserts during a view update.
+        let profile = Ledger(context).profile
+
         NavigationSplitView {
             List(selection: $section) {
                 ForEach(AppSection.content) { item in
@@ -54,12 +59,21 @@ struct ContentView: View {
             case .overview:
                 YearListView(selection: $overviewYear)
                     .navigationSplitViewColumnWidth(min: 200, ideal: 240, max: 320)
-            case .template:
-                TemplateListView(selection: $templateSelection)
-                    .navigationSplitViewColumnWidth(min: 200, ideal: 240, max: 320)
+            // My business and Settings are forms, not lists of things to
+            // pick from: the form itself fills this column, and what it
+            // changes — the printed invoice — fills the one beside it.
+            case .business:
+                BusinessForm(profile: profile)
+                    .navigationSplitViewColumnWidth(min: 440, ideal: 480, max: 560)
             case .settings:
-                SettingsPageList(selection: $settingsPage)
-                    .navigationSplitViewColumnWidth(min: 200, ideal: 240, max: 320)
+                // Two preferences and nothing to pick from: no middle column
+                // at all, so the form has the width the other sections give
+                // their detail.
+                // The window title comes from this column, so it keeps the
+                // one the section is called by.
+                Color.clear
+                    .navigationTitle("Settings")
+                    .navigationSplitViewColumnWidth(0)
             case nil:
                 Color.clear
             }
@@ -71,10 +85,10 @@ struct ContentView: View {
                 ClientDetailColumn(selection: clientSelection)
             case .overview:
                 YearOverviewView(year: overviewYear)
-            case .template:
-                TemplateDetailColumn(selection: templateSelection)
+            case .business:
+                BusinessPreview(profile: profile)
             case .settings:
-                SettingsContent(page: settingsPage)
+                GeneralSettingsForm()
             case nil:
                 ContentUnavailableView("Choose a section", systemImage: "sidebar.left")
             }
