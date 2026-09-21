@@ -15,6 +15,7 @@ struct ImageWell: View {
 
     @State private var isImporting = false
     @State private var isTargeted = false
+    @State private var isHovering = false
     @State private var importError: String?
 
     init(title: LocalizedStringKey? = nil, data: Binding<Data?>, symbol: String = "photo.badge.plus") {
@@ -31,8 +32,12 @@ struct ImageWell: View {
             if let title {
                 LabeledContent(title) { well }
             } else {
+                // Alone in its section, the plate is the row: no box around
+                // it, the section header names it.
                 well
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets())
             }
         }
         .fileImporter(isPresented: $isImporting, allowedContentTypes: Self.acceptedTypes) { result in
@@ -46,22 +51,32 @@ struct ImageWell: View {
         .errorAlert("The image could not be loaded", message: $importError)
     }
 
+    /// The plate does everything: click to choose, drop to replace, and a
+    /// small ⓧ under the pointer to remove. The context menu repeats both.
     private var well: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Button { isImporting = true } label: { plate }
-                .buttonStyle(.plain)
-                .help(data == nil ? "Choose an image" : "Choose another image")
-                .onDrop(of: [.fileURL, .image, .pdf], isTargeted: $isTargeted, perform: drop)
-
-            HStack(spacing: 8) {
+        Button { isImporting = true } label: { plate }
+            .buttonStyle(.plain)
+            .help(data == nil ? "Choose an image" : "Choose another image")
+            .onDrop(of: [.fileURL, .image, .pdf], isTargeted: $isTargeted, perform: drop)
+            .overlay(alignment: .topTrailing) {
+                if data != nil, isHovering {
+                    Button("Remove", systemImage: "xmark.circle.fill") { data = nil }
+                        .labelStyle(.iconOnly)
+                        .buttonStyle(.borderless)
+                        .font(.title3)
+                        .foregroundStyle(.secondary, .regularMaterial)
+                        .padding(6)
+                        .help("Remove")
+                }
+            }
+            .onHover { isHovering = $0 }
+            .contextMenu {
                 Button("Choose…") { isImporting = true }
                 if data != nil {
                     Button("Remove", role: .destructive) { data = nil }
                 }
             }
-            .controlSize(.small)
-        }
-        .padding(.vertical, 4)
+            .padding(.vertical, 4)
     }
 
     @ViewBuilder
