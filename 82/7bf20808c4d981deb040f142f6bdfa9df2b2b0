@@ -1,0 +1,25 @@
+Invoices/Features/YearOverview/YearOverviewView.swift
+  s_883866b4c74061::t_a4d4e78be00c93 167
+Invoices/App/PrivacyMode.swift
+  s_883866b4c74061::t_a4d4e78be00c93 24-25
+Invoices/Features/Import/ImportReviewStep.swift
+  s_883866b4c74061::t_a4d4e78be00c93 127
+Invoices/Features/Invoices/InvoiceListView.swift
+  s_883866b4c74061::t_a4d4e78be00c93 194-196
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "827bf20808c4d981deb040f142f6bdfa9df2b2b0",
+  "prompts": {},
+  "sessions": {
+    "s_883866b4c74061": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f6e07dfc-83b1-4511-8163-9b5203429e0a",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
