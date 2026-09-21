@@ -8,7 +8,7 @@ struct PrivacyCommands: Commands {
 
     var body: some Commands {
         CommandGroup(after: .sidebar) {
-            Toggle("Hide sensitive values", isOn: $hidesSensitiveValues)
+            Toggle("Hide sensitive values", systemImage: "eye.slash", isOn: $hidesSensitiveValues)
                 .keyboardShortcut("h", modifiers: [.command, .shift])
         }
     }
