@@ -129,6 +129,92 @@ struct Ledger {
         invoice.paidDate = nil
     }
 
+    // MARK: Recording history
+
+    /// What an import has to know about the book as it stands: the numbers
+    /// already taken, the clients already known, and the payment term that
+    /// fills in a missing due date.
+    var recorded: InvoiceImport.Existing {
+        let invoices = (try? context.fetch(FetchDescriptor<Invoice>())) ?? []
+        let clients = (try? context.fetch(FetchDescriptor<Client>())) ?? []
+        return InvoiceImport.Existing(
+            numbers: Set(invoices.filter { $0.year > 0 }.map { .init(year: $0.year, sequence: $0.sequence) }),
+            clientNames: clients.map(\.name),
+            paymentTermDays: profile.defaultPaymentTermDays
+        )
+    }
+
+    /// Records invoices that were issued before the ledger kept the book —
+    /// the rows of the accountant's spreadsheet. This is not issuing: the
+    /// numbers were given out long ago, on the documents the clients hold,
+    /// so each row keeps its own number and lands locked, as issued, paid or
+    /// cancelled. The sheet carries one amount per invoice, so each gets one
+    /// line item for it. `InvoiceNumbering` carries on after the highest
+    /// number recorded.
+    ///
+    /// Clients are matched by name; a name the book does not know becomes
+    /// a new client, with whatever details `newClients` typed in for it.
+    @discardableResult
+    func record(
+        _ rows: [InvoiceImport.Row],
+        newClients: [InvoiceImport.NewClient] = [],
+        lineDescription: String
+    ) -> [Invoice] {
+        let profile = self.profile
+        let existing = (try? context.fetch(FetchDescriptor<Client>())) ?? []
+        var clients = Dictionary(
+            existing.map { (InvoiceImport.normalized($0.name), $0) }, uniquingKeysWith: { first, _ in first }
+        )
+        let details = Dictionary(newClients.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+
+        return rows.map { row in
+            let key = InvoiceImport.normalized(row.clientName)
+            let client = clients[key] ?? {
+                let client = Client(name: row.clientName)
+                if let typed = details[key] {
+                    client.street = typed.street
+                    client.postalCode = typed.postalCode
+                    client.city = typed.city
+                    client.countryCode = typed.countryCode.isEmpty ? "SI" : typed.countryCode
+                    client.taxNumber = typed.taxNumber
+                    client.vatID = typed.vatID
+                }
+                context.insert(client)
+                clients[key] = client
+                return client
+            }()
+
+            let invoice = Invoice(
+                number: row.number,
+                year: row.key.year,
+                sequence: row.key.sequence,
+                issueDate: row.issueDate,
+                serviceDate: row.serviceDate,
+                dueDate: row.dueDate
+            )
+            invoice.serviceDateEnd = row.serviceDateEnd
+            invoice.status = row.status
+            invoice.paidDate = row.status == .paid ? row.paidDate : nil
+            invoice.placeOfIssue = profile.city
+            invoice.paymentReference = InvoiceNumbering.defaultReference(number: row.number)
+            invoice.client = client
+            context.insert(invoice)
+
+            // The sheet lists what the client paid, so under VAT the line's
+            // price is the net that grosses up to it.
+            let rate = profile.defaultVatRate
+            let unitPrice = rate.percentage == 0
+                ? row.amount
+                : (row.amount / (1 + rate.percentage / 100)).rounded()
+            let line = InvoiceLine(
+                itemDescription: lineDescription, quantity: 1, unitPrice: unitPrice, vatRate: rate
+            )
+            line.invoice = invoice
+            context.insert(line)
+            return invoice
+        }
+    }
+
     // MARK: Deleting
 
     enum DeletionProblem: Error, Equatable {

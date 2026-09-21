@@ -14,6 +14,14 @@ proprietor.
   live in the editor as you type; drafts are watermarked
 - **Year overview** — a year's invoices in one table, exported as a real Excel workbook
   with dates and amounts as values, so the accountant can sort and sum them
+- **Import** — *File › Import Spreadsheet…* (also on the Overview toolbar and the empty
+  invoice list) reads a spreadsheet of issued invoices — the app's own year overview
+  export, or the one a bookkeeper keeps by hand — and records them as issued, paid or
+  cancelled under their own numbers, adding the clients it does not know. Columns are
+  matched by heading in either language; a sheet the app cannot read whole gets a
+  column-matching step, unknown clients get a step for their address and tax number, and
+  everything is reviewed row by row before the ledger is written. Reads `.xlsx` and
+  `.csv`; a Numbers document exports as either
 - **Invoice template** — logo, tagline, signature and the three standard sentences, with
   placeholders for the month, year, IBAN and payment reference
 - **Private mode** — *View › Hide sensitive values* (⇧⌘H) blanks tax numbers, the IBAN
@@ -29,6 +37,10 @@ proprietor.
 - **Updates** — the release build updates itself over Sparkle
 
 Not built yet: printing, electronic invoicing, expenses, search and filtering.
+
+An import brings in one amount per invoice, so every recorded invoice carries a single
+line item; a spreadsheet says nothing about VAT, so the amount is taken as what the client
+paid and, under VAT registration, the line's price is the net that grosses up to it.
 
 ## Building
 
@@ -106,7 +118,8 @@ Invoices/
   App/                   entry point, sidebar shell, private mode, Sparkle updater,
                          view helpers shared by every feature (export, alerts, rows)
   Models/                SwiftData @Model types
-  Core/                  pure value logic — imports Foundation and nothing else
+  Core/                  pure value logic — imports Foundation and nothing else,
+                         including the .xlsx writer and reader and the import planner
   Services/              the framework edge: the ledger over SwiftData, the PDF renderer,
                          AppKit images
   Features/              one folder per sidebar section
@@ -120,8 +133,11 @@ is what the Foundation-only rule buys. The app icon is drawn in code — rerun
 `swift Scripts/render-app-icon.swift` only after changing the artwork.
 
 Two seams carry most of the app. Every change to an invoice's life — a new draft, issuing,
-payment, cancellation, and whether a draft or a client may be deleted — goes through
-`Services/Ledger.swift`, so each rule is tested once and the views only ask. Everything the
+payment, cancellation, recording invoices imported from a spreadsheet, and whether a draft
+or a client may be deleted — goes through `Services/Ledger.swift`, so each rule is tested
+once and the views only ask. The import itself is pure: `Core/InvoiceImport.swift` turns a
+grid of cells into a plan that says, row by row, what will be recorded and what is skipped
+and why, and the sheet under `Features/Import/` only shows that plan. Everything the
 printed invoice shows is fixed first as `Core/PrintedInvoice.swift`, a plain value built
 from the models; the PDF page, the pagination budget, the live preview and the settings
 sample all render from it, and the preview re-renders because the value changed, not

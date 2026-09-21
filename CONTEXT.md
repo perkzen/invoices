@@ -70,3 +70,17 @@ Every issued invoice of one calendar year, as the accountant's spreadsheet lists
 **Export**:
 Saving a rendered document — the PDF of one invoice or the XLSX of a year — through the
 save panel.
+
+**Import**:
+Reading a spreadsheet of issued invoices — the year overview, or a bookkeeper's own — and
+recording its rows in the ledger under their own numbers. Recording, not issuing: the
+numbers were given out on the documents the clients hold, so the rows land locked.
+_Avoid_: issuing, syncing
+
+**Recording**:
+Writing an invoice that was issued elsewhere into the ledger as it stands — number, status
+and one line item for its amount — without issuing it again.
+
+**Column mapping**:
+Which spreadsheet column holds which invoice field. Guessed from the headings in either
+language; confirmed by the user when a required one is missing.

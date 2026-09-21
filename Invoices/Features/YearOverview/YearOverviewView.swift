@@ -6,6 +6,7 @@ import SwiftUI
 /// .xlsx for the accountant.
 struct YearOverviewView: View {
     @Environment(\.modelContext) private var context
+    @Environment(\.importSpreadsheet) private var importSpreadsheet
     @Query(sort: [SortDescriptor(\Invoice.sequence)]) private var invoices: [Invoice]
 
     @State private var selectedYear: Int?
@@ -31,7 +32,11 @@ struct YearOverviewView: View {
                 ContentUnavailableView {
                     Label("No invoices issued", systemImage: "tablecells")
                 } description: {
-                    Text("The overview lists invoices once the first one has been issued.")
+                    Text("The overview lists invoices once the first one has been issued. Invoices issued before you started using the app can be brought in from a spreadsheet.")
+                } actions: {
+                    if let importSpreadsheet {
+                        Button("Import from a spreadsheet…") { importSpreadsheet() }
+                    }
                 }
             } else {
                 content(for: overview)
@@ -39,6 +44,11 @@ struct YearOverviewView: View {
         }
         .navigationTitle("Overview")
         .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button("Import XLSX", systemImage: "tray.and.arrow.down") { importSpreadsheet?() }
+                    .help("Record invoices from a spreadsheet of issued invoices")
+                    .disabled(importSpreadsheet == nil)
+            }
             if !years.isEmpty {
                 ToolbarItem(placement: .principal) {
                     Picker("Year", selection: Binding(get: { year }, set: { selectedYear = $0 })) {

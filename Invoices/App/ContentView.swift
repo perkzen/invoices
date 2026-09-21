@@ -2,6 +2,11 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var section: AppSection? = .invoices
+    @State private var isImporting = false
+
+    private var importSpreadsheet: ImportSpreadsheetAction {
+        ImportSpreadsheetAction { isImporting = true }
+    }
 
     var body: some View {
         NavigationSplitView {
@@ -30,5 +35,10 @@ struct ContentView: View {
             }
         }
         .frame(minWidth: 1100, minHeight: 600)
+        // One flow per window; the sections and the File menu only ask for it.
+        // What was recorded shows up in the Overview, so the window goes there.
+        .spreadsheetImport(isPresented: $isImporting) { _ in section = .overview }
+        .environment(\.importSpreadsheet, importSpreadsheet)
+        .focusedSceneValue(\.importSpreadsheet, importSpreadsheet)
     }
 }
