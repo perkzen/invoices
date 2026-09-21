@@ -1,3 +1,4 @@
+import AppKit
 import SwiftData
 import SwiftUI
 
@@ -15,7 +16,12 @@ struct InvoicesApp: App {
         }
         // The one profile exists from the first launch on, so views can read
         // it inside `body` without ever inserting during a view update.
-        _ = Ledger(container.mainContext).profile
+        let ledger = Ledger(container.mainContext)
+        _ = ledger.profile
+        ledger.modernizeTemplates()
+        // One window is the whole app; tabs would only offer a second copy
+        // of it and put "Show Tab Bar" in the View menu.
+        NSWindow.allowsAutomaticWindowTabbing = false
     }
 
     var body: some Scene {

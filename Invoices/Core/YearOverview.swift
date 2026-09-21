@@ -77,6 +77,16 @@ nonisolated struct YearOverview: Sendable {
 
     var outstandingTotal: Decimal { total - paidTotal }
 
+    /// Unpaid rows whose due date has passed. `asOf` is a parameter so the
+    /// tests do not depend on the day they run.
+    func overdueRows(asOf now: Date = Date()) -> [YearOverviewRow] {
+        countedRows.filter { !$0.isPaid && $0.dueDate < now }
+    }
+
+    func overdueTotal(asOf now: Date = Date()) -> Decimal {
+        overdueRows(asOf: now).reduce(0) { $0 + $1.amount }
+    }
+
     var countedRows: [YearOverviewRow] { rows.filter { !$0.isCancelled } }
 }
 

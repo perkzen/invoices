@@ -10,10 +10,14 @@ struct InvoiceDetailView: View {
     @State private var export: FileExport?
     @State private var exportError: String?
     @State private var showsPreview = true
+    @State private var isConfirmingCancel = false
 
     private var ledger: Ledger { Ledger(context) }
     private var isLocked: Bool { !invoice.status.isEditable }
     private var issueProblem: Ledger.IssueProblem? { ledger.issueProblem(for: invoice) }
+    private var title: String {
+        invoice.number.isEmpty ? String(localized: "Draft invoice") : invoice.number
+    }
 
     /// `serviceDateEnd` as a toggle: on means the service spans a period.
     private var isPeriod: Binding<Bool> {
@@ -32,6 +36,68 @@ struct InvoiceDetailView: View {
         // follow the same value the PDF will print.
         let printed = PrintedInvoice.make(invoice: invoice, profile: ledger.profile)
 
+        HSplitView {
+            form(printed)
+                .frame(minWidth: 540, idealWidth: 600)
+            if showsPreview {
+                // The rendered page beside the form, the way the template
+                // page shows its sample.
+                InvoicePreview(printed: printed)
+                    .frame(minWidth: 280, idealWidth: 320)
+            }
+        }
+        .animation(nil, value: showsPreview)
+        .navigationTitle(title)
+        .toolbar {
+            // A three-column window shows only the list's title, so the
+            // editor names its own invoice here.
+            ToolbarItem(placement: .principal) {
+                HStack(spacing: 8) {
+                    Text(title)
+                        .font(.headline)
+                        .monospacedDigit()
+                    // "Draft invoice" already says what a draft is.
+                    if !invoice.number.isEmpty {
+                        InvoiceStatusBadge(invoice: invoice)
+                    }
+                }
+            }
+            // A title, not a button: no glass capsule around it.
+            .sharedBackgroundVisibility(.hidden)
+            ToolbarItem(placement: .primaryAction) {
+                Button("Export PDF", systemImage: "square.and.arrow.up") { exportPDF(printed) }
+                    .help("Save the invoice as a PDF")
+            }
+            ToolbarItem(placement: .primaryAction) {
+                Toggle("Preview", systemImage: "sidebar.trailing", isOn: $showsPreview)
+                    .help("Show or hide the invoice preview")
+            }
+            ToolbarItemGroup(placement: .primaryAction) {
+                switch invoice.status {
+                case .draft:
+                    Button("Issue invoice", action: issue)
+                        .disabled(issueProblem != nil)
+                        .help(issueProblem.map { Text(verbatim: $0.message) }
+                              ?? Text("Assign the next number and lock the invoice"))
+                case .issued:
+                    Button("Mark as paid") { ledger.markPaid(invoice) }
+                    Button("Cancel invoice", role: .destructive) { isConfirmingCancel = true }
+                case .paid, .cancelled:
+                    EmptyView()
+                }
+            }
+        }
+        .confirmationDialog("Cancel this invoice?", isPresented: $isConfirmingCancel) {
+            Button("Cancel invoice", role: .destructive) { ledger.cancel(invoice) }
+            Button("Keep invoice", role: .cancel) {}
+        } message: {
+            Text("The number stays in the sequence and the invoice is listed as cancelled. This cannot be undone.")
+        }
+        .fileExport($export)
+        .errorAlert("Export failed", message: $exportError)
+    }
+
+    private func form(_ printed: PrintedInvoice) -> some View {
         Form {
             Section("Invoice") {
                 LabeledContent("Number") {
@@ -67,14 +133,13 @@ struct InvoiceDetailView: View {
             .disabled(isLocked)
 
             Section("Line items") {
-                ForEach(invoice.sortedLines) { line in
-                    InvoiceLineEditor(line: line, currencyCode: invoice.currencyCode, showsVatRate: printed.chargesVat) {
-                        ledger.removeLine(line)
-                    }
-                }
-                .onDelete(perform: removeLines)
-
-                Button("Add line item", systemImage: "plus", action: addLine)
+                InvoiceLinesEditor(
+                    lines: invoice.sortedLines,
+                    currencyCode: invoice.currencyCode,
+                    showsVatRate: printed.chargesVat,
+                    remove: ledger.removeLine
+                )
+                Button("Add line item", systemImage: "plus") { ledger.addLine(to: invoice) }
             }
             .disabled(isLocked)
 
@@ -124,39 +189,6 @@ struct InvoiceDetailView: View {
             .disabled(isLocked)
         }
         .formStyle(.grouped)
-        .inspector(isPresented: $showsPreview) {
-            InvoicePreview(printed: printed)
-                .inspectorColumnWidth(min: 340, ideal: 440, max: 760)
-        }
-        .navigationTitle(invoice.number.isEmpty ? String(localized: "Draft invoice") : invoice.number)
-        .toolbar {
-            ToolbarItem(placement: .status) {
-                Label(invoice.status.label, systemImage: invoice.status.symbol)
-                    .foregroundStyle(.secondary)
-            }
-            ToolbarItem(placement: .primaryAction) {
-                Button("Export PDF", systemImage: "square.and.arrow.down") { exportPDF(printed) }
-            }
-            ToolbarItem(placement: .primaryAction) {
-                Toggle("Preview", systemImage: "sidebar.trailing", isOn: $showsPreview)
-                    .help("Show or hide the invoice preview")
-            }
-            ToolbarItemGroup(placement: .primaryAction) {
-                switch invoice.status {
-                case .draft:
-                    Button("Issue invoice", action: issue)
-                        .disabled(issueProblem != nil)
-                        .help(issueProblem.map { Text(verbatim: $0.message) } ?? Text("Issue invoice"))
-                case .issued:
-                    Button("Mark as paid") { ledger.markPaid(invoice) }
-                    Button("Cancel invoice", role: .destructive) { ledger.cancel(invoice) }
-                case .paid, .cancelled:
-                    EmptyView()
-                }
-            }
-        }
-        .fileExport($export)
-        .errorAlert("Export failed", message: $exportError)
     }
 
     private func exportPDF(_ printed: PrintedInvoice) {
@@ -167,17 +199,6 @@ struct InvoiceDetailView: View {
         export = .pdf(data, named: printed.suggestedFilename)
     }
 
-    private func addLine() {
-        ledger.addLine(to: invoice)
-    }
-
-    private func removeLines(at offsets: IndexSet) {
-        let sorted = invoice.sortedLines
-        for index in offsets {
-            ledger.removeLine(sorted[index])
-        }
-    }
-
     /// The button is disabled while the ledger has an objection, so the
     /// throw cannot reach here from the toolbar.
     private func issue() {
@@ -185,81 +206,105 @@ struct InvoiceDetailView: View {
     }
 }
 
-private struct InvoiceLineEditor: View {
+/// The line items, each as its description on one row and its numbers on
+/// the next, under a single header that names the numeric columns. The
+/// columns are fixed widths shared by header and rows, so they line up
+/// without a grid having to negotiate width with the form.
+private struct InvoiceLinesEditor: View {
+    let lines: [InvoiceLine]
+    let currencyCode: String
+    let showsVatRate: Bool
+    let remove: (InvoiceLine) -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: LineColumns.spacing) {
+                header("Qty", width: LineColumns.quantity)
+                header("Unit", width: LineColumns.unit)
+                header("Price", width: LineColumns.price)
+                header("Discount %", width: LineColumns.discount)
+                if showsVatRate {
+                    header("VAT", width: LineColumns.vat)
+                }
+                Spacer(minLength: 0)
+                Text("Total")
+            }
+            .font(.caption)
+            .foregroundStyle(.secondary)
+
+            ForEach(Array(lines.enumerated()), id: \.element.id) { index, line in
+                if index > 0 {
+                    Divider().padding(.vertical, 4)
+                }
+                InvoiceLineRows(line: line, currencyCode: currencyCode, showsVatRate: showsVatRate) {
+                    remove(line)
+                }
+            }
+        }
+        .labelsHidden()
+        .textFieldStyle(.roundedBorder)
+        .padding(.vertical, 2)
+    }
+
+    private func header(_ title: LocalizedStringKey, width: CGFloat) -> some View {
+        Text(title)
+            .lineLimit(1)
+            .frame(width: width, alignment: .leading)
+    }
+}
+
+/// Widths shared by the header and every line, so the columns line up.
+private enum LineColumns {
+    static let spacing: CGFloat = 6
+    static let quantity: CGFloat = 46
+    static let unit: CGFloat = 52
+    static let price: CGFloat = 78
+    static let discount: CGFloat = 64
+    static let vat: CGFloat = 88
+}
+
+private struct InvoiceLineRows: View {
     @Bindable var line: InvoiceLine
     let currencyCode: String
     let showsVatRate: Bool
     let remove: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            TextField("Description", text: $line.itemDescription)
-                .labelsHidden()
-
-            HStack(alignment: .bottom, spacing: 12) {
-                Field("Quantity", width: 70) {
-                    TextField("", value: $line.quantity, format: .number)
-                }
-                Field("Unit", width: 60) {
-                    TextField("", text: $line.unit)
-                }
-                Field("Price", width: 90) {
-                    TextField("", value: $line.unitPrice, format: .number)
-                        .sensitiveValue()
-                }
-                Field("Discount %", width: 70) {
-                    TextField("", value: $line.discountPercent, format: .number)
-                }
-                if showsVatRate {
-                    Field("VAT", width: 180) {
-                        Picker("", selection: $line.vatRate) {
-                            ForEach(VatRate.allCases) { rate in
-                                Text(rate.label).tag(rate)
-                            }
-                        }
-                    }
-                }
-                Spacer(minLength: 8)
-                VStack(alignment: .trailing, spacing: 2) {
-                    Text("Total")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text(Formatting.money(line.amounts.gross, currencyCode: currencyCode))
-                        .monospacedDigit()
-                        .sensitiveValue()
-                }
-                Button("Remove line item", systemImage: "trash", action: remove)
+        VStack(spacing: 4) {
+            HStack(spacing: LineColumns.spacing) {
+                TextField("Description", text: $line.itemDescription, prompt: Text("Description"))
+                Button("Remove line item", systemImage: "xmark.circle.fill", action: remove)
                     .labelStyle(.iconOnly)
                     .buttonStyle(.borderless)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.tertiary)
+                    .help("Remove line item")
             }
-            .labelsHidden()
-            .textFieldStyle(.roundedBorder)
-        }
-        .padding(.vertical, 4)
-    }
-
-    /// A caption above the control, so the column stays readable instead of
-    /// wrapping an inline Form label into two lines.
-    private struct Field<Content: View>: View {
-        let title: LocalizedStringKey
-        let width: CGFloat
-        @ViewBuilder let content: Content
-
-        init(_ title: LocalizedStringKey, width: CGFloat, @ViewBuilder content: () -> Content) {
-            self.title = title
-            self.width = width
-            self.content = content()
-        }
-
-        var body: some View {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                content
+            HStack(spacing: LineColumns.spacing) {
+                TextField("Qty", value: $line.quantity, format: .number)
+                    .multilineTextAlignment(.trailing)
+                    .frame(width: LineColumns.quantity)
+                TextField("Unit", text: $line.unit)
+                    .frame(width: LineColumns.unit)
+                TextField("Price", value: $line.unitPrice, format: .number)
+                    .multilineTextAlignment(.trailing)
+                    .frame(width: LineColumns.price)
+                    .sensitiveValue()
+                TextField("Discount %", value: $line.discountPercent, format: .number)
+                    .multilineTextAlignment(.trailing)
+                    .frame(width: LineColumns.discount)
+                if showsVatRate {
+                    Picker("VAT", selection: $line.vatRate) {
+                        ForEach(VatRate.allCases) { rate in
+                            Text(rate.shortLabel).tag(rate)
+                        }
+                    }
+                    .frame(width: LineColumns.vat)
+                }
+                Spacer(minLength: 0)
+                Text(Formatting.money(line.amounts.gross, currencyCode: currencyCode))
+                    .monospacedDigit()
+                    .sensitiveValue()
             }
-            .frame(width: width)
         }
     }
 }

@@ -5,15 +5,18 @@ proprietor.
 
 ## What it does
 
-- **Clients** — address and tax details (tax number, VAT ID)
+- **Clients** — address and tax details (tax number, VAT ID), and an optional logo shown
+  next to the client in every list; the printed invoice carries only your own logo
 - **Invoices** — drafts with line items, quantity, price and discount per line, and live
-  totals
+  totals; the list is searchable and can be narrowed to drafts, open, paid or cancelled
 - **Issuing** — assigns the next sequential number of the year (`2026-001`) and locks the
   invoice; only drafts can be edited or deleted
 - **PDF export** — an A4 invoice carrying the fields Slovenian law requires, previewed
   live in the editor as you type; drafts are watermarked
-- **Year overview** — a year's invoices in one table, exported as a real Excel workbook
-  with dates and amounts as values, so the accountant can sort and sum them
+- **Year overview** — the year's invoiced, paid, outstanding and overdue amounts above a
+  table of its invoices, each opening as its printed page beside the table; exported as a
+  real Excel workbook with dates and amounts as values, so the accountant can sort and sum
+  them
 - **Import** — *File › Import Spreadsheet…* (also on the Overview toolbar and the empty
   invoice list) reads a spreadsheet of issued invoices — the app's own year overview
   export, or the one a bookkeeper keeps by hand — and records them as issued, paid or
@@ -23,7 +26,8 @@ proprietor.
   everything is reviewed row by row before the ledger is written. Reads `.xlsx` and
   `.csv`; a Numbers document exports as either
 - **Invoice template** — logo, tagline, signature and the three standard sentences, with
-  placeholders for the month, year, IBAN and payment reference
+  placeholders for the month, year, IBAN and payment reference, edited beside a live sample
+  in its own sidebar section
 - **Private mode** — *View › Hide sensitive values* (⇧⌘H) blanks tax numbers, the IBAN
   and every amount on screen, for a screen share. Exports keep the real values
 - **English and Slovenian** — follows the Mac's language, or *Settings › Language*.
@@ -36,7 +40,7 @@ proprietor.
   translation
 - **Updates** — the release build updates itself over Sparkle
 
-Not built yet: printing, electronic invoicing, expenses, search and filtering.
+Not built yet: printing, electronic invoicing, expenses.
 
 An import brings in one amount per invoice, so every recorded invoice carries a single
 line item; a spreadsheet says nothing about VAT, so the amount is taken as what the client
@@ -115,8 +119,11 @@ against `SUPublicEDKey`, so every update after that is unattended.
 ```
 project.yml              target, build settings, Info.plist
 Invoices/
-  App/                   entry point, sidebar shell, private mode, Sparkle updater,
-                         view helpers shared by every feature (export, alerts, rows)
+  App/                   entry point, the three-column shell, private mode, menu
+                         commands, Sparkle updater
+  UI/                    the view vocabulary every feature reuses: client avatars,
+                         status badges, image wells, and the modifiers for exporting a
+                         file, alerting on failure and confirming a deletion
   Models/                SwiftData @Model types
   Core/                  pure value logic — imports Foundation and nothing else,
                          including the .xlsx writer and reader and the import planner

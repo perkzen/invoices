@@ -2,33 +2,97 @@ import AppKit
 import SwiftData
 import SwiftUI
 
-/// The ⌘, window. The same content also lives in the sidebar under
-/// Settings, so nobody has to know the shortcut to find it.
-struct SettingsView: View {
-    var body: some View {
-        SettingsContent()
-            .frame(width: 1040, height: 720)
+/// The pages of Settings. They are rows in the middle column of the main
+/// window and the sidebar of the ⌘, window, so both show the same forms.
+/// The invoice template is not one of them: it has its own sidebar section.
+enum SettingsPage: String, CaseIterable, Identifiable {
+    case general
+    case business
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .business: String(localized: "My business")
+        case .general: String(localized: "General")
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .business: "building.2"
+        case .general: "gearshape"
+        }
     }
 }
 
-/// Settings: the business details and the invoice template, with a live
-/// preview of a sample invoice so every change is seen where it lands.
+struct SettingsPageList: View {
+    @Binding var selection: SettingsPage?
+
+    var body: some View {
+        List(selection: $selection) {
+            ForEach(SettingsPage.allCases) { page in
+                Label(page.title, systemImage: page.symbol)
+                    .tag(page)
+            }
+        }
+        .navigationTitle("Settings")
+    }
+}
+
+/// The ⌘, window. The same pages also live in the sidebar under Settings,
+/// so nobody has to know the shortcut to find them.
+struct SettingsView: View {
+    @State private var page: SettingsPage? = .general
+
+    var body: some View {
+        NavigationSplitView {
+            SettingsPageList(selection: $page)
+                .navigationSplitViewColumnWidth(min: 180, ideal: 200, max: 240)
+                // Nothing to reveal by collapsing two pages away.
+                .toolbar(removing: .sidebarToggle)
+        } detail: {
+            SettingsContent(page: page)
+        }
+        .frame(width: 1240, height: 720)
+    }
+}
+
+/// One settings page. The business details sit beside the sample preview,
+/// since they are printed; the general preferences are not, so they stand
+/// alone.
 struct SettingsContent: View {
+    let page: SettingsPage?
+
+    var body: some View {
+        Group {
+            switch page {
+            case .general, nil:
+                GeneralSettingsForm()
+            case .business:
+                ProfilePreviewSplit { profile in
+                    BusinessProfileForm(profile: profile)
+                }
+            }
+        }
+        .navigationTitle((page ?? .general).title)
+    }
+}
+
+/// A form about the business profile beside a live preview of a sample
+/// invoice, so every change is seen where it lands. Shared by the business
+/// page and the invoice template.
+struct ProfilePreviewSplit<Content: View>: View {
+    @ViewBuilder let form: (BusinessProfile) -> Content
+
     @Environment(\.modelContext) private var context
 
     var body: some View {
         let profile = Ledger(context).profile
 
         HStack(spacing: 0) {
-            TabView {
-                Tab("My business", systemImage: "building.2") {
-                    BusinessProfileForm(profile: profile)
-                }
-                Tab("Invoice template", systemImage: "doc.richtext") {
-                    InvoiceTemplateForm(profile: profile)
-                }
-            }
-            .frame(width: 470)
+            form(profile)
+                .frame(width: 470)
             Divider()
             VStack(spacing: 0) {
                 Text("Preview on a sample invoice")
@@ -42,6 +106,18 @@ struct SettingsContent: View {
             }
             .frame(minWidth: 400)
         }
+    }
+}
+
+/// Preferences about the app rather than the business: private mode and
+/// the interface language.
+private struct GeneralSettingsForm: View {
+    var body: some View {
+        Form {
+            PrivacySection()
+            LanguageSection()
+        }
+        .formStyle(.grouped)
     }
 }
 
@@ -99,8 +175,6 @@ private struct BusinessProfileForm: View {
                 TextField("Footer note", text: $profile.invoiceFooter, axis: .vertical)
                     .lineLimit(2...5)
             }
-            PrivacySection()
-            LanguageSection()
         }
         .formStyle(.grouped)
     }
@@ -165,110 +239,5 @@ private struct LanguageSection: View {
     private static func nativeName(of code: String) -> String {
         let locale = Locale(identifier: code)
         return locale.localizedString(forLanguageCode: code)?.capitalized(with: locale) ?? code
-    }
-}
-
-/// Everything on the printed invoice that is the business's own: logo, tagline,
-/// the three sentences, and the signature.
-private struct InvoiceTemplateForm: View {
-    @Bindable var profile: BusinessProfile
-
-    var body: some View {
-        Form {
-            Section("Header") {
-                ImageWell(title: "Logo", data: $profile.logoData)
-                TextField("Line of business", text: $profile.activityLine,
-                          prompt: Text("e.g. IT SERVICES AND CONSULTING"))
-            }
-            Section {
-                TextField("Intro sentence", text: $profile.introTemplate, axis: .vertical)
-                    .lineLimit(1...3)
-                TextField("Payment instruction", text: $profile.paymentNoteTemplate, axis: .vertical)
-                    .lineLimit(1...3)
-                TextField("Closing sentence", text: $profile.closingNote, axis: .vertical)
-                    .lineLimit(1...3)
-                DisclosureGroup("Placeholders filled in automatically") {
-                    ForEach(InvoiceTemplate.Placeholder.allCases, id: \.self) { placeholder in
-                        HStack {
-                            Text(verbatim: placeholder.token).monospaced()
-                            Spacer()
-                            Text(placeholder.meaning).foregroundStyle(.secondary)
-                        }
-                        .font(.callout)
-                    }
-                }
-            } header: {
-                Text("Text")
-            } footer: {
-                Text("The intro sentence can be overridden on each invoice. The payment instruction is printed only when an IBAN is set.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-            Section {
-                ImageWell(title: "Signature", data: $profile.signatureData)
-            } header: {
-                Text("Signature")
-            } footer: {
-                Text("The name under the signature is “Full name” from the My business tab.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .formStyle(.grouped)
-    }
-}
-
-/// Thumbnail plus choose/remove buttons for a stored bitmap.
-private struct ImageWell: View {
-    let title: LocalizedStringKey
-    @Binding var data: Data?
-
-    @State private var isImporting = false
-    @State private var importError: String?
-
-    var body: some View {
-        LabeledContent(title) {
-            HStack(spacing: 10) {
-                Group {
-                    if let image = data.flatMap(NSImage.init(data:)) {
-                        Image(nsImage: image).resizable().scaledToFit()
-                    } else {
-                        Image(systemName: "photo")
-                            .foregroundStyle(.tertiary)
-                    }
-                }
-                .frame(width: 72, height: 44)
-                .background(.white, in: RoundedRectangle(cornerRadius: 4))
-                .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(.separator))
-
-                Button("Choose…") { isImporting = true }
-                if data != nil {
-                    Button("Remove", role: .destructive) { data = nil }
-                }
-            }
-        }
-        .fileImporter(
-            isPresented: $isImporting,
-            allowedContentTypes: [.image, .pdf]
-        ) { result in
-            switch result {
-            case .success(let url):
-                load(url)
-            case .failure(let error):
-                importError = error.localizedDescription
-            }
-        }
-        .errorAlert("The image could not be loaded", message: $importError)
-    }
-
-    private func load(_ url: URL) {
-        // The app is sandboxed; a picked file is readable only inside this scope.
-        let scoped = url.startAccessingSecurityScopedResource()
-        defer { if scoped { url.stopAccessingSecurityScopedResource() } }
-        guard let raw = try? Data(contentsOf: url), let png = ImageData.normalized(raw) else {
-            importError = String(localized: "The file is not an image that can be read.")
-            return
-        }
-        data = png
     }
 }
