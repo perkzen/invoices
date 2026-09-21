@@ -64,6 +64,9 @@ struct InvoiceListView: View {
                     }
                 }
                 .pickerStyle(.menu)
+                // The toolbar's capsule hugs the picker's bounds; give the
+                // label room to breathe inside it.
+                .padding(.horizontal, 8)
                 .help("Show only invoices in one state")
             }
             ToolbarItem {
