@@ -1,0 +1,13 @@
+Invoices/App/ImageWell.swift
+  ai_agent 9-10
+Invoices/Features/Clients/ClientDetailView.swift
+  ai_agent 7-11,13-21,23-57,61
+Invoices/Features/Template/InvoiceTemplateForm.swift
+  ai_agent 40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "0a59b31d23176cd7991d9800de699dabbfaba3c3",
+  "prompts": {}
+}
