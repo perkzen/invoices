@@ -84,8 +84,11 @@ enum InvoicePDF {
         )
     }
 
+    /// `masksSensitiveValues` is the live preview's copy of private mode:
+    /// the same document with the bank account, the tax numbers and every
+    /// amount printed as a mask. An export or a print never asks for it.
     @MainActor
-    static func render(_ printed: PrintedInvoice) -> Data? {
+    static func render(_ printed: PrintedInvoice, masksSensitiveValues: Bool = false) -> Data? {
         let chunks = pages(of: printed)
         let data = NSMutableData()
         var box = CGRect(origin: .zero, size: pageSize)
@@ -100,7 +103,8 @@ enum InvoicePDF {
                 lines: chunk,
                 pageNumber: index + 1,
                 pageCount: chunks.count,
-                showsSummary: index == chunks.count - 1
+                showsSummary: index == chunks.count - 1,
+                masksSensitiveValues: masksSensitiveValues
             )
             let renderer = ImageRenderer(content: page)
             renderer.proposedSize = ProposedViewSize(pageSize)

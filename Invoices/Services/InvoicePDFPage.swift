@@ -21,11 +21,33 @@ struct InvoicePDFPage: View {
     let pageCount: Int
     /// Totals, clauses and the signature only appear on the last page.
     let showsSummary: Bool
+    /// Private mode's page: the bank account, the tax numbers and every
+    /// amount print as `PrivacyMode.mask`. Only the live preview asks for
+    /// it — an exported or printed invoice carries the real values.
+    var masksSensitiveValues = false
 
     private let margin: CGFloat = 44
     private let bodySize: CGFloat = 9.5
 
     private var issuer: PrintedInvoice.Issuer { printed.issuer }
+
+    /// A value private mode hides, as it prints.
+    private func hidden(_ text: String) -> String {
+        masksSensitiveValues ? PrivacyMode.mask : text
+    }
+
+    /// An amount, masked the same way. The mask replaces the digits, not the
+    /// column, so the table keeps its shape.
+    private func amount(_ value: Decimal) -> String {
+        masksSensitiveValues ? PrivacyMode.mask : Formatting.amount(value)
+    }
+
+    /// The payment sentence names the account to pay into, so private mode
+    /// masks the account inside it and leaves the sentence readable.
+    private var paymentNote: String {
+        guard masksSensitiveValues, !issuer.iban.isEmpty else { return printed.paymentNote }
+        return printed.paymentNote.replacingOccurrences(of: issuer.iban, with: PrivacyMode.mask)
+    }
 
     var body: some View {
         ZStack {
@@ -92,12 +114,12 @@ struct InvoicePDFPage: View {
             }
             gap(10)
             ForEach(issuer.addressLines, id: \.self) { Text($0) }
-            Text(verbatim: DocumentText.string("Tax number: \(issuer.taxNumber)"))
+            Text(verbatim: DocumentText.string("Tax number: \(hidden(issuer.taxNumber))"))
             if let vatID = printed.issuerVatID {
-                Text(verbatim: DocumentText.string("VAT ID: \(vatID)"))
+                Text(verbatim: DocumentText.string("VAT ID: \(hidden(vatID))"))
             }
             if !issuer.iban.isEmpty {
-                Text(verbatim: DocumentText.string("Bank account: \(issuer.iban)"))
+                Text(verbatim: DocumentText.string("Bank account: \(hidden(issuer.iban))"))
             }
             if !issuer.bankName.isEmpty {
                 Text(issuer.bankName)
@@ -115,10 +137,10 @@ struct InvoicePDFPage: View {
                     .font(.system(size: bodySize, weight: .bold))
                 ForEach(printed.customer?.addressLines ?? [], id: \.self) { Text($0) }
                 if let tax = printed.customer?.taxNumber, !tax.isEmpty {
-                    Text(verbatim: DocumentText.string("Tax number: \(tax)"))
+                    Text(verbatim: DocumentText.string("Tax number: \(hidden(tax))"))
                 }
                 if let vat = printed.customer?.vatID, !vat.isEmpty {
-                    Text(verbatim: DocumentText.string("VAT ID: \(vat)"))
+                    Text(verbatim: DocumentText.string("VAT ID: \(hidden(vat))"))
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -185,10 +207,10 @@ struct InvoicePDFPage: View {
                     description: line.description.isEmpty ? "—" : line.description,
                     quantity: Formatting.number(line.quantity, fractionDigits: 2),
                     unit: line.unit,
-                    price: Formatting.amount(line.unitPrice),
+                    price: amount(line.unitPrice),
                     discount: line.discountPercent == 0 ? "" : Formatting.percent(line.discountPercent),
                     vat: Formatting.percent(line.vatRate.percentage),
-                    amount: Formatting.amount(printed.columnAmount(of: line)),
+                    amount: amount(printed.columnAmount(of: line)),
                     isHeader: false
                 )
                 Rectangle().fill(.black.opacity(0.08)).frame(height: 0.5)
@@ -244,10 +266,10 @@ struct InvoicePDFPage: View {
     }
 
     /// The amount sits in the Amount column, directly under the line values.
-    private func totalRow(_ label: String.LocalizationValue, _ amount: Decimal, bold: Bool) -> some View {
+    private func totalRow(_ label: String.LocalizationValue, _ value: Decimal, bold: Bool) -> some View {
         HStack(spacing: 6) {
             Text(verbatim: DocumentText.string(label))
-            Text(Formatting.amount(amount)).frame(width: 76, alignment: .trailing)
+            Text(amount(value)).frame(width: 76, alignment: .trailing)
         }
         .fontWeight(bold ? .bold : .regular)
         .monospacedDigit()
@@ -258,7 +280,7 @@ struct InvoicePDFPage: View {
             // TODO: a VAT-registered business billing reverse charge needs its
             // own clause (Article 25 of ZDDV-1); it is not the Article 94 one.
             ForEach(printed.exemptionClauses, id: \.self) { Text($0) }
-            if !printed.paymentNote.isEmpty { Text(printed.paymentNote) }
+            if !paymentNote.isEmpty { Text(paymentNote) }
             if !issuer.closingNote.isEmpty { Text(issuer.closingNote) }
             if !printed.notes.isEmpty { Text(printed.notes) }
         }

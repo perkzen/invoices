@@ -8,6 +8,11 @@ import SwiftUI
 /// and the printed invoice carry the real values even while it is on.
 enum PrivacyMode {
     static let storageKey = "hidesSensitiveValues"
+
+    /// What stands in for a hidden value where a grey bar cannot be drawn —
+    /// the rendered PDF, which is an image of a document and has no views to
+    /// redact.
+    static let mask = "••••"
 }
 
 extension View {

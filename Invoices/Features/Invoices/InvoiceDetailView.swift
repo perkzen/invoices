@@ -285,10 +285,11 @@ private struct InvoiceLineRows: View {
                     .frame(width: LineColumns.quantity)
                 TextField("Unit", text: $line.unit)
                     .frame(width: LineColumns.unit)
-                TextField("Price", value: $line.unitPrice, format: .number)
-                    .multilineTextAlignment(.trailing)
-                    .frame(width: LineColumns.price)
-                    .sensitiveValue()
+                SensitiveValue(Formatting.number(line.unitPrice)) {
+                    TextField("Price", value: $line.unitPrice, format: .number)
+                        .multilineTextAlignment(.trailing)
+                }
+                .frame(width: LineColumns.price, alignment: .trailing)
                 TextField("Discount %", value: $line.discountPercent, format: .number)
                     .multilineTextAlignment(.trailing)
                     .frame(width: LineColumns.discount)

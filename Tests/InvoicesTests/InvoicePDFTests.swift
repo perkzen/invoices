@@ -1,4 +1,5 @@
 import Foundation
+import PDFKit
 import Testing
 @testable import Invoices
 
@@ -39,10 +40,43 @@ struct InvoicePDFTests {
         )
     }
 
+    /// The account, the two tax numbers, a line amount and the total, spelled
+    /// the way they come back out of the page — text extraction drops the
+    /// thousands separator, so an amount reads 4400,00 and not 4.400,00.
+    private static let secrets = ["SI56 1910 0000 1234 567", "12345678", "87654321", "2200,00", "4400,00"]
+
+    private func text(of data: Data?) -> String? {
+        data.flatMap(PDFDocument.init(data:))?.string
+    }
+
     @Test func `renders a valid single page PDF`() throws {
         let data = try #require(InvoicePDF.render(printed()))
         #expect(data.starts(with: Array("%PDF".utf8)))
         #expect(data.count > 1000)
+    }
+
+    /// Private mode's preview: the same page, with the account, the tax
+    /// numbers and the amounts masked — including the account named inside
+    /// the payment sentence.
+    @Test func `a masked render prints no sensitive value`() throws {
+        let invoice = printed(lineCount: 2, isDraft: false)
+        let masked = try #require(text(of: InvoicePDF.render(invoice, masksSensitiveValues: true)))
+
+        #expect(masked.contains(PrivacyMode.mask))
+        for secret in Self.secrets {
+            #expect(!masked.contains(secret), "\(secret) printed on a masked page")
+        }
+        // What the page is for survives the mask.
+        #expect(masked.contains("Software development – item 2"))
+        #expect(masked.contains("2026-001"))
+    }
+
+    @Test func `an export prints the real values`() throws {
+        let plain = try #require(text(of: InvoicePDF.render(printed(lineCount: 2, isDraft: false))))
+        for value in Self.secrets {
+            #expect(plain.contains(value))
+        }
+        #expect(!plain.contains(PrivacyMode.mask))
     }
 
     @Test func `an issued invoice renders too`() throws {

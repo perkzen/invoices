@@ -18,30 +18,30 @@ struct InvoicePreview: View {
 
     /// `.redacted(reason: .privacy)` stops at the edge of an AppKit view, so
     /// the rendered page cannot be blanked the way the rest of the interface
-    /// is — it is blurred instead. It stays live while it is blurred, so the
-    /// layout still answers whether a long invoice broke onto a second page.
+    /// is — it is rendered with the sensitive values masked instead. The page
+    /// stays legible, so the preview still answers what it is for: how the
+    /// invoice reads, and whether a long one broke onto a second page.
     @AppStorage(PrivacyMode.storageKey) private var hidesSensitiveValues = false
     @State private var pdfData: Data?
 
+    /// What a render is of. Masking is part of it, or toggling private mode
+    /// would leave the last render on screen.
+    private struct Render: Hashable {
+        var printed: PrintedInvoice
+        var masksSensitiveValues: Bool
+    }
+
+    private var render: Render {
+        Render(printed: printed, masksSensitiveValues: hidesSensitiveValues)
+    }
+
     var body: some View {
         PDFDocumentView(data: pdfData, fitsPage: fitsPage)
-            .blur(radius: hidesSensitiveValues ? 14 : 0)
-            .overlay {
-                if hidesSensitiveValues {
-                    Label("Preview hidden", systemImage: "eye.slash")
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 8)
-                        .background(.regularMaterial, in: Capsule())
-                }
-            }
-            .animation(.default, value: hidesSensitiveValues)
-            .task(id: printed) {
+            .task(id: render) {
                 // Coalesce a burst of keystrokes into one render.
                 try? await Task.sleep(for: .milliseconds(120))
                 guard !Task.isCancelled else { return }
-                pdfData = InvoicePDF.render(printed)
+                pdfData = InvoicePDF.render(render.printed, masksSensitiveValues: render.masksSensitiveValues)
             }
     }
 }

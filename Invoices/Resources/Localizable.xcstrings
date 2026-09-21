@@ -1924,16 +1924,6 @@
         }
       }
     },
-    "Preview hidden": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Predogled je zakrit"
-          }
-        }
-      }
-    },
     "Preview on a sample invoice": {
       "localizations": {
         "sl": {
