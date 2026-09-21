@@ -1,0 +1,21 @@
+Invoices/App/PrivacyCommands.swift
+  s_c5595a7759f84a::t_a4394766eac220 11
+Invoices/App/InvoicesApp.swift
+  s_c5595a7759f84a::t_a4394766eac220 1,20-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "5e1bb75c4b5e1d01a20c7b8158cf6c3bef33c93a",
+  "prompts": {},
+  "sessions": {
+    "s_c5595a7759f84a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4e50920c-a177-4332-bbb9-950d410104fa",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
