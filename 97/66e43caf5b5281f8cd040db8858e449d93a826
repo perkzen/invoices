@@ -1,0 +1,55 @@
+Invoices/Features/Invoices/InvoiceListView.swift
+  s_c5595a7759f84a::t_d61b423f16e298 12,36,39-41
+Invoices/App/InvoicesApp.swift
+  s_c5595a7759f84a::t_d61b423f16e298 30
+Invoices/Features/Import/SpreadsheetImportFlow.swift
+  s_c5595a7759f84a::t_d61b423f16e298 1-101
+Invoices/Features/Import/ImportSession.swift
+  s_c5595a7759f84a::t_d61b423f16e298 1-136
+Invoices/Core/InvoiceImport.swift
+  s_c5595a7759f84a::t_d61b423f16e298 1-367
+Invoices/Core/Spreadsheet.swift
+  s_c5595a7759f84a::t_d61b423f16e298 1-309
+Invoices/Services/Ledger.swift
+  s_c5595a7759f84a::t_d61b423f16e298 132-217
+CONTEXT.md
+  s_c5595a7759f84a::t_d61b423f16e298 73-86
+Invoices/Core/ZIPArchive.swift
+  s_c5595a7759f84a::t_d61b423f16e298 95-179
+Invoices/Core/XLSXWriter.swift
+  s_c5595a7759f84a::t_d61b423f16e298 97-110,121-132
+Invoices/Features/Import/ImportReviewStep.swift
+  s_c5595a7759f84a::t_d61b423f16e298 1-169
+Invoices/Resources/Localizable.xcstrings
+  s_c5595a7759f84a::t_c2c61592d32ce2 71-174,228-237,288-297,360-369,391-400,543-552,633-642,655-664,675,680,965-974,1077-1178,1337-1346,1369-1378,1421-1430,1521-1530,1561-1570,1601-1620,1673-1682,1693-1702,1773-1782,1835-1844,2037-2046,2089-2098,2111-2130,2245-2256,2339-2358,2505-2514,2525-2554,2615-2664,2803-2812,2951-2960,3018-3039
+Invoices/Features/Import/SpreadsheetImportView.swift
+  s_c5595a7759f84a::t_d61b423f16e298 1-152
+Invoices/Features/YearOverview/YearOverviewView.swift
+  s_c5595a7759f84a::t_c2c61592d32ce2 48
+Invoices/Features/Import/ImportColumnsStep.swift
+  s_c5595a7759f84a::t_d61b423f16e298 1-99
+Tests/InvoicesTests/SpreadsheetReaderTests.swift
+  s_c5595a7759f84a::t_d61b423f16e298 1-240
+Tests/InvoicesTests/InvoiceImportTests.swift
+  s_c5595a7759f84a::t_d61b423f16e298 1-260
+Invoices/Features/Import/ImportClientsStep.swift
+  s_c5595a7759f84a::t_d61b423f16e298 1-40
+Tests/InvoicesTests/LocalizationTests.swift
+  s_c5595a7759f84a::t_d61b423f16e298 72-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "9766e43caf5b5281f8cd040db8858e449d93a826",
+  "prompts": {},
+  "sessions": {
+    "s_c5595a7759f84a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4e50920c-a177-4332-bbb9-950d410104fa",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
