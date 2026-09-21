@@ -12,7 +12,8 @@ import SwiftUI
 ///
 /// Every label comes from `DocumentText`, never from the app's own language:
 /// the invoice is a Slovenian legal document and must not change language
-/// with the UI. Never write a plain `Text("…")` on this page.
+/// with the UI. Never write a plain `Text("…")` on this page. The one
+/// exception is the `DRAFT` watermark, which is not part of the document.
 struct InvoicePDFPage: View {
     let printed: PrintedInvoice
     /// The rows this page carries — a slice of `printed.lines`.
@@ -89,8 +90,11 @@ struct InvoicePDFPage: View {
         Spacer().frame(height: height)
     }
 
+    /// The one English word on the page. The watermark is not part of the
+    /// document, it marks the page as not yet being one, so it does not go
+    /// through `DocumentText`.
     private var draftWatermark: some View {
-        Text(verbatim: DocumentText.string("DRAFT"))
+        Text(verbatim: "DRAFT")
             .font(.system(size: 110, weight: .bold))
             .foregroundStyle(.red.opacity(0.12))
             .rotationEffect(.degrees(-30))

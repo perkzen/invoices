@@ -53,8 +53,8 @@ struct LocalizationTests {
     /// through `DocumentText`. Add to it when a document gains a label.
     private static let documentKeys = [
         // InvoicePDFPage
-        "DRAFT", "Tax number: %@", "VAT ID: %@", "Bank account: %@", "Invoice", "draft", "Date",
-        "Due date", "Place of issue", "Date of service, abbreviated", "Reference number",
+        "Tax number: %@", "VAT ID: %@", "Bank account: %@", "Invoice", "draft", "Date", "Due date",
+        "Place of issue", "Date of service, abbreviated", "Reference number",
         "Invoice – continued", "Invoice no. %@ – continued", "No.", "Description of goods or services",
         "Quantity", "Unit", "Price", "Discount", "VAT", "Amount", "Subtotal excl. VAT:", "VAT %@:",
         "TOTAL DUE %@:", "Issued by:", "Page %lld / %lld",

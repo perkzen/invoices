@@ -48,7 +48,8 @@ proprietor.
   Slovenian whatever the interface language, because they are documents rather than
   interface — their English keys are resolved through `Core/DocumentText.swift`, and a
   test in `LocalizationTests` lists every such key and fails when one has no Slovenian
-  translation
+  translation. The one exception is the `DRAFT` watermark, which stays English: it is not
+  part of the document, it says the page is not one yet
 - **Updates** — the release build updates itself over Sparkle
 
 Not built yet: printing, electronic invoicing, expenses.

@@ -83,6 +83,16 @@ struct InvoicePDFTests {
         _ = try #require(InvoicePDF.render(printed(lineCount: 3, isDraft: false)))
     }
 
+    /// The watermark is the one English word on the page, and it is only
+    /// there while the invoice is a draft.
+    @Test func `a draft is watermarked DRAFT, an issued invoice is not`() throws {
+        let draft = try #require(text(of: InvoicePDF.render(printed())))
+        #expect(draft.contains("DRAFT"))
+        #expect(!draft.contains("OSNUTEK"))
+        let issued = try #require(text(of: InvoicePDF.render(printed(isDraft: false))))
+        #expect(!issued.contains("DRAFT"))
+    }
+
     @Test func `a long invoice spills onto more pages`() throws {
         let long = printed(lineCount: 30, isDraft: false)
         #expect(InvoicePDF.pages(of: long).count > 1)

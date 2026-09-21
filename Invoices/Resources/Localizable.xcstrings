@@ -682,18 +682,6 @@
         }
       }
     },
-    "DRAFT": {
-      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
-      "extractionState": "manual",
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OSNUTEK"
-          }
-        }
-      }
-    },
     "Date": {
       "localizations": {
         "sl": {
