@@ -49,6 +49,8 @@ struct SettingsView: View {
         NavigationSplitView {
             SettingsPageList(selection: $page)
                 .navigationSplitViewColumnWidth(min: 180, ideal: 200, max: 240)
+                // Nothing to reveal by collapsing two pages away.
+                .toolbar(removing: .sidebarToggle)
         } detail: {
             SettingsContent(page: page)
         }
