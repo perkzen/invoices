@@ -1,0 +1,47 @@
+Invoices/App/Invoices.entitlements
+  s_3b4aae7c8bbc27::t_e27401a57bcb36 11-14
+Invoices/Core/InvoiceTemplate.swift
+  s_3b4aae7c8bbc27::t_e27401a57bcb36 21-28
+Invoices/Features/Invoices/InvoiceDetailView.swift
+  s_3b4aae7c8bbc27::t_dde4f0b60c568b 12,15-16,21-29,83-88,114-121,124,232-251
+Invoices/Models/BusinessProfile.swift
+  s_3b4aae7c8bbc27::t_e27401a57bcb36 39-42
+Tests/InvoicesTests/InvoiceEmailTests.swift
+  s_3b4aae7c8bbc27::t_2816188c430d33 1-84
+Invoices/Core/InvoiceEmail.swift
+  s_3b4aae7c8bbc27::t_e27401a57bcb36 1-42
+Invoices/Features/Settings/SettingsView.swift
+  s_3b4aae7c8bbc27::t_dde4f0b60c568b 17-19,24,50-65
+Invoices/Core/PrintedInvoice.swift
+  s_3b4aae7c8bbc27::t_e27401a57bcb36 136,171-184
+Invoices/Features/Business/BusinessForm.swift
+  s_3b4aae7c8bbc27::t_dde4f0b60c568b 101-111
+Tests/InvoicesTests/InvoiceTemplateTests.swift
+  s_3b4aae7c8bbc27::t_dde4f0b60c568b 31-34
+Tests/InvoicesTests/LocalizationTests.swift
+  s_3b4aae7c8bbc27::t_dde4f0b60c568b 69-70
+Invoices/Services/EmailComposer.swift
+  s_3b4aae7c8bbc27::t_e27401a57bcb36 1-139
+README.md
+  s_3b4aae7c8bbc27::t_2816188c430d33 16-23,38-39
+  s_3b4aae7c8bbc27::t_9368682fa8bc72 151
+Invoices/Resources/Localizable.xcstrings
+  s_3b4aae7c8bbc27::t_2816188c430d33 2744
+  s_3b4aae7c8bbc27::t_dde4f0b60c568b 370-379,915-934,1035-1054,1075-1086,1273-1284,1381-1390,1525-1534,1827-1836,2279-2338,2609-2618,2629-2638,2719-2728,2739-2743,2759-2764
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "4b18d69830a1ef9921ec67b78a3a6d0bc1eb3961",
+  "prompts": {},
+  "sessions": {
+    "s_3b4aae7c8bbc27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "034297d1-3fd8-4e64-af86-31301dfa3b3f",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
