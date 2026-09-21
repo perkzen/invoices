@@ -59,11 +59,12 @@ struct ClientDetailView: View {
                 }
             }
             .formStyle(.grouped)
+        }
         .navigationTitle(client.displayName)
         .toolbar {
             // A three-column window shows only the list's title, so the
             // editor names its client here — text alone, like the invoice
-            // editor's chip; the logo is already large in the form below.
+            // editor's chip; the logo is already large above the form.
             ToolbarItem(placement: .principal) {
                 Text(client.displayName)
                     .font(.headline)
