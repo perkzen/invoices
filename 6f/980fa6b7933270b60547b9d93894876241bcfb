@@ -1,0 +1,19 @@
+Invoices/Services/InvoicePDFPage.swift
+  s_5f2c8dac6fe23a::t_b0bb34f9404467 277-279,283,285
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "6f980fa6b7933270b60547b9d93894876241bcfb",
+  "prompts": {},
+  "sessions": {
+    "s_5f2c8dac6fe23a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f707dbdc-522e-4ec5-9c93-8dc07b5d826a",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
