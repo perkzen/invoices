@@ -87,6 +87,16 @@ git tag v0.0.2 && git push origin v0.0.2
 key, writes `appcast.xml` and publishes both on a GitHub release. The tag is the only
 source of the version number. The workflow's comments explain the rest.
 
+The image itself is built by `Scripts/make-dmg.sh`, which lays out the mounted window
+— fixed size, the app beside the Applications alias — from `Scripts/dmg-settings.py`.
+It needs [dmgbuild](https://github.com/dmgbuild/dmgbuild) (`pipx install dmgbuild`),
+which the workflow installs for itself. Build one from a local Release build to see
+what a release will look like:
+
+```bash
+Scripts/make-dmg.sh build/Build/Products/Release/Invoices.app 0.0.0
+```
+
 The app's update feed is `…/releases/latest/download/appcast.xml` — GitHub redirects
 that fixed path to whichever release is newest, so the URL compiled into the app never
 has to change.
@@ -132,7 +142,7 @@ Invoices/
   Features/              one folder per sidebar section
   Resources/             asset catalog, Localizable.xcstrings
 Tests/InvoicesTests/     Swift Testing
-Scripts/                 app icon renderer, release installer
+Scripts/                 app icon renderer, release installer, disk image
 ```
 
 Anything in `Core/` is testable without a `ModelContainer`, a window or a run loop; that

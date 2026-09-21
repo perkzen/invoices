@@ -93,19 +93,20 @@ jobs:
             exit 1
           fi
 
+      # Writes the mounted window's .DS_Store, so the image opens at a fixed
+      # size with the app beside the Applications alias rather than at
+      # whatever size the Finder last used. Scripts/dmg-settings.py holds the
+      # layout; pipx because the runner's Python refuses a bare pip install.
+      - name: Install dmgbuild
+        run: pipx install dmgbuild
+
       - name: Build the disk image
         id: dmg
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          mkdir -p dmg
-          cp -R "build/Build/Products/Release/Invoices.app" dmg/
-          # So the image opens with the usual drag-here-to-install layout.
-          ln -s /Applications dmg/Applications
-          hdiutil create \
-            -volname "Invoices $VERSION" \
-            -srcfolder dmg \
-            -ov -format UDZO \
-            "Invoices-$VERSION.dmg"
+          Scripts/make-dmg.sh \
+            "build/Build/Products/Release/Invoices.app" \
+            "$VERSION"
           echo "name=Invoices-$VERSION.dmg" >> "$GITHUB_OUTPUT"
 
       - name: Fetch Sparkle's signing tools
