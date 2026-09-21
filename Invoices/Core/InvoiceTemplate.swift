@@ -98,11 +98,19 @@ nonisolated enum InvoiceTemplate {
         return resolve(template, with: Dictionary(uniqueKeysWithValues: values))
     }
 
-    static func resolve(_ template: String, with values: [String: String]) -> String {
+    /// The template with every legacy token spelled the current way. The
+    /// resolver applies it on the fly; the ledger applies it once to what is
+    /// stored, so the editor shows the same tokens its legend lists.
+    static func modernized(_ template: String) -> String {
         var result = template
         for (legacy, token) in legacyTokens {
             result = result.replacingOccurrences(of: legacy, with: token)
         }
+        return result
+    }
+
+    static func resolve(_ template: String, with values: [String: String]) -> String {
+        var result = modernized(template)
         for (token, value) in values {
             result = result.replacingOccurrences(of: token, with: value)
         }

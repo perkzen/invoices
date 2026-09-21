@@ -32,6 +32,23 @@ struct Ledger {
         return profile
     }
 
+    /// Rewrites the legacy placeholder tokens in the stored sentences — the
+    /// profile's three and every invoice's own intro — to their current
+    /// spelling. Run once at launch; a store written before the rename would
+    /// otherwise show Slovenian tokens beside a legend that lists English ones.
+    func modernizeTemplates() {
+        let profile = self.profile
+        for keyPath in [\BusinessProfile.introTemplate, \.paymentNoteTemplate, \.closingNote] {
+            let modern = InvoiceTemplate.modernized(profile[keyPath: keyPath])
+            if modern != profile[keyPath: keyPath] { profile[keyPath: keyPath] = modern }
+        }
+        let invoices = (try? context.fetch(FetchDescriptor<Invoice>())) ?? []
+        for invoice in invoices {
+            let modern = InvoiceTemplate.modernized(invoice.introOverride)
+            if modern != invoice.introOverride { invoice.introOverride = modern }
+        }
+    }
+
     // MARK: Drafts
 
     /// A new draft: today's dates, the profile's payment term and city, and
