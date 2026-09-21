@@ -58,6 +58,8 @@ struct ClientDetailView: View {
                 Text(client.displayName)
                     .font(.headline)
             }
+            // A title, not a button: no glass capsule around it.
+            .sharedBackgroundVisibility(.hidden)
         }
     }
 }

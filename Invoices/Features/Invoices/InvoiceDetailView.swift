@@ -62,6 +62,8 @@ struct InvoiceDetailView: View {
                     }
                 }
             }
+            // A title, not a button: no glass capsule around it.
+            .sharedBackgroundVisibility(.hidden)
             ToolbarItem(placement: .primaryAction) {
                 Button("Export PDF", systemImage: "square.and.arrow.up") { exportPDF(printed) }
                     .help("Save the invoice as a PDF")
