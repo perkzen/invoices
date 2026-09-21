@@ -1,0 +1,33 @@
+Invoices/App/PrivacyMode.swift
+  s_883866b4c74061::t_fa9def17cbce94 11-15
+Invoices/App/SensitiveField.swift
+  s_883866b4c74061::t_6a62fd4a32c96c 32-34
+  s_883866b4c74061::t_ef84307ccaca6a 3-31,46-49
+Invoices/Services/InvoicePDFPage.swift
+  s_883866b4c74061::t_0abdbcd767d8a4 24-27,34-51,117,119,122,140,143,210,213,269,272,283
+Invoices/Features/Invoices/InvoiceDetailView.swift
+  s_883866b4c74061::t_2dbfa6f6baf81c 288-292
+Invoices/Features/Invoices/InvoicePreview.swift
+  s_883866b4c74061::t_bbc3590573cb9d 21-23,27-37,40,44
+Invoices/Services/InvoicePDF.swift
+  s_883866b4c74061::t_bc61c1c2e26f9a 87-89,91,106-107
+Tests/InvoicesTests/InvoicePDFTests.swift
+  s_883866b4c74061::t_6cd6619e904bcc 63
+  s_883866b4c74061::t_6a62fd4a32c96c 43-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "5876ec5a66f6b3165774d1d2af2e333a32af1594",
+  "prompts": {},
+  "sessions": {
+    "s_883866b4c74061": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f6e07dfc-83b1-4511-8163-9b5203429e0a",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
