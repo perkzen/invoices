@@ -69,6 +69,8 @@ struct LocalizationTests {
         "VAT not charged under Article 94(1) of the VAT Act (ZDDV-1).",
         "Reverse charge / exempt under the VAT Act (ZDDV-1).",
         "Sample Company Ltd.", "1 Sample Street", "Software development", "Consulting and support",
+        // ImportSession
+        "Services rendered",
     ]
 
     /// The documents are Slovenian whatever language the app runs in, and

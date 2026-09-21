@@ -68,6 +68,110 @@
         }
       }
     },
+    "%lld new clients": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld new client"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld new clients"
+                }
+              }
+            }
+          }
+        },
+        "sl": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld nova stranka"
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld novi stranki"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld nove stranke"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld novih strank"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld rows skipped": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld row skipped"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld rows skipped"
+                }
+              }
+            }
+          }
+        },
+        "sl": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld vrstica preskočena"
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld vrstici preskočeni"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld vrstice preskočene"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld vrstic preskočenih"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "0 %": {},
     "1 Sample Street": {
       "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
@@ -121,6 +225,16 @@
         }
       }
     },
+    "A missing due date is filled in from the payment term, a missing date of service from the invoice date, and an invoice without a payment date is recorded as unpaid.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manjkajoča valuta se izpolni iz plačilnega roka, manjkajoči datum opravljene storitve iz datuma računa, račun brez datuma plačila pa se zabeleži kot neplačan."
+          }
+        }
+      }
+    },
     "Add a client so you can invoice them.": {
       "localizations": {
         "sl": {
@@ -167,6 +281,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vsi računi"
+          }
+        }
+      }
+    },
+    "Already in the ledger": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Že v knjigi"
           }
         }
       }
@@ -233,6 +357,16 @@
         }
       }
     },
+    "Appears twice in the file": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V datoteki se pojavi dvakrat"
+          }
+        }
+      }
+    },
     "Applies to the app interface. Invoices are always in Slovenian.": {
       "localizations": {
         "sl": {
@@ -254,6 +388,16 @@
       }
     },
     "BIC / SWIFT": {},
+    "Back": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nazaj"
+          }
+        }
+      }
+    },
     "Bank": {
       "localizations": {
         "sl": {
@@ -396,6 +540,16 @@
         }
       }
     },
+    "Choose an Excel workbook (.xlsx) or a CSV file. A Numbers document can be exported as either.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izberi Excelov zvezek (.xlsx) ali datoteko CSV. Dokument Numbers je mogoče izvoziti v oba formata."
+          }
+        }
+      }
+    },
     "Choose an image": {
       "localizations": {
         "sl": {
@@ -476,6 +630,16 @@
         }
       }
     },
+    "Columns": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stolpci"
+          }
+        }
+      }
+    },
     "Consulting and support": {
       "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
       "extractionState": "manual",
@@ -484,6 +648,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Svetovanje in podpora"
+          }
+        }
+      }
+    },
+    "Continue": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naprej"
           }
         }
       }
@@ -498,12 +672,12 @@
         }
       }
     },
-    "Create your first draft invoice.": {
+    "Create your first draft invoice, or bring in the ones you issued before from a spreadsheet.": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ustvari prvi osnutek računa."
+            "value": "Ustvari prvi osnutek računa ali uvozi že izdane račune iz preglednice."
           }
         }
       }
@@ -788,6 +962,16 @@
         }
       }
     },
+    "Filled in when missing": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izpolnjeno, če manjka"
+          }
+        }
+      }
+    },
     "Flat-rate expenses": {
       "localizations": {
         "sl": {
@@ -886,6 +1070,108 @@
           "stringUnit": {
             "state": "translated",
             "value": "IZDANI RAČUNI ZA LETO %@"
+          }
+        }
+      }
+    },
+    "Import": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uvozi"
+          }
+        }
+      }
+    },
+    "Import %lld invoices": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Import %lld invoice"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Import %lld invoices"
+                }
+              }
+            }
+          }
+        },
+        "sl": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Uvozi %lld račun"
+                }
+              },
+              "two": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Uvozi %lld računa"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Uvozi %lld račune"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Uvozi %lld računov"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Import Spreadsheet…": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uvozi preglednico …"
+          }
+        }
+      }
+    },
+    "Import XLSX": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uvozi XLSX"
+          }
+        }
+      }
+    },
+    "Import from a spreadsheet…": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uvozi iz preglednice …"
+          }
+        }
+      }
+    },
+    "Import invoices": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uvoz računov"
           }
         }
       }
@@ -1048,6 +1334,16 @@
         }
       }
     },
+    "Issue your first invoice and the year's numbers appear here. Invoices issued before you started using the app can be brought in from a spreadsheet.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izdaj prvi račun in tu se prikažejo številke leta. Račune, izdane pred uporabo aplikacije, lahko uvoziš iz preglednice."
+          }
+        }
+      }
+    },
     "Issued": {
       "localizations": {
         "sl": {
@@ -1066,6 +1362,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Račun izdal:"
+          }
+        }
+      }
+    },
+    "Issued, unpaid": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izdan, neplačan"
           }
         }
       }
@@ -1108,6 +1414,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pozneje"
+          }
+        }
+      }
+    },
+    "Line item description": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opis postavke"
           }
         }
       }
@@ -1202,6 +1518,16 @@
         }
       }
     },
+    "New clients": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nove stranke"
+          }
+        }
+      }
+    },
     "New draft invoice": {
       "localizations": {
         "sl": {
@@ -1232,6 +1558,16 @@
         }
       }
     },
+    "No amount": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brez zneska"
+          }
+        }
+      }
+    },
     "No client": {
       "localizations": {
         "sl": {
@@ -1258,6 +1594,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ni strank"
+          }
+        }
+      }
+    },
+    "No date": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brez datuma"
+          }
+        }
+      }
+    },
+    "No invoice number": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brez številke računa"
           }
         }
       }
@@ -1314,12 +1670,32 @@
         }
       }
     },
+    "Not in the file": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ni v datoteki"
+          }
+        }
+      }
+    },
     "Notes": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "Opombe"
+          }
+        }
+      }
+    },
+    "Nothing in the file can be recorded": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Iz datoteke ni mogoče zabeležiti ničesar"
           }
         }
       }
@@ -1394,6 +1770,16 @@
         }
       }
     },
+    "Outcome": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izid"
+          }
+        }
+      }
+    },
     "Outstanding": {
       "localizations": {
         "sl": {
@@ -1442,6 +1828,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Plačano"
+          }
+        }
+      }
+    },
+    "Paid %@": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plačan %@"
           }
         }
       }
@@ -1638,6 +2034,16 @@
         }
       }
     },
+    "Record invoices from a spreadsheet of issued invoices": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zabeleži račune iz preglednice izdanih računov"
+          }
+        }
+      }
+    },
     "Reference number": {
       "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
       "extractionState": "manual",
@@ -1680,6 +2086,16 @@
         }
       }
     },
+    "Required": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obvezno"
+          }
+        }
+      }
+    },
     "Reverse charge / exempt under the VAT Act (ZDDV-1).": {
       "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
       "extractionState": "manual",
@@ -1688,6 +2104,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Obrnjena davčna obveznost / oproščeno po ZDDV-1."
+          }
+        }
+      }
+    },
+    "Review": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pregled"
+          }
+        }
+      }
+    },
+    "Row": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vrstica"
           }
         }
       }
@@ -1806,6 +2242,18 @@
         }
       }
     },
+    "Services rendered": {
+      "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
+      "extractionState": "manual",
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opravljene storitve"
+          }
+        }
+      }
+    },
     "Settings": {
       "localizations": {
         "sl": {
@@ -1884,6 +2332,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Standardna predloga"
+          }
+        }
+      }
+    },
+    "Step %@": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Korak %@"
+          }
+        }
+      }
+    },
+    "Still to match: %@. Without them a row cannot be recorded as an issued invoice.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Še brez stolpca: %@. Brez njih vrstice ni mogoče zabeležiti kot izdan račun."
           }
         }
       }
@@ -2034,12 +2502,52 @@
         }
       }
     },
+    "The file is not an Excel workbook.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datoteka ni Excelov zvezek."
+          }
+        }
+      }
+    },
     "The file is not an image that can be read.": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "Datoteka ni slika, ki bi jo znal prebrati."
+          }
+        }
+      }
+    },
+    "The file lists one amount per invoice, so each is recorded with a single line item carrying this description. The invoices land issued, paid or cancelled as the file says, and cannot be edited afterwards.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datoteka navaja en znesek na račun, zato se vsak zabeleži z eno postavko s tem opisom. Računi bodo izdani, plačani ali stornirani, kot piše v datoteki, in jih pozneje ni mogoče urejati."
+          }
+        }
+      }
+    },
+    "The file names clients the ledger does not know yet: %@, with %@ between them. The spreadsheet gives only the name; fill in what the invoice must show, or leave it for later under Clients.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datoteka navaja stranke, ki jih v knjigi še ni: %1$@ (skupaj %2$@). Preglednica vsebuje le ime; izpolni, kar mora biti na računu, ali pa to uredi pozneje pod Stranke."
+          }
+        }
+      }
+    },
+    "The first rows of the file": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prve vrstice datoteke"
           }
         }
       }
@@ -2100,6 +2608,56 @@
           "stringUnit": {
             "state": "translated",
             "value": "Številka ostane v zaporedju, račun pa je naveden kot storniran. Tega ni mogoče razveljaviti."
+          }
+        }
+      }
+    },
+    "The overview lists invoices once the first one has been issued. Invoices issued before you started using the app can be brought in from a spreadsheet.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pregled prikazuje račune, ko je izdan prvi. Račune, izdane pred uporabo aplikacije, je mogoče uvoziti iz preglednice."
+          }
+        }
+      }
+    },
+    "The spreadsheet could not be read": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preglednice ni bilo mogoče prebrati"
+          }
+        }
+      }
+    },
+    "The spreadsheet is empty.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preglednica je prazna."
+          }
+        }
+      }
+    },
+    "The text in the file could not be decoded.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Besedila v datoteki ni bilo mogoče dekodirati."
+          }
+        }
+      }
+    },
+    "The workbook has no worksheet.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvezek nima nobenega delovnega lista."
           }
         }
       }
@@ -2242,6 +2800,16 @@
         }
       }
     },
+    "Which column holds what": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kateri stolpec vsebuje kaj"
+          }
+        }
+      }
+    },
     "Year": {
       "localizations": {
         "sl": {
@@ -2380,6 +2948,16 @@
         }
       }
     },
+    "new": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nova"
+          }
+        }
+      }
+    },
     "overview.overdue": {
       "extractionState": "manual",
       "comment": "Overdue amount in the year overview. Slovenian needs the neuter form here, unlike the badge on one invoice.",
@@ -2434,6 +3012,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "vaš IBAN"
+          }
+        }
+      }
+    },
+    "“%@” is not a date": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "»%@« ni datum"
+          }
+        }
+      }
+    },
+    "“%@” is not an amount": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "»%@« ni znesek"
+          }
+        }
+      }
+    },
+    "“%@” is not an invoice number": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "»%@« ni številka računa"
           }
         }
       }

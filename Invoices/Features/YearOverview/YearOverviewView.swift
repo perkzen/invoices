@@ -9,6 +9,7 @@ struct YearOverviewView: View {
     let year: Int?
 
     @Environment(\.modelContext) private var context
+    @Environment(\.importSpreadsheet) private var importSpreadsheet
     @Query(sort: [SortDescriptor(\Invoice.sequence)]) private var invoices: [Invoice]
 
     @State private var export: FileExport?
@@ -44,8 +45,19 @@ struct YearOverviewView: View {
                 ContentUnavailableView {
                     Label("No invoices issued", systemImage: "tablecells")
                 } description: {
-                    Text("Issue your first invoice and the year's numbers appear here.")
+                    Text("Issue your first invoice and the year's numbers appear here. Invoices issued before you started using the app can be brought in from a spreadsheet.")
+                } actions: {
+                    if let importSpreadsheet {
+                        Button("Import from a spreadsheet…") { importSpreadsheet() }
+                    }
                 }
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button("Import XLSX", systemImage: "tray.and.arrow.down") { importSpreadsheet?() }
+                    .help("Record invoices from a spreadsheet of issued invoices")
+                    .disabled(importSpreadsheet == nil)
             }
         }
         .fileExport($export)
