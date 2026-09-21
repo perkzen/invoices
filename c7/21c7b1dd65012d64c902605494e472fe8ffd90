@@ -1,0 +1,36 @@
+Invoices/App/ContentView.swift
+  s_5f2c8dac6fe23a::t_1dec9c471334e7 12-13,57-62,83-84
+  s_5f2c8dac6fe23a::t_63248e8585a5b0 64-66,86
+  s_5f2c8dac6fe23a::t_68c28d9b6808c9 67-71
+Invoices/Features/Settings/SettingsView.swift
+  s_5f2c8dac6fe23a::t_0f64b050a02776 5-7,10-11,15-17,24
+Invoices/Features/Invoices/InvoiceDetailView.swift
+  s_5f2c8dac6fe23a::t_4c7428402544ce 185
+Invoices/App/AppSection.swift
+  s_5f2c8dac6fe23a::t_2cc409e1c7a27c 10,17,24,34
+README.md
+  s_5f2c8dac6fe23a::t_e44bffa71bee6f 28-32
+Invoices/Features/Business/BusinessForm.swift
+  s_5f2c8dac6fe23a::t_e05cf39fe2e38c 138
+  s_5f2c8dac6fe23a::t_2504682abc6fa2 1-137,139-141
+Invoices/Resources/Localizable.xcstrings
+  s_5f2c8dac6fe23a::t_4c7428402544ce 330,335,2565,2570
+Invoices/Features/Invoices/InvoicePreview.swift
+  s_5f2c8dac6fe23a::t_e05cf39fe2e38c 13-17,27,53,64-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "c721c7b1dd65012d64c902605494e472fe8ffd90",
+  "prompts": {},
+  "sessions": {
+    "s_5f2c8dac6fe23a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f707dbdc-522e-4ec5-9c93-8dc07b5d826a",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
