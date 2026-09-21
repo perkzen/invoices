@@ -175,6 +175,33 @@ struct LedgerTests {
         #expect(next.number == "2026-002")
     }
 
+    @Test func `marking unpaid puts the invoice back among the issued`() throws {
+        let ledger = try makeLedger()
+        let invoice = readyDraft(in: ledger)
+        try ledger.issue(invoice)
+        ledger.markPaid(invoice, on: date(2026, 4, 2))
+        ledger.markUnpaid(invoice)
+
+        #expect(invoice.status == .issued)
+        #expect(invoice.paidDate == nil)
+        // And the second time round, the payment is dated afresh.
+        ledger.markPaid(invoice, on: date(2026, 4, 9))
+        #expect(invoice.paidDate == date(2026, 4, 9))
+    }
+
+    @Test func `only a paid invoice can be marked unpaid`() throws {
+        let ledger = try makeLedger()
+        let draft = ledger.newDraft()
+        ledger.markUnpaid(draft)
+        #expect(draft.status == .draft)
+
+        let cancelled = readyDraft(in: ledger)
+        try ledger.issue(cancelled)
+        ledger.cancel(cancelled)
+        ledger.markUnpaid(cancelled)
+        #expect(cancelled.status == .cancelled)
+    }
+
     @Test func `only an issued invoice can be paid or cancelled`() throws {
         let ledger = try makeLedger()
         let draft = ledger.newDraft()

@@ -14,17 +14,11 @@ struct InvoiceListView: View {
     private var invoices: [Invoice]
 
     @State private var pendingDelete: Invoice?
-    @State private var searchText = ""
-    @State private var filter: StatusFilter = .all
 
     private var ledger: Ledger { Ledger(context) }
 
     private var selected: Invoice? {
         invoices.first { $0.persistentModelID == selection }
-    }
-
-    private var shown: [Invoice] {
-        invoices.filter { filter.matches($0) && matchesSearch($0) }
     }
 
     var body: some View {
@@ -40,11 +34,9 @@ struct InvoiceListView: View {
                         Button("Import from a spreadsheet…") { importSpreadsheet() }
                     }
                 }
-            } else if shown.isEmpty {
-                ContentUnavailableView.search(text: searchText)
             } else {
                 List(selection: $selection) {
-                    ForEach(shown) { invoice in
+                    ForEach(invoices) { invoice in
                         InvoiceRow(invoice: invoice)
                             .tag(invoice.persistentModelID)
                             .contextMenu { deleteMenu(for: invoice) }
@@ -54,25 +46,12 @@ struct InvoiceListView: View {
             }
         }
         .navigationTitle("Invoices")
-        .searchable(text: $searchText, prompt: "Number or client")
         .deletionConfirmation("Delete draft?", item: $pendingDelete) { _ in
             Text("The draft and all of its line items will be permanently deleted.")
         } perform: { invoice in
             delete(invoice)
         }
         .toolbar {
-            ToolbarItem {
-                Picker("Show", selection: $filter) {
-                    ForEach(StatusFilter.allCases) { option in
-                        Text(option.title).tag(option)
-                    }
-                }
-                .pickerStyle(.menu)
-                .help("Show only invoices in one state")
-            }
-            // The picker draws its own pop-up control, spaced like every
-            // other pop-up; the toolbar's glass around it only crowded it.
-            .sharedBackgroundVisibility(.hidden)
             ToolbarItem {
                 Button("Delete draft", systemImage: "trash") { requestDelete(selected) }
                     .disabled(selected.map { ledger.deletionProblem(for: $0) != nil } ?? true)
@@ -86,13 +65,6 @@ struct InvoiceListView: View {
         }
     }
 
-    private func matchesSearch(_ invoice: Invoice) -> Bool {
-        let query = searchText.trimmingCharacters(in: .whitespaces)
-        guard !query.isEmpty else { return true }
-        return invoice.number.localizedStandardContains(query)
-            || (invoice.client?.name.localizedStandardContains(query) ?? false)
-    }
-
     private var deleteHelp: String {
         guard let selected else { return String(localized: "Select a draft to delete it") }
         return ledger.deletionProblem(for: selected)?.message ?? String(localized: "Delete draft")
@@ -104,8 +76,6 @@ struct InvoiceListView: View {
         // autosave replaces, which would drop the selection a moment later.
         try? context.save()
         // A fresh draft is the one thing the user wants to look at next.
-        filter = .all
-        searchText = ""
         selection = invoice.persistentModelID
     }
 
@@ -130,34 +100,6 @@ struct InvoiceListView: View {
         // before it is gone.
         if selection == invoice.persistentModelID { selection = nil }
         try? ledger.delete(invoice)
-    }
-}
-
-/// The states the list can be narrowed to. "Open" is the money still out:
-/// issued and not yet paid.
-private enum StatusFilter: String, CaseIterable, Identifiable {
-    case all, drafts, open, paid, cancelled
-
-    var id: String { rawValue }
-
-    var title: String {
-        switch self {
-        case .all: String(localized: "All invoices")
-        case .drafts: String(localized: "Drafts")
-        case .open: String(localized: "Open")
-        case .paid: String(localized: "invoiceFilter.paid", defaultValue: "Paid")
-        case .cancelled: String(localized: "Cancelled")
-        }
-    }
-
-    func matches(_ invoice: Invoice) -> Bool {
-        switch self {
-        case .all: true
-        case .drafts: invoice.status == .draft
-        case .open: invoice.status == .issued
-        case .paid: invoice.status == .paid
-        case .cancelled: invoice.status == .cancelled
-        }
     }
 }
 

@@ -5,18 +5,63 @@ struct InvoiceDetailView: View {
     @Bindable var invoice: Invoice
 
     @Environment(\.modelContext) private var context
+    @Environment(\.colorScheme) private var colorScheme
     @Query(sort: [SortDescriptor(\Client.name)]) private var clients: [Client]
 
     @State private var export: FileExport?
     @State private var exportError: String?
     @State private var showsPreview = true
     @State private var isConfirmingCancel = false
+    @State private var isMarkingPaid = false
 
     private var ledger: Ledger { Ledger(context) }
     private var isLocked: Bool { !invoice.status.isEditable }
     private var issueProblem: Ledger.IssueProblem? { ledger.issueProblem(for: invoice) }
     private var title: String {
         invoice.number.isEmpty ? String(localized: "Draft invoice") : invoice.number
+    }
+
+    /// Pick the status, and the ledger's questions — the payment date, the
+    /// cancellation warning — are asked before it changes.
+    private var statusPicker: some View {
+        Picker("Status", selection: requestedStatus) {
+            ForEach(reachableStatuses) { status in
+                Image(nsImage: StatusCapsuleImage.image(for: status, in: colorScheme))
+                    .tag(status)
+            }
+        }
+        .pickerStyle(.menu)
+        .labelsHidden()
+        .fixedSize()
+        .help("Change the status of the invoice")
+    }
+
+    /// The states the pop-up offers from where the invoice stands. Paid
+    /// goes back to issued, never straight to cancelled; cancelled is final.
+    private var reachableStatuses: [InvoiceStatus] {
+        switch invoice.status {
+        case .issued: [.issued, .paid, .cancelled]
+        case .paid: [.issued, .paid]
+        case .draft, .cancelled: [invoice.status]
+        }
+    }
+
+    /// The pop-up's selection. Reading it is the invoice's status; choosing
+    /// a status asks the ledger for the change, or asks the user first. The
+    /// status itself moves only once that is answered, so a dismissed sheet
+    /// leaves the pop-up where it was.
+    private var requestedStatus: Binding<InvoiceStatus> {
+        Binding(
+            get: { invoice.status },
+            set: { status in
+                switch (invoice.status, status) {
+                case (.issued, .paid): isMarkingPaid = true
+                case (.issued, .cancelled): isConfirmingCancel = true
+                case (.paid, .issued): ledger.markUnpaid(invoice)
+                default: break
+                }
+            }
+        )
     }
 
     /// `serviceDateEnd` as a toggle: on means the service spans a period.
@@ -36,56 +81,46 @@ struct InvoiceDetailView: View {
         // follow the same value the PDF will print.
         let printed = PrintedInvoice.make(invoice: invoice, profile: ledger.profile)
 
-        HSplitView {
-            form(printed)
-                .frame(minWidth: 540, idealWidth: 600)
-            if showsPreview {
-                // The rendered page beside the form, the way the template
-                // page shows its sample.
+        form(printed)
+            // The rendered page in an inspector: a pane of the window with
+            // the toolbar broken at its edge, the way Pages and Xcode hang
+            // theirs, rather than a split view drawing its seam up through
+            // the toolbar between the title and the tools.
+            .inspector(isPresented: $showsPreview) {
                 InvoicePreview(printed: printed)
-                    .frame(minWidth: 280, idealWidth: 320)
+                    .inspectorColumnWidth(min: 280, ideal: 340, max: 520)
             }
-        }
-        .animation(nil, value: showsPreview)
-        .navigationTitle(title)
+            .navigationTitle(title)
         .toolbar {
             // A three-column window shows only the list's title, so the
-            // editor names its own invoice here.
+            // editor names its own invoice here. The status is the first
+            // row of the form, not repeated up here.
             ToolbarItem(placement: .principal) {
-                HStack(spacing: 8) {
-                    Text(title)
-                        .font(.headline)
-                        .monospacedDigit()
-                    // "Draft invoice" already says what a draft is.
-                    if !invoice.number.isEmpty {
-                        InvoiceStatusBadge(invoice: invoice)
-                    }
-                }
+                Text(title)
+                    .font(.headline)
+                    .monospacedDigit()
             }
             // A title, not a button: no glass capsule around it.
             .sharedBackgroundVisibility(.hidden)
-            ToolbarItem(placement: .primaryAction) {
+            ToolbarItemGroup(placement: .primaryAction) {
+                // Issuing is the one change with reasons it may be blocked,
+                // so it is a button that can be disabled and say why, among
+                // the tools. The other changes of status are the pop-up at
+                // the top of the form.
+                if invoice.status == .draft {
+                    Button("Issue invoice", systemImage: "paperplane", action: issue)
+                        .disabled(issueProblem != nil)
+                        .help(issueProblem.map { Text(verbatim: $0.message) }
+                              ?? Text("Issue the invoice: assign the next number and lock it"))
+                }
                 Button("Export PDF", systemImage: "square.and.arrow.up") { exportPDF(printed) }
                     .help("Save the invoice as a PDF")
-            }
-            ToolbarItem(placement: .primaryAction) {
                 Toggle("Preview", systemImage: "sidebar.trailing", isOn: $showsPreview)
                     .help("Show or hide the invoice preview")
             }
-            ToolbarItemGroup(placement: .primaryAction) {
-                switch invoice.status {
-                case .draft:
-                    Button("Issue invoice", action: issue)
-                        .disabled(issueProblem != nil)
-                        .help(issueProblem.map { Text(verbatim: $0.message) }
-                              ?? Text("Assign the next number and lock the invoice"))
-                case .issued:
-                    Button("Mark as paid") { ledger.markPaid(invoice) }
-                    Button("Cancel invoice", role: .destructive) { isConfirmingCancel = true }
-                case .paid, .cancelled:
-                    EmptyView()
-                }
-            }
+        }
+        .sheet(isPresented: $isMarkingPaid) {
+            PaymentDateSheet { date in ledger.markPaid(invoice, on: date) }
         }
         .confirmationDialog("Cancel this invoice?", isPresented: $isConfirmingCancel) {
             Button("Cancel invoice", role: .destructive) { ledger.cancel(invoice) }
@@ -99,6 +134,29 @@ struct InvoiceDetailView: View {
 
     private func form(_ printed: PrintedInvoice) -> some View {
         Form {
+            // Once issued, the state comes first: it is the one thing left
+            // to change on a locked invoice. A draft has nothing to say
+            // here; its way forward is the toolbar's button.
+            if invoice.status != .draft {
+                Section {
+                    LabeledContent("Status") {
+                        if invoice.status == .cancelled {
+                            InvoiceStatusBadge(invoice: invoice)
+                        } else {
+                            // Overdue is the badge's own word, not a state
+                            // the pop-up can offer, so it stands beside it.
+                            if invoice.isOverdue {
+                                InvoiceStatusBadge(invoice: invoice)
+                            }
+                            statusPicker
+                        }
+                    }
+                    if invoice.status == .paid, let paidDate = invoice.paidDate {
+                        LabeledContent("Paid on", value: Formatting.date(paidDate))
+                    }
+                }
+            }
+
             Section("Invoice") {
                 LabeledContent("Number") {
                     Text(invoice.number.isEmpty ? String(localized: "assigned on issue") : invoice.number)
@@ -203,6 +261,39 @@ struct InvoiceDetailView: View {
     /// throw cannot reach here from the toolbar.
     private func issue() {
         try? ledger.issue(invoice)
+    }
+}
+
+/// Asks when the payment arrived before the invoice is marked paid. The
+/// date lives here, not in the editor, so every opening starts from today
+/// instead of whatever was picked last time.
+private struct PaymentDateSheet: View {
+    let confirm: (Date) -> Void
+
+    @Environment(\.dismiss) private var dismiss
+    @State private var date = Date()
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Mark as paid")
+                .font(.headline)
+            DatePicker("Paid on", selection: $date, in: ...Date(), displayedComponents: .date)
+            Text("The date is listed in the year overview. Mark the invoice unpaid to change it.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            HStack {
+                Spacer()
+                Button("Cancel") { dismiss() }
+                    .keyboardShortcut(.cancelAction)
+                Button("Mark as paid") {
+                    confirm(date)
+                    dismiss()
+                }
+                .keyboardShortcut(.defaultAction)
+            }
+        }
+        .padding(20)
+        .frame(width: 340)
     }
 }
 

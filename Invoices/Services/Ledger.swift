@@ -138,6 +138,15 @@ struct Ledger {
         invoice.paidDate = date
     }
 
+    /// The way back from a payment marked by mistake: the invoice is issued
+    /// and outstanding again. The date has to go too — the year overview
+    /// counts an invoice as paid by its date, not its status.
+    func markUnpaid(_ invoice: Invoice) {
+        guard invoice.status == .paid else { return }
+        invoice.status = .issued
+        invoice.paidDate = nil
+    }
+
     /// Cancellation. The invoice keeps its number so the sequence stays
     /// unbroken; the year overview lists it but does not count it.
     func cancel(_ invoice: Invoice) {

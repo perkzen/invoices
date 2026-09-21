@@ -275,16 +275,6 @@
         }
       }
     },
-    "All invoices": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vsi računi"
-          }
-        }
-      }
-    },
     "Already in the ledger": {
       "localizations": {
         "sl": {
@@ -373,16 +363,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Velja za vmesnik aplikacije. Računi so vedno v slovenščini."
-          }
-        }
-      }
-    },
-    "Assign the next number and lock the invoice": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dodeli naslednjo številko in zakleni račun"
           }
         }
       }
@@ -486,6 +466,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Storniran"
+          }
+        }
+      }
+    },
+    "Change the status of the invoice": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spremeni stanje računa"
           }
         }
       }
@@ -858,16 +848,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Osnutek-racuna"
-          }
-        }
-      }
-    },
-    "Drafts": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Osnutki"
           }
         }
       }
@@ -1304,6 +1284,16 @@
         }
       }
     },
+    "Issue the invoice: assign the next number and lock it": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izdaj račun: dodeli naslednjo številko in ga zakleni"
+          }
+        }
+      }
+    },
     "Issue your first invoice and the year's numbers appear here.": {
       "localizations": {
         "sl": {
@@ -1444,6 +1434,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Označi kot plačan"
+          }
+        }
+      }
+    },
+    "Mark as paid…": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Označi kot plačan…"
+          }
+        }
+      }
+    },
+    "Mark as unpaid": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Označi kot neplačan"
           }
         }
       }
@@ -1680,16 +1690,6 @@
         }
       }
     },
-    "Number or client": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Številka ali stranka"
-          }
-        }
-      }
-    },
     "OK": {
       "localizations": {
         "sl": {
@@ -1716,16 +1716,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Izdati je mogoče le osnutek"
-          }
-        }
-      }
-    },
-    "Open": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Odprti"
           }
         }
       }
@@ -1808,6 +1798,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Plačan %@"
+          }
+        }
+      }
+    },
+    "Paid on": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plačan dne"
           }
         }
       }
@@ -2010,6 +2010,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zabeleži račune iz preglednice izdanih računov"
+          }
+        }
+      }
+    },
+    "Record the date the payment arrived": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapiši datum prejema plačila"
           }
         }
       }
@@ -2234,26 +2244,6 @@
         }
       }
     },
-    "Show": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prikaži"
-          }
-        }
-      }
-    },
-    "Show only invoices in one state": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prikaži samo račune v enem stanju"
-          }
-        }
-      }
-    },
     "Show or hide the invoice preview": {
       "localizations": {
         "sl": {
@@ -2292,6 +2282,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Računalniško programiranje"
+          }
+        }
+      }
+    },
+    "Status": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stanje"
           }
         }
       }
@@ -2438,6 +2438,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Naziv se natisne v glavi računa, ime in priimek pod »Račun izdal«."
+          }
+        }
+      }
+    },
+    "The date is listed in the year overview. Mark the invoice unpaid to change it.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datum je naveden v letnem pregledu. Za spremembo označi račun kot neplačan."
           }
         }
       }
@@ -2841,24 +2851,6 @@
           }
         }
       }
-    },
-    "invoiceFilter.paid": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Plačani"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Paid"
-          }
-        }
-      },
-      "extractionState": "manual",
-      "comment": "List filter for paid invoices. Slovenian needs the plural here, unlike the status of one invoice."
     },
     "invoiceStatus.paid": {
       "localizations": {
