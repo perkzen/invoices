@@ -182,7 +182,7 @@ struct InvoiceDetailView: View {
             } header: {
                 Text("Text")
             } footer: {
-                Text("An empty intro sentence uses the template from Settings. Notes are printed below the clauses.")
+                Text("An empty intro sentence uses the template from My business. Notes are printed below the clauses.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }

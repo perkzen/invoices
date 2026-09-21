@@ -327,12 +327,12 @@
         }
       }
     },
-    "An empty intro sentence uses the template from Settings. Notes are printed below the clauses.": {
+    "An empty intro sentence uses the template from My business. Notes are printed below the clauses.": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Prazen uvodni stavek uporabi predlogo iz Nastavitev. Opombe se natisnejo pod klavzulami."
+            "value": "Prazen uvodni stavek uporabi predlogo iz razdelka Moj s.p. Opombe se natisnejo pod klavzulami."
           }
         }
       }
@@ -526,16 +526,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Izberi razdelek"
-          }
-        }
-      }
-    },
-    "Choose a template from the list.": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Izberi predlogo s seznama."
           }
         }
       }
@@ -1218,16 +1208,6 @@
         }
       }
     },
-    "Invoice template": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Predloga računa"
-          }
-        }
-      }
-    },
     "Invoice – continued": {
       "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
       "extractionState": "manual",
@@ -1644,16 +1624,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ni izdanih računov"
-          }
-        }
-      }
-    },
-    "No template selected": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ni izbrane predloge"
           }
         }
       }
@@ -2336,16 +2306,6 @@
         }
       }
     },
-    "Standard template": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Standardna predloga"
-          }
-        }
-      }
-    },
     "Step %@": {
       "localizations": {
         "sl": {
@@ -2602,12 +2562,12 @@
         }
       }
     },
-    "The name under the signature is “Full name” from Settings › My business.": {
+    "The name under the signature is “Full name” below.": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ime pod podpisom je »Ime in priimek« iz Nastavitve › Moj s.p."
+            "value": "Ime pod podpisom je »Ime in priimek« spodaj."
           }
         }
       }
@@ -2708,16 +2668,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Neplačano"
-          }
-        }
-      }
-    },
-    "Used on every invoice": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uporabljena na vsakem računu"
           }
         }
       }

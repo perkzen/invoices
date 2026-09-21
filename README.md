@@ -25,9 +25,11 @@ proprietor.
   column-matching step, unknown clients get a step for their address and tax number, and
   everything is reviewed row by row before the ledger is written. Reads `.xlsx` and
   `.csv`; a Numbers document exports as either
-- **Invoice template** — logo, tagline, signature and the three standard sentences, with
-  placeholders for the month, year, IBAN and payment reference, edited beside a live sample
-  in its own sidebar section
+- **My business** — one sidebar section for everything an invoice is printed from and
+  printed with: name, address, tax status and bank details, the logo, the signature, the
+  line of business and the three standard sentences, with placeholders for the month,
+  year, IBAN and payment reference. The form fills one column and a live sample invoice
+  the next, so every change is seen where it lands
 - **Private mode** — *View › Hide sensitive values* (⇧⌘H) blanks tax numbers, the IBAN
   and every amount on screen, for a screen share. Exports keep the real values
 - **English and Slovenian** — follows the Mac's language, or *Settings › Language*.
