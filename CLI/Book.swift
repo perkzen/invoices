@@ -37,6 +37,11 @@ struct StoreLocation {
 
     var isNamedOutright: Bool { bundleIdentifier == nil }
 
+    static let noAppMessage =
+        "No copy of the app was found, and the tool takes the documents' Slovenian wording "
+        + "and the skill from it. Run the tool from inside an installed Invoices.app "
+        + "(Contents/Helpers/invoices), or point INVOICES_APP at one."
+
     static func resolve(_ options: StoreOptions) -> StoreLocation {
         if let path = options.store ?? (options.dev ? nil : ProcessInfo.processInfo.environment["INVOICES_STORE"]) {
             let expanded = (path as NSString).expandingTildeInPath
@@ -50,17 +55,41 @@ struct StoreLocation {
         return StoreLocation(url: url, bundleIdentifier: bundleID)
     }
 
-    /// The installed app the documents take their Slovenian wording from:
-    /// INVOICES_APP when set, else whichever build Launch Services knows,
-    /// the one this store belongs to first.
+    /// The app the documents take their Slovenian wording from, and the
+    /// skill comes from: INVOICES_APP when set; else the app this executable
+    /// ships inside, which is where an installed copy runs from (the symlink
+    /// on the PATH points into `Contents/Helpers`); else whichever build
+    /// Launch Services knows, the one this store belongs to first, for a
+    /// build-tree binary run on its own.
     @MainActor func installedApp() -> Bundle? {
         if let path = ProcessInfo.processInfo.environment["INVOICES_APP"] {
             return Bundle(url: URL(fileURLWithPath: (path as NSString).expandingTildeInPath))
         }
+        if let own = Self.enclosingApp { return own }
         let candidates = [bundleIdentifier, Self.releaseBundleID, Self.devBundleID].compactMap { $0 }
         for identifier in candidates {
             if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: identifier),
                let bundle = Bundle(url: url) {
+                return bundle
+            }
+        }
+        return nil
+    }
+
+    /// The `.app` this executable sits inside, when it does: the bundle
+    /// above `Contents/Helpers/invoices`, with the app's resources in it.
+    /// Read from the kernel's idea of the executable rather than `argv[0]`,
+    /// which is whatever the shell typed, and through any symlink.
+    static var enclosingApp: Bundle? {
+        var size: UInt32 = 0
+        _ = _NSGetExecutablePath(nil, &size)
+        var buffer = [CChar](repeating: 0, count: Int(size) + 1)
+        guard _NSGetExecutablePath(&buffer, &size) == 0 else { return nil }
+        var url = URL(fileURLWithPath: String(cString: buffer)).resolvingSymlinksInPath()
+        while url.pathComponents.count > 1 {
+            url.deleteLastPathComponent()
+            if url.pathExtension == "app" {
+                guard let bundle = Bundle(url: url), bundle.path(forResource: "sl", ofType: "lproj") != nil else { return nil }
                 return bundle
             }
         }
@@ -126,13 +155,7 @@ final class Book {
     /// Rendering a document needs the app's wording; without it the page
     /// would come out in English, which a Slovenian invoice must not.
     func requireApp() throws {
-        guard app != nil else {
-            throw ToolError(
-                "No installed copy of the app was found, and the documents take their Slovenian "
-                    + "wording from it. Install the app (Scripts/install-release.sh) or point "
-                    + "INVOICES_APP at an Invoices.app."
-            )
-        }
+        guard app != nil else { throw ToolError(StoreLocation.noAppMessage) }
     }
 
     // MARK: Finding records

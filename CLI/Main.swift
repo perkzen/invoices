@@ -26,6 +26,7 @@ struct InvoicesCommand: ParsableCommand {
                 """,
             subcommands: [
                 StoreCommand.self,
+                SkillCommand.self,
                 ProfileCommand.self,
                 ClientCommand.self,
                 InvoiceCommand.self,

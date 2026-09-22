@@ -35,8 +35,7 @@ jobs:
 
       # Signing is off: the runner has no identity, and an unsigned test host
       # avoids hardened-runtime restrictions on injecting the test bundle.
-      # One derived-data path, so the smoke test below finds the app it
-      # takes the document strings from.
+      # One derived-data path, so the smoke test below finds the built app.
       - name: Test
         run: |
           xcodebuild test \
@@ -47,44 +46,35 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO
 
-      - name: Build the command-line tool
-        run: |
-          xcodebuild build \
-            -project Invoices.xcodeproj \
-            -scheme InvoicesCLI \
-            -configuration Debug \
-            -destination 'platform=macOS' \
-            -derivedDataPath build \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO
-
-      # The tool has no unit tests of its own — its logic is the app's, tested
-      # above — so drive it once through an invoice's life against a
-      # throwaway store, and render the documents, which is the one thing a
-      # tool can do differently from the app.
+      # The tool is built into the app above, so there is nothing more to
+      # build. It has no unit tests of its own — its logic is the app's,
+      # tested above — so drive the copy inside the built app once through
+      # an invoice's life against a throwaway store, and render the
+      # documents, which is the one thing a tool can do differently from
+      # the app. No INVOICES_APP: finding the app it ships in is under test.
       - name: Smoke-test the command-line tool
         env:
           INVOICES_STORE: ${{ runner.temp }}/smoke.store
-          INVOICES_APP: ${{ github.workspace }}/build/Build/Products/Debug/Invoices Dev.app
         run: |
           set -euxo pipefail
-          invoices=build/Build/Products/Debug/invoices
+          invoices="build/Build/Products/Debug/Invoices Dev.app/Contents/Helpers/invoices"
           year=$(date +%Y)
-          $invoices store | jq -e '.exists == false'
-          $invoices profile set --name "Test s.p." --city Ljubljana --iban SI56000000000000000 | jq -e '.city == "Ljubljana"'
-          $invoices client add --name "Parakeet AI Ltd." --street "1 Sample Street" --postal-code 1000 --city Ljubljana | jq -e '.id != null'
-          $invoices client list --search parakeet | jq -e 'length == 1'
-          $invoices invoice create --client parakeet --service-end month \
+          "$invoices" store | jq -e '.exists == false and (.app | endswith("Invoices Dev.app"))'
+          "$invoices" skill | head -1 | grep -qx -- '---'
+          "$invoices" profile set --name "Test s.p." --city Ljubljana --iban SI56000000000000000 | jq -e '.city == "Ljubljana"'
+          "$invoices" client add --name "Parakeet AI Ltd." --street "1 Sample Street" --postal-code 1000 --city Ljubljana | jq -e '.id != null'
+          "$invoices" client list --search parakeet | jq -e 'length == 1'
+          "$invoices" invoice create --client parakeet --service-end month \
             --line '{"description": "Consulting", "quantity": 10, "unit": "h", "unitPrice": 50}' \
             --line '{"description": "Support", "unitPrice": "49,90"}' | jq -e '.status == "draft" and .totals.gross == 549.9'
-          $invoices invoice line set draft 2 '{"discountPercent": 10}' | jq -e '.lines[1].amounts.gross == 44.91'
-          $invoices invoice issue draft | jq -e ".number == \"$year-001\""
-          if $invoices invoice set "$year-001" --notes x; then echo "an issued invoice was edited"; exit 1; fi
-          $invoices invoice pdf "$year-001" --output "$RUNNER_TEMP/invoice.pdf" | jq -e '.pages == 1'
+          "$invoices" invoice line set draft 2 '{"discountPercent": 10}' | jq -e '.lines[1].amounts.gross == 44.91'
+          "$invoices" invoice issue draft | jq -e ".number == \"$year-001\""
+          if "$invoices" invoice set "$year-001" --notes x; then echo "an issued invoice was edited"; exit 1; fi
+          "$invoices" invoice pdf "$year-001" --output "$RUNNER_TEMP/invoice.pdf" | jq -e '.pages == 1'
           test -s "$RUNNER_TEMP/invoice.pdf"
-          $invoices invoice pay "$year-001" --on "$year-01-15" | jq -e '.status == "paid"'
-          $invoices overview --year "$year" --xlsx "$RUNNER_TEMP/overview.xlsx" | jq -e '.paidTotal == 544.91 and (.invoices | length) == 1'
+          "$invoices" invoice pay "$year-001" --on "$year-01-15" | jq -e '.status == "paid"'
+          "$invoices" overview --year "$year" --xlsx "$RUNNER_TEMP/overview.xlsx" | jq -e '.paidTotal == 544.91 and (.invoices | length) == 1'
           test -s "$RUNNER_TEMP/overview.xlsx"
-          $invoices invoice unpay "$year-001" | jq -e '.status == "issued"'
-          $invoices invoice cancel "$year-001" | jq -e '.status == "cancelled"'
-          if $invoices client delete parakeet; then echo "a client with issued invoices was deleted"; exit 1; fi
+          "$invoices" invoice unpay "$year-001" | jq -e '.status == "issued"'
+          "$invoices" invoice cancel "$year-001" | jq -e '.status == "cancelled"'
+          if "$invoices" client delete parakeet; then echo "a client with issued invoices was deleted"; exit 1; fi
