@@ -1,0 +1,30 @@
+Invoices/App/CommandLineTool.swift
+  s_471e94f93bc6d7::t_45c50768531e06 1-59
+Invoices/App/CommandLineToolCommands.swift
+  s_471e94f93bc6d7::t_89ff09c351dfb4 1-36,38-44,46-47,49,52-53,57-74
+  s_471e94f93bc6d7::t_6e9ed854d24097 37,45,48,50-51,54-56
+Invoices/App/InvoicesApp.swift
+  s_471e94f93bc6d7::t_83f1b896271646 40
+Tests/InvoicesTests/CommandLineToolTests.swift
+  s_471e94f93bc6d7::t_c7c810d9d62b3c 1-57
+Invoices/Resources/Localizable.xcstrings
+  s_471e94f93bc6d7::t_0409ce00c6d14a 7-26,543-552,1229-1248,2521-2530,2717-2732
+README.md
+  s_471e94f93bc6d7::t_03c2e2b6f1af12 112-120
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "fa5cb59c824b1216f84c70c3ea5471a31de66817",
+  "prompts": {},
+  "sessions": {
+    "s_471e94f93bc6d7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69c02328-457b-4665-a9e0-09abb98d94d9",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
