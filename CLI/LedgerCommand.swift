@@ -16,10 +16,16 @@ protocol LedgerCommand: ParsableCommand {
 
 extension LedgerCommand {
     nonisolated func run() throws {
+        // The command holds ArgumentParser's property wrappers, which are not
+        // Sendable, so the checker will not let `self` cross into the
+        // main-actor closure. It is safe to: `assumeIsolated` runs the
+        // closure synchronously on this very thread, and nothing reads the
+        // command after it.
+        nonisolated(unsafe) let command = self
         let failure: String? = MainActor.assumeIsolated {
             do {
-                let book = try Book.open(store)
-                try execute(book)
+                let book = try Book.open(command.store)
+                try command.execute(book)
                 try book.save()
                 return nil
             } catch let error as ToolError {
