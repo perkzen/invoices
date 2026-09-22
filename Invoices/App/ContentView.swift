@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var invoiceSelection: PersistentIdentifier?
     @State private var clientSelection: PersistentIdentifier?
     @State private var overviewYear: Int?
+    @State private var businessPage = BusinessPage.details
     @State private var isImporting = false
 
     private var importSpreadsheet: ImportSpreadsheetAction {
@@ -61,9 +62,11 @@ struct ContentView: View {
                     .navigationSplitViewColumnWidth(min: 200, ideal: 240, max: 320)
             // My business and Settings are forms, not lists of things to
             // pick from: the form itself fills this column, and what it
-            // changes — the printed invoice — fills the one beside it.
+            // changes — the printed invoice, or the email it goes out in —
+            // fills the one beside it. The page is kept here so the two
+            // columns cannot disagree about it.
             case .business:
-                BusinessForm(profile: profile)
+                BusinessForm(profile: profile, page: $businessPage)
                     .navigationSplitViewColumnWidth(min: 440, ideal: 480, max: 560)
             case .settings:
                 // Two preferences and nothing to pick from: no middle column
@@ -86,7 +89,7 @@ struct ContentView: View {
             case .overview:
                 YearOverviewView(year: overviewYear)
             case .business:
-                BusinessPreview(profile: profile)
+                BusinessPreview(profile: profile, page: businessPage)
             case .settings:
                 GeneralSettingsForm()
             case nil:

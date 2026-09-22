@@ -19,7 +19,7 @@ struct LocalizationTests {
     /// and must differ, or a Slovenian Mac would see the English fall back.
     @Test func `the Slovenian localization ships in the app bundle`() throws {
         let sl = try bundle("sl")
-        for key in ["Invoices", "Default payment term: %lld days", "Settings", "Hide sensitive values"] {
+        for key in ["Invoices", "Default payment term: %lld days", "Settings", "Hide sensitive values", "Details", "Page", "Subject", "Message"] {
             let value = try #require(slovenian(key, in: sl), "\(key) has no Slovenian translation")
             #expect(value != key)
         }
