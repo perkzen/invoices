@@ -165,4 +165,30 @@ struct PrintedInvoiceFromModelsTests {
         #expect(sample.chargesVat)
         #expect(sample.lines.allSatisfy { $0.vatRate == .standard })
     }
+
+    /// The sample email beside the email page goes through the same
+    /// initializer the mail client is handed, resolved against the same
+    /// invoice the printed sample shows: no token is left in braces, and it
+    /// names the sample's number and attachment. Private mode masks the
+    /// IBAN there as the rendered page does.
+    @Test func `the sample email names the sample invoice, and masks the IBAN in private mode`() throws {
+        let ledger = try makeLedger()
+        let profile = ledger.profile
+        profile.iban = "SI56 1910 0000 1234 567"
+        profile.emailBodyTemplate = "{client}, {number}, {iban}, {due}, {MONTH} {year}"
+
+        let printed = PrintedInvoice.sample(matching: profile)
+        let email = InvoiceEmail.sample(matching: profile)
+        #expect(email.subject.contains(printed.number))
+        #expect(!email.subject.contains("{"))
+        #expect(!email.body.contains("{"))
+        #expect(email.body.contains(printed.number))
+        #expect(email.body.contains(profile.iban))
+        #expect(email.attachmentFilename == printed.suggestedFilename + ".pdf")
+
+        let masked = InvoiceEmail.sample(matching: profile, masksSensitiveValues: true)
+        #expect(!masked.body.contains(profile.iban))
+        #expect(masked.body.contains(PrivacyMode.mask))
+        #expect(masked.subject == email.subject)
+    }
 }

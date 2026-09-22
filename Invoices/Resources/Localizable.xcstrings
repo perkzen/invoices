@@ -880,26 +880,6 @@
         }
       }
     },
-    "Email message": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Besedilo e-pošte"
-          }
-        }
-      }
-    },
-    "Email subject": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zadeva e-pošte"
-          }
-        }
-      }
-    },
     "Exempt": {
       "localizations": {
         "sl": {
@@ -970,12 +950,32 @@
         }
       }
     },
+    "Footer": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noga"
+          }
+        }
+      }
+    },
     "Footer note": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
             "value": "Opomba v nogi"
+          }
+        }
+      }
+    },
+    "From:": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Od:"
           }
         }
       }
@@ -1540,6 +1540,16 @@
         }
       }
     },
+    "Message": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sporočilo"
+          }
+        }
+      }
+    },
     "My business": {
       "localizations": {
         "sl": {
@@ -1782,16 +1792,6 @@
         }
       }
     },
-    "On the invoice": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Na računu"
-          }
-        }
-      }
-    },
     "Only a draft can be issued": {
       "localizations": {
         "sl": {
@@ -1858,6 +1858,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pregled"
+          }
+        }
+      }
+    },
+    "Page": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stran"
           }
         }
       }
@@ -2012,6 +2022,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Predogled"
+          }
+        }
+      }
+    },
+    "Preview of the email for a sample invoice": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Predogled e-pošte za vzorčni račun"
           }
         }
       }
@@ -2304,6 +2324,16 @@
         }
       }
     },
+    "Send by email opens this message in your mail client, addressed to the client, with the invoice PDF attached. Add your name where the message signs off.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pošlji po e-pošti odpre to sporočilo v poštnem odjemalcu, naslovljeno na stranko, s priloženim PDF-jem računa. Dodajte svoje ime, kjer se sporočilo poslovi."
+          }
+        }
+      }
+    },
     "Send invoices with": {
       "localizations": {
         "sl": {
@@ -2474,6 +2504,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ulica in hišna številka"
+          }
+        }
+      }
+    },
+    "Subject": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zadeva"
+          }
+        }
+      }
+    },
+    "Subject:": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zadeva:"
           }
         }
       }
@@ -2754,22 +2804,12 @@
         }
       }
     },
-    "The message an invoice is sent with, the PDF attached. The placeholders above apply here too; add your name where the message signs off.": {
+    "The name under the signature is the full name under Details.": {
       "localizations": {
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sporočilo, s katerim se pošlje račun s priloženim PDF-jem. Tudi tu veljajo zgornje označbe; na koncu dodajte svoje ime."
-          }
-        }
-      }
-    },
-    "The name under the signature is “Full name” below.": {
-      "localizations": {
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ime pod podpisom je »Ime in priimek« spodaj."
+            "value": "Ime pod podpisom je »Ime in priimek« pod Podatki."
           }
         }
       }
@@ -2830,6 +2870,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zvezek nima nobenega delovnega lista."
+          }
+        }
+      }
+    },
+    "To:": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Za:"
           }
         }
       }
