@@ -97,13 +97,19 @@ Scripts/install-release.sh
 
 ## The command-line tool
 
+The tool ships inside the app, at `Invoices.app/Contents/Helpers/invoices`, so every
+release carries it and a Sparkle update replaces it along with the app. Putting it on
+the PATH is a symlink into the bundle, and the skill that teaches Claude Code to use it
+is printed by the tool itself:
+
 ```bash
-Scripts/install-cli.sh
+sudo ln -sfn /Applications/Invoices.app/Contents/Helpers/invoices /usr/local/bin/invoices
+mkdir -p ~/.claude/skills/invoices && invoices skill > ~/.claude/skills/invoices/SKILL.md
 ```
 
-builds the `InvoicesCLI` target in Release, installs it as `/usr/local/bin/invoices`
-(pass another directory as the first argument), and links `skills/invoices` into
-`~/.claude/skills/invoices`, where Claude Code picks it up. Then:
+`Scripts/install-cli.sh` does both (pass another directory as the first argument), and
+clears the quarantine flag a disk-image install leaves on the helper, which Gatekeeper
+would otherwise hold against it separately from the app. Then:
 
 ```bash
 invoices --help
@@ -122,7 +128,7 @@ container. That is why it is Swift and lives in this project: a tool in another
 language would have to re-derive the Core Data schema and every rule in the ledger, and
 break the first time either moved.
 
-Three things follow from opening the store directly:
+Three things follow from opening the store directly, and one from living in the bundle:
 
 - It opens the **installed app's** store, the one under `com.domenperko.Invoices`. `--dev`
   opens the development build's instead; `--store <path>` (or `INVOICES_STORE`) opens a
@@ -131,10 +137,11 @@ Three things follow from opening the store directly:
 - The first time a terminal opens a store in `~/Library/Containers`, macOS asks whether
   Terminal may access data from other apps. Allow it once.
 - The tool is a bare executable with no resources, so it takes the Slovenian document
-  strings from the installed app's `sl.lproj` — `Bundle` of whichever build Launch
-  Services finds, or `INVOICES_APP`. Rendering a PDF or a spreadsheet refuses to run
-  without one rather than print a legal document in English; everything else works
-  either way.
+  strings and the skill from the app around it: the `.app` above its own executable,
+  resolved through the symlink; or `INVOICES_APP`; or, for a build-tree binary run on
+  its own, whichever build Launch Services finds. Rendering a PDF or a spreadsheet
+  refuses to run without one rather than print a legal document in English; everything
+  else works either way.
 
 Every command prints JSON. Records carry an `id` (a UUID stored on the invoice and the
 client, given to older rows at launch) so a draft can be named before it has a number;
@@ -214,8 +221,9 @@ Invoices/
   Resources/             asset catalog, Localizable.xcstrings
 CLI/                     the `invoices` command-line tool: one file per command group,
                          the store locator, the JSON records; compiles Models, Core and
-                         Services alongside
-skills/invoices/         the agent skill that teaches Claude Code to use the tool
+                         Services alongside, and is copied into the app bundle
+skills/invoices/         the agent skill that teaches Claude Code to use the tool; also
+                         bundled into the app, and printed by `invoices skill`
 Tests/InvoicesTests/     Swift Testing
 Scripts/                 app icon renderer, release installer, tool installer, disk image
 ```

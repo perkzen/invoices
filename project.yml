@@ -33,8 +33,22 @@ targets:
         excludes:
           # Claude Code parks git worktrees here; they hold a second copy of every source.
           - ".claude/**"
+      # The agent skill rides along so `invoices skill` can print it from
+      # any installed copy, without a checkout.
+      - path: skills/invoices/SKILL.md
+        buildPhase: resources
     dependencies:
       - package: Sparkle
+      # The command-line tool ships inside the app, so the disk image
+      # carries it and a Sparkle update replaces it with the app; a symlink
+      # on the PATH points into the bundle (Scripts/install-cli.sh). Copied,
+      # not linked: it is a program of its own, not a library.
+      - target: InvoicesCLI
+        link: false
+        embed: true
+        copy:
+          destination: wrapper
+          subpath: Contents/Helpers
     settings:
       base:
         # The bundle is named per configuration (below), but the Swift module
@@ -83,8 +97,9 @@ targets:
   # coding agents (see skills/invoices/SKILL.md). It compiles the app's own
   # models, rules and renderers rather than linking a framework, so there is
   # nothing to embed and nothing that could disagree with the app; it opens
-  # the app's store by path. It is not sandboxed, and it has no resources: the
-  # Slovenian document strings are read from the installed app at run time.
+  # the app's store by path. It is not sandboxed, and it has no resources of
+  # its own: it lives in the app bundle (above) and reads the Slovenian
+  # document strings and the skill from there at run time.
   InvoicesCLI:
     type: tool
     platform: macOS

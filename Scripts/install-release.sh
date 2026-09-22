@@ -49,3 +49,4 @@ rm -rf "$(dirname "$BUILT_APP")"
 "$LSREGISTER" -f "$DESTINATION/Invoices.app"
 
 echo "Installed $DESTINATION/Invoices.app"
+echo "The command-line tool is inside it; Scripts/install-cli.sh puts it on the PATH."

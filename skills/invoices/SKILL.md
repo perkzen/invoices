@@ -15,8 +15,14 @@ Before anything else, check that the tool is installed:
 command -v invoices
 ```
 
-If it is not, say so and stop. It is installed from the app's repository with
-`Scripts/install-cli.sh`; do not look for the store or edit it by other means.
+If it is not, say so and stop. The tool ships inside the app; putting it on the PATH is
+one line the user runs themselves:
+
+```bash
+sudo ln -sfn /Applications/Invoices.app/Contents/Helpers/invoices /usr/local/bin/invoices
+```
+
+Do not look for the store or edit it by other means.
 
 ## Learn the current tool
 

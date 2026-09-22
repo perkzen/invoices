@@ -87,7 +87,8 @@ language; confirmed by the user when a required one is missing.
 
 **Command-line tool**:
 `invoices` — the ledger driven from a shell, by a script or an agent, over the same
-store and through the same rules as the app. Answers in JSON.
+store and through the same rules as the app. Answers in JSON. Ships inside the app
+bundle and is updated with it; a symlink on the PATH points at it.
 _Avoid_: API, server, daemon
 
 **Agent skill**:

@@ -19,6 +19,9 @@ source file.
 
 `InvoicesCLI` builds `invoices`, from `CLI/` plus the app's `Models/`, `Core/` and
 `Services/` (less the email composer and the image normalizer) compiled a second time.
+The app target depends on it and copies it into `Contents/Helpers/`, so building the app
+builds the tool, and the installed one is the copy inside `/Applications/Invoices.app`,
+reached through a symlink on the PATH.
 Anything added to those folders has to compile without the rest of `App/`, `UI/` and
 `Features/` — the tool links SwiftUI and AppKit, but not the app's views — and under
 nonisolated default isolation, which the tool target uses so its command types can
@@ -28,8 +31,8 @@ invoice's life against a throwaway store (`.github/workflows/ci.yml`), so a chan
 its commands should keep that script passing.
 
 ```bash
-xcodebuild -project Invoices.xcodeproj -scheme InvoicesCLI -destination 'platform=macOS' -derivedDataPath build build
-INVOICES_STORE=/tmp/try.store INVOICES_APP="build/Build/Products/Debug/Invoices Dev.app" build/Build/Products/Debug/invoices --help
+xcodebuild -project Invoices.xcodeproj -scheme Invoices -destination 'platform=macOS' -derivedDataPath build build
+INVOICES_STORE=/tmp/try.store "build/Build/Products/Debug/Invoices Dev.app/Contents/Helpers/invoices" --help
 ```
 
 Never run it without `--store`, `INVOICES_STORE` or `--dev` while developing: the
