@@ -5,10 +5,11 @@ import Foundation
 /// name, runs `execute` on the main actor — the ledger and the models are
 /// main-actor types — saves, and turns any failure into the error JSON.
 ///
-/// `ParsableCommand.run()` is a nonisolated requirement, and the command
-/// types are declared `nonisolated` to satisfy it; `main()` calls it on the
+/// `ParsableCommand.run()` is a nonisolated requirement, which is why the
+/// tool target compiles with nonisolated default isolation (`project.yml`)
+/// rather than the app's main-actor default; `main()` calls `run()` on the
 /// main thread, which is what lets `execute` assume the main actor.
-nonisolated protocol LedgerCommand: ParsableCommand {
+protocol LedgerCommand: ParsableCommand {
     var store: StoreOptions { get }
     @MainActor func execute(_ book: Book) throws
 }

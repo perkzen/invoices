@@ -2,7 +2,7 @@ import ArgumentParser
 import Foundation
 
 /// Invoices: drafting, editing, issuing, payment, cancellation, the PDF.
-nonisolated struct InvoiceCommand: ParsableCommand {
+struct InvoiceCommand: ParsableCommand {
     static var configuration: CommandConfiguration {
         CommandConfiguration(
             commandName: "invoice",
@@ -23,7 +23,7 @@ nonisolated struct InvoiceCommand: ParsableCommand {
     }
 
     /// The fields of a draft, as options. Shared by `create` and `set`.
-    nonisolated struct Fields: ParsableArguments {
+    struct Fields: ParsableArguments {
         @Option(help: "The client's id or name.") var client: String?
         @Option(name: .customLong("issue-date"), help: "YYYY-MM-DD; today by default.") var issueDate: String?
         @Option(name: .customLong("service-date"), help: "YYYY-MM-DD; the day the service was rendered, or a period's first day.")
@@ -80,7 +80,7 @@ nonisolated struct InvoiceCommand: ParsableCommand {
         }
     }
 
-    nonisolated struct List: LedgerCommand {
+    struct List: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(commandName: "list", abstract: "List invoices: drafts first, then newest number first.")
         }
@@ -105,7 +105,7 @@ nonisolated struct InvoiceCommand: ParsableCommand {
         }
     }
 
-    nonisolated struct Show: LedgerCommand {
+    struct Show: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(commandName: "show", abstract: "One invoice, with its line items and totals.")
         }
@@ -118,7 +118,7 @@ nonisolated struct InvoiceCommand: ParsableCommand {
         }
     }
 
-    nonisolated struct Create: LedgerCommand {
+    struct Create: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(
                 commandName: "create",
@@ -168,7 +168,7 @@ nonisolated struct InvoiceCommand: ParsableCommand {
         }
     }
 
-    nonisolated struct Update: LedgerCommand {
+    struct Update: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(commandName: "set", abstract: "Change a draft's fields. Only the options given are changed.")
         }
@@ -186,7 +186,7 @@ nonisolated struct InvoiceCommand: ParsableCommand {
         }
     }
 
-    nonisolated struct Line: ParsableCommand {
+    struct Line: ParsableCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(
                 commandName: "line",
@@ -196,7 +196,7 @@ nonisolated struct InvoiceCommand: ParsableCommand {
             )
         }
 
-        nonisolated struct Add: LedgerCommand {
+        struct Add: LedgerCommand {
             static var configuration: CommandConfiguration {
                 CommandConfiguration(commandName: "add", abstract: "Append a line item to a draft.")
             }
@@ -215,7 +215,7 @@ nonisolated struct InvoiceCommand: ParsableCommand {
             }
         }
 
-        nonisolated struct Update: LedgerCommand {
+        struct Update: LedgerCommand {
             static var configuration: CommandConfiguration {
                 CommandConfiguration(commandName: "set", abstract: "Change a line item. Only the keys given are changed.")
             }
@@ -234,7 +234,7 @@ nonisolated struct InvoiceCommand: ParsableCommand {
             }
         }
 
-        nonisolated struct Remove: LedgerCommand {
+        struct Remove: LedgerCommand {
             static var configuration: CommandConfiguration {
                 CommandConfiguration(commandName: "remove", abstract: "Remove a line item from a draft.")
             }
@@ -260,7 +260,7 @@ nonisolated struct InvoiceCommand: ParsableCommand {
         return lines[index - 1]
     }
 
-    nonisolated struct Issue: LedgerCommand {
+    struct Issue: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(
                 commandName: "issue",
@@ -279,7 +279,7 @@ nonisolated struct InvoiceCommand: ParsableCommand {
         }
     }
 
-    nonisolated struct Pay: LedgerCommand {
+    struct Pay: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(commandName: "pay", abstract: "Mark an issued invoice paid.")
         }
@@ -298,7 +298,7 @@ nonisolated struct InvoiceCommand: ParsableCommand {
         }
     }
 
-    nonisolated struct Unpay: LedgerCommand {
+    struct Unpay: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(commandName: "unpay", abstract: "Undo a payment marked by mistake: the invoice is issued and outstanding again.")
         }
@@ -316,7 +316,7 @@ nonisolated struct InvoiceCommand: ParsableCommand {
         }
     }
 
-    nonisolated struct Cancel: LedgerCommand {
+    struct Cancel: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(
                 commandName: "cancel",
@@ -339,7 +339,7 @@ nonisolated struct InvoiceCommand: ParsableCommand {
         }
     }
 
-    nonisolated struct Delete: LedgerCommand {
+    struct Delete: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(commandName: "delete", abstract: "Delete a draft. An issued invoice is cancelled instead.")
         }
@@ -355,7 +355,7 @@ nonisolated struct InvoiceCommand: ParsableCommand {
         }
     }
 
-    nonisolated struct PDF: LedgerCommand {
+    struct PDF: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(
                 commandName: "pdf",
@@ -368,7 +368,7 @@ nonisolated struct InvoiceCommand: ParsableCommand {
         @Option(name: [.short, .long], help: "Where to write it; \"Invoice-<number>.pdf\" in the current directory by default.")
         var output: String?
 
-        nonisolated struct Record: Encodable {
+        struct Record: Encodable {
             var path: String
             var number: String?
             var pages: Int

@@ -2,7 +2,7 @@ import ArgumentParser
 import Foundation
 
 /// The year overview: what the accountant gets.
-nonisolated struct OverviewCommand: LedgerCommand {
+struct OverviewCommand: LedgerCommand {
     static var configuration: CommandConfiguration {
         CommandConfiguration(
             commandName: "overview",
@@ -14,7 +14,7 @@ nonisolated struct OverviewCommand: LedgerCommand {
     @Option(help: "The year; this year by default.") var year: Int?
     @Option(help: "Also write the year's spreadsheet to this path.") var xlsx: String?
 
-    nonisolated struct Row: Encodable {
+    struct Row: Encodable {
         var number: String
         var client: String?
         var issueDate: String
@@ -27,7 +27,7 @@ nonisolated struct OverviewCommand: LedgerCommand {
         var isOverdue: Bool
     }
 
-    nonisolated struct Record: Encodable {
+    struct Record: Encodable {
         var year: Int
         /// Every year with at least one issued invoice, newest first.
         var years: [Int]

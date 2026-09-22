@@ -3,7 +3,7 @@ import Foundation
 
 /// Answers where the tool would look, without opening anything — the one
 /// command that is safe to run before the app has ever been launched.
-nonisolated struct StoreCommand: ParsableCommand {
+struct StoreCommand: ParsableCommand {
     static var configuration: CommandConfiguration {
         CommandConfiguration(
             commandName: "store",
@@ -13,7 +13,7 @@ nonisolated struct StoreCommand: ParsableCommand {
 
     @OptionGroup var store: StoreOptions
 
-    nonisolated struct Record: Encodable {
+    struct Record: Encodable {
         var path: String
         var exists: Bool
         var bundleIdentifier: String?

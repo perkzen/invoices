@@ -2,7 +2,7 @@ import Foundation
 
 /// Every command answers in JSON. Keys are sorted so two runs diff cleanly;
 /// dates are calendar days, amounts are numbers.
-nonisolated enum Output {
+enum Output {
     static func print<T: Encodable>(_ value: T) {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
@@ -23,7 +23,7 @@ nonisolated enum Output {
 
 /// A calendar day as the tool reads and writes it: `2026-09-22`, on the
 /// app's calendar so a date never lands in the wrong year.
-nonisolated enum Day {
+enum Day {
     static func string(_ date: Date) -> String {
         let parts = Formatting.calendar.dateComponents([.year, .month, .day], from: date)
         return String(format: "%04d-%02d-%02d", parts.year ?? 0, parts.month ?? 0, parts.day ?? 0)
@@ -51,7 +51,7 @@ nonisolated enum Day {
 
 /// An amount as typed on the command line: `49.90`, or `49,90` the
 /// Slovenian way.
-nonisolated enum Amount {
+enum Amount {
     static func parse(_ text: String) throws -> Decimal {
         let normalized = text.replacingOccurrences(of: ",", with: ".").trimmingCharacters(in: .whitespaces)
         guard let value = Decimal(string: normalized, locale: Locale(identifier: "en_US_POSIX")), !normalized.isEmpty else {
@@ -63,7 +63,7 @@ nonisolated enum Amount {
 
 // MARK: What the commands print
 
-nonisolated struct AmountsRecord: Encodable {
+struct AmountsRecord: Encodable {
     var net: Decimal
     var vat: Decimal
     var gross: Decimal
@@ -75,12 +75,12 @@ nonisolated struct AmountsRecord: Encodable {
     }
 }
 
-nonisolated struct ClientSummary: Encodable {
+struct ClientSummary: Encodable {
     var id: String?
     var name: String
 }
 
-nonisolated struct ClientRecord: Encodable {
+struct ClientRecord: Encodable {
     var id: String?
     var name: String
     var street: String
@@ -98,7 +98,7 @@ nonisolated struct ClientRecord: Encodable {
     var invoices: [InvoiceSummary]?
 }
 
-nonisolated struct LineRecord: Encodable {
+struct LineRecord: Encodable {
     var index: Int
     var description: String
     var quantity: Decimal
@@ -109,7 +109,7 @@ nonisolated struct LineRecord: Encodable {
     var amounts: AmountsRecord
 }
 
-nonisolated struct InvoiceSummary: Encodable {
+struct InvoiceSummary: Encodable {
     var id: String?
     var number: String?
     var status: String
@@ -122,7 +122,7 @@ nonisolated struct InvoiceSummary: Encodable {
     var currencyCode: String
 }
 
-nonisolated struct InvoiceRecord: Encodable {
+struct InvoiceRecord: Encodable {
     var id: String?
     var number: String?
     var status: String
@@ -142,7 +142,7 @@ nonisolated struct InvoiceRecord: Encodable {
     var totals: AmountsRecord
 }
 
-nonisolated struct ProfileRecord: Encodable {
+struct ProfileRecord: Encodable {
     var name: String
     var activityLine: String
     var street: String

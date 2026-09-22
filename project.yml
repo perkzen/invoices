@@ -91,7 +91,12 @@ targets:
     sources:
       - Invoices/Models
       - Invoices/Core
-      - Invoices/Services
+      - path: Invoices/Services
+        excludes:
+          # Neither is reachable from a command, and both are the app's
+          # AppKit edge rather than the ledger's.
+          - EmailComposer.swift
+          - ImageData.swift
       # The PDF page names the private-mode mask; nothing else from App/.
       - Invoices/App/PrivacyMode.swift
       - CLI
@@ -102,6 +107,12 @@ targets:
         PRODUCT_NAME: invoices
         PRODUCT_MODULE_NAME: InvoicesCLI
         CODE_SIGN_STYLE: Automatic
+        # ArgumentParser's `run()` and `Decodable` are nonisolated
+        # requirements; under the app's main-actor default every command
+        # type would fail to satisfy them (and `nonisolated` cannot be put
+        # on a type with property-wrapped properties). The shared sources
+        # say `@MainActor` where they mean it, so they compile either way.
+        SWIFT_DEFAULT_ACTOR_ISOLATION: nonisolated
 
   InvoicesTests:
     type: bundle.unit-test

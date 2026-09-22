@@ -8,7 +8,7 @@ import Foundation
 /// Every command prints JSON on stdout. A failure prints `{"error": "…"}` on
 /// stderr and exits with status 1, so a caller never has to parse prose.
 @main
-nonisolated struct InvoicesCommand: ParsableCommand {
+struct InvoicesCommand: ParsableCommand {
     static var configuration: CommandConfiguration {
         CommandConfiguration(
             commandName: "invoices",

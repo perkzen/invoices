@@ -4,7 +4,7 @@ import Foundation
 import SwiftData
 
 /// The options every command takes to say which store it means.
-nonisolated struct StoreOptions: ParsableArguments {
+struct StoreOptions: ParsableArguments {
     @Flag(help: "Open the development build's store (Invoices Dev) instead of the installed app's.")
     var dev = false
 
@@ -20,14 +20,14 @@ nonisolated struct StoreOptions: ParsableArguments {
 
 /// A failure worded for the caller. `String(describing:)` is what ends up
 /// in the error JSON.
-nonisolated struct ToolError: Error, CustomStringConvertible {
+struct ToolError: Error, CustomStringConvertible {
     let description: String
     init(_ description: String) { self.description = description }
 }
 
 /// Where the store is: the installed app's container, the development
 /// build's, or a file named outright.
-nonisolated struct StoreLocation {
+struct StoreLocation {
     static let releaseBundleID = "com.domenperko.Invoices"
     static let devBundleID = "com.domenperko.Invoices.dev"
 

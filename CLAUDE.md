@@ -18,9 +18,12 @@ source file.
 ## The command-line tool
 
 `InvoicesCLI` builds `invoices`, from `CLI/` plus the app's `Models/`, `Core/` and
-`Services/` compiled a second time. Anything added to those folders has to compile
-without the rest of `App/`, `UI/` and `Features/` — the tool links SwiftUI and AppKit,
-but not the app's views. It has no unit tests; CI builds it and drives it through an
+`Services/` (less the email composer and the image normalizer) compiled a second time.
+Anything added to those folders has to compile without the rest of `App/`, `UI/` and
+`Features/` — the tool links SwiftUI and AppKit, but not the app's views — and under
+nonisolated default isolation, which the tool target uses so its command types can
+satisfy ArgumentParser's nonisolated requirements: in shared code, write `@MainActor`
+where it is meant rather than relying on the app's default. It has no unit tests; CI builds it and drives it through an
 invoice's life against a throwaway store (`.github/workflows/ci.yml`), so a change to
 its commands should keep that script passing.
 

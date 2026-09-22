@@ -2,7 +2,7 @@ import ArgumentParser
 import Foundation
 
 /// Clients: the counterparties invoices are addressed to.
-nonisolated struct ClientCommand: ParsableCommand {
+struct ClientCommand: ParsableCommand {
     static var configuration: CommandConfiguration {
         CommandConfiguration(
             commandName: "client",
@@ -18,7 +18,7 @@ nonisolated struct ClientCommand: ParsableCommand {
     }
 
     /// The fields a client is made of, as options. Shared by `add` and `set`.
-    nonisolated struct Fields: ParsableArguments {
+    struct Fields: ParsableArguments {
         @Option(help: "Street and number.") var street: String?
         @Option(name: .customLong("postal-code")) var postalCode: String?
         @Option var city: String?
@@ -46,7 +46,7 @@ nonisolated struct ClientCommand: ParsableCommand {
         }
     }
 
-    nonisolated struct List: LedgerCommand {
+    struct List: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(commandName: "list", abstract: "List clients, by name.")
         }
@@ -64,7 +64,7 @@ nonisolated struct ClientCommand: ParsableCommand {
         }
     }
 
-    nonisolated struct Show: LedgerCommand {
+    struct Show: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(commandName: "show", abstract: "One client, with its invoices.")
         }
@@ -77,7 +77,7 @@ nonisolated struct ClientCommand: ParsableCommand {
         }
     }
 
-    nonisolated struct Add: LedgerCommand {
+    struct Add: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(commandName: "add", abstract: "Add a client.")
         }
@@ -104,7 +104,7 @@ nonisolated struct ClientCommand: ParsableCommand {
         }
     }
 
-    nonisolated struct Update: LedgerCommand {
+    struct Update: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(commandName: "set", abstract: "Change a client's fields. Only the options given are changed.")
         }
@@ -126,7 +126,7 @@ nonisolated struct ClientCommand: ParsableCommand {
         }
     }
 
-    nonisolated struct Delete: LedgerCommand {
+    struct Delete: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(commandName: "delete", abstract: "Delete a client that has no issued invoices.")
         }

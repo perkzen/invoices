@@ -2,7 +2,7 @@ import ArgumentParser
 import Foundation
 
 /// The issuer: the one business profile.
-nonisolated struct ProfileCommand: ParsableCommand {
+struct ProfileCommand: ParsableCommand {
     static var configuration: CommandConfiguration {
         CommandConfiguration(
             commandName: "profile",
@@ -12,7 +12,7 @@ nonisolated struct ProfileCommand: ParsableCommand {
         )
     }
 
-    nonisolated struct Show: LedgerCommand {
+    struct Show: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(commandName: "show", abstract: "Print the profile.")
         }
@@ -24,7 +24,7 @@ nonisolated struct ProfileCommand: ParsableCommand {
         }
     }
 
-    nonisolated struct Update: LedgerCommand {
+    struct Update: LedgerCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(
                 commandName: "set",

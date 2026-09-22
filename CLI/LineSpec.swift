@@ -6,7 +6,7 @@ extension InvoiceStatus: ExpressibleByArgument {}
 
 /// A number in a line's JSON: `49.9`, or `"49,90"` when the caller would
 /// rather not trust a float.
-nonisolated struct DecimalValue: Decodable {
+struct DecimalValue: Decodable {
     let value: Decimal
 
     init(from decoder: Decoder) throws {
@@ -22,7 +22,7 @@ nonisolated struct DecimalValue: Decodable {
 /// One line item as the caller writes it: a JSON object naming only the
 /// fields it wants to set. What it leaves out keeps the line's value — the
 /// ledger's defaults on a new line, the current value on an existing one.
-nonisolated struct LineSpec: Decodable {
+struct LineSpec: Decodable {
     static let help = """
         A line item as a JSON object. Keys: description, quantity (default 1), unit \
         (h, kos, dan…; empty hides the column), unitPrice, discountPercent, vatRate \
