@@ -11,10 +11,17 @@ import Foundation
 nonisolated enum DocumentText {
     static let locale = Formatting.locale
 
-    /// The `sl.lproj` inside the app bundle. Falling back to the main bundle
-    /// only happens when the localization is missing altogether.
+    /// Where `sl.lproj` is looked for. The app never sets this: its own
+    /// bundle carries the localization. The command-line tool is a bare
+    /// executable with no resources of its own, so it points this at the
+    /// installed app before it renders anything — once, at startup, before
+    /// the first lookup, which is why an unsynchronized global is enough.
+    nonisolated(unsafe) static var resourceBundle: Bundle = .main
+
+    /// The `sl.lproj` inside `resourceBundle`. Falling back to the main
+    /// bundle only happens when the localization is missing altogether.
     static var bundle: Bundle {
-        guard let path = Bundle.main.path(forResource: "sl", ofType: "lproj"),
+        guard let path = resourceBundle.path(forResource: "sl", ofType: "lproj"),
               let bundle = Bundle(path: path)
         else { return .main }
         return bundle

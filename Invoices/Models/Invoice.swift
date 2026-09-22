@@ -9,6 +9,11 @@ final class Invoice {
     var year: Int = 0
     var sequence: Int = 0
 
+    /// The identity the command-line tool addresses an invoice by — a draft
+    /// has no number to go by. Optional because rows written before the tool
+    /// existed have none; `Ledger.assignIdentifiers` fills those in.
+    var uuid: UUID?
+
     var status: InvoiceStatus = InvoiceStatus.draft
     var issueDate: Date = Date()
     /// Date of service — mandatory on a Slovenian invoice and
@@ -44,6 +49,7 @@ final class Invoice {
         self.number = number
         self.year = year
         self.sequence = sequence
+        self.uuid = UUID()
         self.issueDate = issueDate
         self.serviceDate = serviceDate
         self.dueDate = dueDate

@@ -84,3 +84,20 @@ and one line item for its amount — without issuing it again.
 **Column mapping**:
 Which spreadsheet column holds which invoice field. Guessed from the headings in either
 language; confirmed by the user when a required one is missing.
+
+**Command-line tool**:
+`invoices` — the ledger driven from a shell, by a script or an agent, over the same
+store and through the same rules as the app. Answers in JSON.
+_Avoid_: API, server, daemon
+
+**Agent skill**:
+The instructions that teach a coding agent to use the command-line tool:
+`skills/invoices/SKILL.md`. The tool's `--help` is the authority on syntax; the skill
+carries the rules and the manners — what to confirm before doing.
+_Avoid_: plugin, integration
+
+**Identity**:
+The UUID on an invoice or a client that the command-line tool names it by, since a
+draft has no number and two clients may share a name. Assigned when the model is made,
+and at launch to rows made before there was one.
+_Avoid_: key, handle

@@ -39,6 +39,27 @@ struct LedgerTests {
         #expect(try ledger.context.fetch(FetchDescriptor<BusinessProfile>()).count == 1)
     }
 
+    // MARK: Identity
+
+    /// The command-line tool names an invoice or a client by this. A row
+    /// written before the tool existed has none until the launch-time pass.
+    @Test func `every invoice and client carries an identity, and old rows are given one`() throws {
+        let ledger = try makeLedger()
+        let client = Client(name: "PARAKEET AI Ltd.")
+        ledger.context.insert(client)
+        let draft = ledger.newDraft()
+        #expect(client.uuid != nil)
+        #expect(draft.uuid != nil)
+        #expect(client.uuid != draft.uuid)
+
+        client.uuid = nil
+        draft.uuid = nil
+        try ledger.context.save()
+        ledger.assignIdentifiers()
+        #expect(client.uuid != nil)
+        #expect(draft.uuid != nil)
+    }
+
     // MARK: Drafts
 
     @Test func `a new draft takes its defaults from the profile`() throws {
