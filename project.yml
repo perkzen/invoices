@@ -20,6 +20,9 @@ packages:
   Sparkle:
     url: https://github.com/sparkle-project/Sparkle
     exactVersion: 2.10.0
+  ArgumentParser:
+    url: https://github.com/apple/swift-argument-parser
+    from: "1.5.0"
 
 targets:
   Invoices:
@@ -76,6 +79,41 @@ targets:
         # replacing its own bundle, so the install runs in an XPC service.
         SUEnableInstallerLauncherService: true
 
+  # `invoices`, the command-line tool: the app's ledger for scripts and for
+  # coding agents (see skills/invoices/SKILL.md). It compiles the app's own
+  # models, rules and renderers rather than linking a framework, so there is
+  # nothing to embed and nothing that could disagree with the app; it opens
+  # the app's store by path. It is not sandboxed, and it has no resources: the
+  # Slovenian document strings are read from the installed app at run time.
+  InvoicesCLI:
+    type: tool
+    platform: macOS
+    sources:
+      - Invoices/Models
+      - Invoices/Core
+      - path: Invoices/Services
+        excludes:
+          # Neither is reachable from a command, and both are the app's
+          # AppKit edge rather than the ledger's.
+          - EmailComposer.swift
+          - ImageData.swift
+      # The PDF page names the private-mode mask; nothing else from App/.
+      - Invoices/App/PrivacyMode.swift
+      - CLI
+    dependencies:
+      - package: ArgumentParser
+    settings:
+      base:
+        PRODUCT_NAME: invoices
+        PRODUCT_MODULE_NAME: InvoicesCLI
+        CODE_SIGN_STYLE: Automatic
+        # ArgumentParser's `run()` and `Decodable` are nonisolated
+        # requirements; under the app's main-actor default every command
+        # type would fail to satisfy them (and `nonisolated` cannot be put
+        # on a type with property-wrapped properties). The shared sources
+        # say `@MainActor` where they mean it, so they compile either way.
+        SWIFT_DEFAULT_ACTOR_ISOLATION: nonisolated
+
   InvoicesTests:
     type: bundle.unit-test
     platform: macOS
@@ -107,3 +145,10 @@ schemes:
       config: Debug
       targets:
         - InvoicesTests
+
+  InvoicesCLI:
+    build:
+      targets:
+        InvoicesCLI: all
+    run:
+      config: Debug

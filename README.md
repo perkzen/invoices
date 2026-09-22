@@ -51,6 +51,12 @@ proprietor.
   translation. The one exception is the `DRAFT` watermark, which stays English: it is not
   part of the document, it says the page is not one yet
 - **Updates** — the release build updates itself over Sparkle
+- **From the command line, and from an agent** — `invoices` is the same ledger as a
+  command-line tool: it lists, drafts, edits, issues, pays and cancels invoices, keeps
+  clients, renders the PDF and the year's spreadsheet, and answers in JSON. With the
+  skill in `skills/invoices/` installed, Claude Code (or any agent with a skill system)
+  can be told "invoice Parakeet for August, 80 hours at 45" and do it in the app's
+  store. See [The command-line tool](#the-command-line-tool)
 
 Not built yet: printing, electronic invoicing, expenses.
 
@@ -88,6 +94,59 @@ Release is the app you use. Build and install it into `/Applications` with:
 ```bash
 Scripts/install-release.sh
 ```
+
+## The command-line tool
+
+```bash
+Scripts/install-cli.sh
+```
+
+builds the `InvoicesCLI` target in Release, installs it as `/usr/local/bin/invoices`
+(pass another directory as the first argument), and links `skills/invoices` into
+`~/.claude/skills/invoices`, where Claude Code picks it up. Then:
+
+```bash
+invoices --help
+invoices invoice list --overdue
+invoices invoice create --client parakeet --service-date 2026-08-01 --service-end month \
+  --line '{"description": "Razvoj programske opreme", "quantity": 80, "unit": "h", "unitPrice": 45}'
+invoices invoice issue draft
+invoices invoice pdf 2026-003
+invoices overview --year 2026 --xlsx ~/Desktop/Izdani-racuni-2026.xlsx
+```
+
+The tool is not a second implementation. Its target compiles the app's `Models/`,
+`Core/` and `Services/` — the same `Ledger`, the same numbering, the same PDF page and
+spreadsheet — and opens the app's SwiftData store by path, inside the app's sandbox
+container. That is why it is Swift and lives in this project: a tool in another
+language would have to re-derive the Core Data schema and every rule in the ledger, and
+break the first time either moved.
+
+Three things follow from opening the store directly:
+
+- It opens the **installed app's** store, the one under `com.domenperko.Invoices`. `--dev`
+  opens the development build's instead; `--store <path>` (or `INVOICES_STORE`) opens a
+  file outright, and creates it when it does not exist, which is what the CI smoke test
+  runs against. The app's own store is never created by the tool: launch the app once.
+- The first time a terminal opens a store in `~/Library/Containers`, macOS asks whether
+  Terminal may access data from other apps. Allow it once.
+- The tool is a bare executable with no resources, so it takes the Slovenian document
+  strings from the installed app's `sl.lproj` — `Bundle` of whichever build Launch
+  Services finds, or `INVOICES_APP`. Rendering a PDF or a spreadsheet refuses to run
+  without one rather than print a legal document in English; everything else works
+  either way.
+
+Every command prints JSON. Records carry an `id` (a UUID stored on the invoice and the
+client, given to older rows at launch) so a draft can be named before it has a number;
+issued invoices are named by number. Errors are `{"error": "…"}` on stderr with exit
+status 1, worded so that an agent knows what to do next. `skills/invoices/SKILL.md` is
+the agent-facing manual, written the way [herdr](https://github.com/herdrdev/herdr)
+writes its skill: check the binary exists, learn the syntax from `--help`, read state
+from the JSON, and confirm with the user before the irreversible steps — issuing,
+cancelling, deleting.
+
+The running app does not watch the store for changes made by another process; if it is
+open while the tool writes, relaunch it to see them.
 
 ## Releasing
 
@@ -153,8 +212,12 @@ Invoices/
                          the mail composer, AppKit images
   Features/              one folder per sidebar section
   Resources/             asset catalog, Localizable.xcstrings
+CLI/                     the `invoices` command-line tool: one file per command group,
+                         the store locator, the JSON records; compiles Models, Core and
+                         Services alongside
+skills/invoices/         the agent skill that teaches Claude Code to use the tool
 Tests/InvoicesTests/     Swift Testing
-Scripts/                 app icon renderer, release installer, disk image
+Scripts/                 app icon renderer, release installer, tool installer, disk image
 ```
 
 Anything in `Core/` is testable without a `ModelContainer`, a window or a run loop; that

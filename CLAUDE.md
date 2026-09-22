@@ -15,6 +15,26 @@ xcodebuild -project Invoices.xcodeproj -scheme Invoices -destination 'platform=m
 are generated and not committed. Re-run `xcodegen generate` after adding or renaming a
 source file.
 
+## The command-line tool
+
+`InvoicesCLI` builds `invoices`, from `CLI/` plus the app's `Models/`, `Core/` and
+`Services/` (less the email composer and the image normalizer) compiled a second time.
+Anything added to those folders has to compile without the rest of `App/`, `UI/` and
+`Features/` — the tool links SwiftUI and AppKit, but not the app's views — and under
+nonisolated default isolation, which the tool target uses so its command types can
+satisfy ArgumentParser's nonisolated requirements: in shared code, write `@MainActor`
+where it is meant rather than relying on the app's default. It has no unit tests; CI builds it and drives it through an
+invoice's life against a throwaway store (`.github/workflows/ci.yml`), so a change to
+its commands should keep that script passing.
+
+```bash
+xcodebuild -project Invoices.xcodeproj -scheme InvoicesCLI -destination 'platform=macOS' -derivedDataPath build build
+INVOICES_STORE=/tmp/try.store INVOICES_APP="build/Build/Products/Debug/Invoices Dev.app" build/Build/Products/Debug/invoices --help
+```
+
+Never run it without `--store`, `INVOICES_STORE` or `--dev` while developing: the
+default is the installed app's store, the user's real invoices.
+
 ## The two configurations
 
 Debug builds `Invoices Dev.app` (`com.domenperko.Invoices.dev`), Release builds

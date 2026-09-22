@@ -49,6 +49,17 @@ struct Ledger {
         }
     }
 
+    /// Gives every invoice and client that has none the identity the
+    /// command-line tool addresses it by. Rows written before the tool
+    /// existed have none, so this runs once at launch, like
+    /// `modernizeTemplates`; new models get theirs in `init`.
+    func assignIdentifiers() {
+        let invoices = (try? context.fetch(FetchDescriptor<Invoice>(predicate: #Predicate<Invoice> { $0.uuid == nil }))) ?? []
+        for invoice in invoices { invoice.uuid = UUID() }
+        let clients = (try? context.fetch(FetchDescriptor<Client>(predicate: #Predicate<Client> { $0.uuid == nil }))) ?? []
+        for client in clients { client.uuid = UUID() }
+    }
+
     // MARK: Drafts
 
     /// A new draft: today's dates, the profile's payment term and city, and

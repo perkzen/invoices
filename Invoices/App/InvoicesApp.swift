@@ -19,6 +19,7 @@ struct InvoicesApp: App {
         let ledger = Ledger(container.mainContext)
         _ = ledger.profile
         ledger.modernizeTemplates()
+        ledger.assignIdentifiers()
         // One window is the whole app; tabs would only offer a second copy
         // of it and put "Show Tab Bar" in the View menu.
         NSWindow.allowsAutomaticWindowTabbing = false

@@ -16,6 +16,10 @@ final class Client {
     var defaultPaymentTermDays: Int = 8
     var notes: String = ""
     var createdAt: Date = Date()
+    /// The identity the command-line tool addresses a client by when the
+    /// name is ambiguous. Optional because rows written before the tool
+    /// existed have none; `Ledger.assignIdentifiers` fills those in.
+    var uuid: UUID?
     /// Shown next to the client in lists; never printed on an invoice, which
     /// carries the issuer's logo only.
     @Attribute(.externalStorage) var logoData: Data?
@@ -26,6 +30,7 @@ final class Client {
     init(name: String = "") {
         self.name = name
         self.createdAt = Date()
+        self.uuid = UUID()
     }
 
     var addressLines: [String] {
