@@ -37,6 +37,7 @@ struct InvoicesApp: App {
             PrivacyCommands()
             #if !DEBUG
                 UpdaterCommands()
+                CommandLineToolCommands()
             #endif
         }
 

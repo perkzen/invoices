@@ -109,7 +109,15 @@ mkdir -p ~/.claude/skills/invoices && invoices skill > ~/.claude/skills/invoices
 
 `Scripts/install-cli.sh` does both (pass another directory as the first argument), and
 clears the quarantine flag a disk-image install leaves on the helper, which Gatekeeper
-would otherwise hold against it separately from the app. Then:
+would otherwise hold against it separately from the app.
+
+**Invoices › Install Command Line Tool…** makes the same link from inside the app, for
+when a terminal is not at hand. It asks which folder to link into, because a sandboxed
+app may write only where the user has pointed it, and it offers `~/.local/bin`:
+`/usr/local/bin` belongs to root, so the app is refused there and the `sudo` line above
+stays the way in. It links the tool and nothing else — the skill is still
+`invoices skill`. Only the release build offers it; the development build would link a
+copy of itself in `build/`, which the next clean build empties. Then:
 
 ```bash
 invoices --help

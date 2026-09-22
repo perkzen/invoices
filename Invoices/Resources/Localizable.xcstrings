@@ -4,6 +4,26 @@
     "": {
       "shouldTranslate": false
     },
+    "%@\n\nA folder that belongs to the system, such as /usr/local/bin, cannot be written by the app. From the Terminal:\n\nsudo ln -sfn %@ /usr/local/bin/invoices": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@\n\nV sistemsko mapo, kot je /usr/local/bin, aplikacija ne more pisati. V terminalu:\n\nsudo ln -sfn %@ /usr/local/bin/invoices"
+          }
+        }
+      }
+    },
+    "%@ points to the tool inside this app, and an update keeps it current.\n\nIf that folder is not on your PATH, add it. To teach Claude Code the tool, run: invoices skill > ~/.claude/skills/invoices/SKILL.md": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ kaže na orodje v tej aplikaciji; posodobitev aplikacije osveži tudi orodje.\n\nČe ta mapa ni na vaši poti PATH, jo dodajte. Da bo orodje poznal tudi Claude Code, zaženite: invoices skill > ~/.claude/skills/invoices/SKILL.md"
+          }
+        }
+      }
+    },
     "%@ will be permanently deleted.": {
       "localizations": {
         "sl": {
@@ -516,6 +536,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Izberi stranko s seznama ali dodaj novo."
+          }
+        }
+      }
+    },
+    "Choose a folder that is on your PATH. The tool is linked into it as “invoices”.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Izberite mapo, ki je na vaši poti PATH. Orodje bo vanjo povezano kot »invoices«."
           }
         }
       }
@@ -1192,6 +1222,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Uvoz računov"
+          }
+        }
+      }
+    },
+    "Install": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Namesti"
+          }
+        }
+      }
+    },
+    "Install Command Line Tool…": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Namesti orodje ukazne vrstice…"
           }
         }
       }
@@ -2468,6 +2518,16 @@
         }
       }
     },
+    "Something that is not a link to this app is already called “invoices” in that folder. Choose another folder, or remove %@ yourself.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V tej mapi že obstaja »invoices«, ki ni povezava do te aplikacije. Izberite drugo mapo ali sami odstranite %@."
+          }
+        }
+      }
+    },
     "Status": {
       "localizations": {
         "sl": {
@@ -2650,6 +2710,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Stranka nima e-poštnega naslova"
+          }
+        }
+      }
+    },
+    "The command line tool could not be installed": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Orodja ukazne vrstice ni bilo mogoče namestiti"
+          }
+        }
+      }
+    },
+    "The command line tool is installed": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Orodje ukazne vrstice je nameščeno"
           }
         }
       }
