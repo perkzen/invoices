@@ -10,6 +10,7 @@ A native Mac app for issuing and tracking invoices as a Slovenian sole trader.
 [![Release](https://img.shields.io/github/v/release/perkzen/invoices)](https://github.com/perkzen/invoices/releases/latest)
 ![macOS 26+](https://img.shields.io/badge/macOS-26%2B-000000?logo=apple&logoColor=white)
 ![Swift 6](https://img.shields.io/badge/Swift-6-F05138?logo=swift&logoColor=white)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
 </div>
 
