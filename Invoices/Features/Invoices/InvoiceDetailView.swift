@@ -260,15 +260,10 @@ struct InvoiceDetailView: View {
             }
 
             Section {
-                TextField(
-                    "Intro sentence",
-                    text: $invoice.introOverride,
-                    prompt: Text(verbatim: printed.intro),
-                    axis: .vertical
+                MessageEditor(
+                    "Intro sentence", text: $invoice.introOverride, prompt: printed.intro, lines: 2
                 )
-                .lineLimit(1...3)
-                TextField("Notes", text: $invoice.notes, axis: .vertical)
-                    .lineLimit(3...8)
+                MessageEditor("Notes", text: $invoice.notes, lines: 5)
             } header: {
                 Text("Text")
             } footer: {

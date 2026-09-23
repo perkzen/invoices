@@ -122,12 +122,9 @@ struct BusinessForm: View {
             }
         }
         Section {
-            TextField("Intro sentence", text: $profile.introTemplate, axis: .vertical)
-                .lineLimit(1...3)
-            TextField("Payment instruction", text: $profile.paymentNoteTemplate, axis: .vertical)
-                .lineLimit(1...3)
-            TextField("Closing sentence", text: $profile.closingNote, axis: .vertical)
-                .lineLimit(1...3)
+            MessageEditor("Intro sentence", text: $profile.introTemplate, lines: 2)
+            MessageEditor("Payment instruction", text: $profile.paymentNoteTemplate, lines: 2)
+            MessageEditor("Closing sentence", text: $profile.closingNote, lines: 2)
             PlaceholderLegend()
         } header: {
             Text("Text")
@@ -137,8 +134,7 @@ struct BusinessForm: View {
                 .foregroundStyle(.secondary)
         }
         Section("Footer") {
-            TextField("Footer note", text: $profile.invoiceFooter, axis: .vertical)
-                .lineLimit(2...5)
+            MessageEditor("Footer note", text: $profile.invoiceFooter, lines: 3)
         }
     }
 
@@ -148,11 +144,7 @@ struct BusinessForm: View {
     private var email: some View {
         Section {
             TextField("Subject", text: $profile.emailSubjectTemplate)
-            // A message is read as paragraphs, so its text keeps to the
-            // left like a letter, not to the right like a value.
-            TextField("Message", text: $profile.emailBodyTemplate, axis: .vertical)
-                .lineLimit(6...14)
-                .multilineTextAlignment(.leading)
+            MessageEditor("Message", text: $profile.emailBodyTemplate)
             PlaceholderLegend()
         } header: {
             Text("Email")

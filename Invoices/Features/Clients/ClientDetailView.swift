@@ -37,8 +37,7 @@ struct ClientDetailView: View {
                     value: $client.defaultPaymentTermDays,
                     in: 0...120
                 )
-                TextField("Notes", text: $client.notes, axis: .vertical)
-                    .lineLimit(3...8)
+                MessageEditor("Notes", text: $client.notes, lines: 5)
             }
             if !client.issuedInvoices.isEmpty {
                 Section("Invoices") {
