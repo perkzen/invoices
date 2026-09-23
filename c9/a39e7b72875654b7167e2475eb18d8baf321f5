@@ -1,0 +1,32 @@
+Invoices/App/CommandLineToolCommands.swift
+  s_7d6e898819b44c::t_8cc270d0e0b093 5-7,13
+Invoices/App/CommandLineToolInstall.swift
+  s_7d6e898819b44c::t_8cc270d0e0b093 1-16,18-70
+  s_7d6e898819b44c::t_0ddb85d11587ca 17,71
+Invoices/Features/Settings/SettingsView.swift
+  s_7d6e898819b44c::t_0c47f1bf9d5072 17-19,27,118-125,127-147
+  s_7d6e898819b44c::t_0ddb85d11587ca 26,28,126,148
+Invoices/Resources/Localizable.xcstrings
+  s_7d6e898819b44c::t_c44270ac58d168 663-672,1259-1268,1562-1568
+README.md
+  s_7d6e898819b44c::t_535a83d9e7e414 114-115
+  s_7d6e898819b44c::t_024ca0369e438b 116-121
+Tests/InvoicesTests/LocalizationTests.swift
+  s_7d6e898819b44c::t_535a83d9e7e414 22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "c9a39e7b72875654b7167e2475eb18d8baf321f5",
+  "prompts": {},
+  "sessions": {
+    "s_7d6e898819b44c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3c17e686-852c-45f9-bfd0-4abcfef3c5a4",
+        "model": "claude-opus-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
