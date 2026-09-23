@@ -1,0 +1,30 @@
+docs/releasing.md
+  s_7d6e898819b44c::t_ce418d45955a43 1-46
+docs/features.md
+  s_7d6e898819b44c::t_41dcd8a73dcd38 56
+  s_7d6e898819b44c::t_ce418d45955a43 1-55,57-62
+README.md
+  s_7d6e898819b44c::t_3fa12b119a1078 44
+  s_7d6e898819b44c::t_c546afcad6550a 22
+  s_7d6e898819b44c::t_49831e0d3916dd 1,3,5,7,9-12,14,16,18,20-21,23-27,29-34,36,38-39,41-42,46,48,51-53,56-57,59,61-64
+docs/cli.md
+  s_7d6e898819b44c::t_ce418d45955a43 1-68
+docs/architecture.md
+  s_7d6e898819b44c::t_ce418d45955a43 1-96
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "415170bc81e6ecdc2d896c93e631544b6331e00c",
+  "prompts": {},
+  "sessions": {
+    "s_7d6e898819b44c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3c17e686-852c-45f9-bfd0-4abcfef3c5a4",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
