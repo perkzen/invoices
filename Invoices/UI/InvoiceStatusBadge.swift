@@ -30,6 +30,11 @@ struct StatusCapsule: View {
         Text(label)
             .font(.caption.weight(.medium))
             .foregroundStyle(tint)
+            // A state is one word in one line. Squeezed by a narrow list
+            // row, the text would otherwise break — "Can-celled" — and
+            // stretch the capsule into a two-line lozenge.
+            .lineLimit(1)
+            .fixedSize()
             .padding(.horizontal, 7)
             .padding(.vertical, 2)
             .background(tint.opacity(0.14), in: Capsule())
