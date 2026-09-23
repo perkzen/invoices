@@ -1,0 +1,19 @@
+Invoices/UI/InvoiceStatusBadge.swift
+  s_7d6e898819b44c::t_ec68d090bd2b0a 33-37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "703a2da54dc0920806ca9fe54e3d0e2e3a612efb",
+  "prompts": {},
+  "sessions": {
+    "s_7d6e898819b44c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3c17e686-852c-45f9-bfd0-4abcfef3c5a4",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
