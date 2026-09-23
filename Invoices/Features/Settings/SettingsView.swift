@@ -14,15 +14,18 @@ struct SettingsView: View {
     }
 }
 
-/// Private mode, the mail client and the interface language — the
-/// preferences that are the app's own. Shown in the ⌘, window and in the
-/// sidebar's Settings row.
+/// Private mode, the mail client, the interface language and the
+/// command-line tool — the preferences that are the app's own. Shown in the
+/// ⌘, window and in the sidebar's Settings row.
 struct GeneralSettingsForm: View {
     var body: some View {
         Form {
             PrivacySection()
             EmailSection()
             LanguageSection()
+            #if !DEBUG
+                CommandLineToolSection()
+            #endif
         }
         .formStyle(.grouped)
         .navigationTitle("Settings")
@@ -112,3 +115,34 @@ private struct LanguageSection: View {
         return locale.localizedString(forLanguageCode: code)?.capitalized(with: locale) ?? code
     }
 }
+
+/// The `invoices` tool, the same install as Invoices › Install Command Line
+/// Tool…. It is here for the reason private mode is: a menu nobody thinks to
+/// open is a poor place to keep the only way to reach a feature.
+///
+/// Gated like the menu item, and for the same reason — Debug's helper lives
+/// in `build/`, which the next clean build empties, and Debug shows this very
+/// form.
+#if !DEBUG
+
+    private struct CommandLineToolSection: View {
+        var body: some View {
+            Section {
+                LabeledContent {
+                    Button("Install…") { CommandLineToolInstall.run() }
+                        .disabled(!CommandLineTool.isPresent)
+                } label: {
+                    // The name of a command, not a word to translate.
+                    Text(verbatim: "invoices")
+                }
+            } header: {
+                Text("Command line tool")
+            } footer: {
+                Text("Links “invoices” into a folder you choose, so you can list, draft and issue invoices from the Terminal — and let Claude Code do it too. The link points at the tool inside this app, so an update keeps it current.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+#endif

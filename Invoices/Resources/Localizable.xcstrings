@@ -660,6 +660,16 @@
         }
       }
     },
+    "Command line tool": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Orodje ukazne vrstice"
+          }
+        }
+      }
+    },
     "Consulting and support": {
       "comment": "Printed document — resolved through DocumentText, so it is Slovenian in every interface language.",
       "extractionState": "manual",
@@ -1246,6 +1256,16 @@
         }
       }
     },
+    "Install…": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Namesti…"
+          }
+        }
+      }
+    },
     "Intro sentence": {
       "localizations": {
         "sl": {
@@ -1536,6 +1556,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dejavnost"
+          }
+        }
+      }
+    },
+    "Links “invoices” into a folder you choose, so you can list, draft and issue invoices from the Terminal — and let Claude Code do it too. The link points at the tool inside this app, so an update keeps it current.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poveže »invoices« v mapo, ki jo izberete, tako da lahko račune pregledujete, pripravljate in izdajate iz terminala – ali to prepustite Claude Code. Povezava kaže na orodje v tej aplikaciji, zato posodobitev poskrbi, da ostane aktualna."
           }
         }
       }
