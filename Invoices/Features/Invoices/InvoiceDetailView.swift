@@ -13,6 +13,7 @@ struct InvoiceDetailView: View {
     @State private var emailError: String?
     @State private var showsPreview = true
     @State private var isConfirmingCancel = false
+    @State private var isConfirmingReturn = false
     @State private var isMarkingPaid = false
     @State private var isOfferingEmail = false
     @AppStorage(EmailComposer.Client.storageKey) private var emailClient = EmailComposer.Client.appleMail
@@ -50,9 +51,12 @@ struct InvoiceDetailView: View {
 
     /// The states the pop-up offers from where the invoice stands. Paid
     /// goes back to issued, never straight to cancelled; cancelled is final.
+    /// Draft is offered only to the year's latest invoice, the one that can
+    /// give its number back.
     private var reachableStatuses: [InvoiceStatus] {
         switch invoice.status {
-        case .issued: [.issued, .paid, .cancelled]
+        case .issued:
+            ledger.returnProblem(for: invoice) == nil ? [.draft, .issued, .paid, .cancelled] : [.issued, .paid, .cancelled]
         case .paid: [.issued, .paid]
         case .draft, .cancelled: [invoice.status]
         }
@@ -69,6 +73,7 @@ struct InvoiceDetailView: View {
                 switch (invoice.status, status) {
                 case (.issued, .paid): isMarkingPaid = true
                 case (.issued, .cancelled): isConfirmingCancel = true
+                case (.issued, .draft): isConfirmingReturn = true
                 case (.paid, .issued): ledger.markUnpaid(invoice)
                 default: break
                 }
@@ -150,6 +155,12 @@ struct InvoiceDetailView: View {
             Button("Keep invoice", role: .cancel) {}
         } message: {
             Text("The number stays in the sequence and the invoice is listed as cancelled. This cannot be undone.")
+        }
+        .confirmationDialog("Return this invoice to draft?", isPresented: $isConfirmingReturn) {
+            Button("Return to draft") { try? ledger.returnToDraft(invoice) }
+            Button("Keep issued", role: .cancel) {}
+        } message: {
+            Text("Only for an invoice the client has not received. It gives back number \(invoice.number), and issuing it again assigns the same one. An invoice already sent should be cancelled instead.")
         }
         // Offered once, right after issuing — the moment the invoice is
         // final and the client is waiting for it. "Later" is the toolbar button.

@@ -70,6 +70,8 @@ jobs:
           "$invoices" invoice line set draft 2 '{"discountPercent": 10}' | jq -e '.lines[1].amounts.gross == 44.91'
           "$invoices" invoice issue draft | jq -e ".number == \"$year-001\""
           if "$invoices" invoice set "$year-001" --notes x; then echo "an issued invoice was edited"; exit 1; fi
+          "$invoices" invoice unissue "$year-001" | jq -e '.status == "draft" and .number == null and .returnedToDraftDate != null'
+          "$invoices" invoice issue draft | jq -e ".number == \"$year-001\""
           "$invoices" invoice pdf "$year-001" --output "$RUNNER_TEMP/invoice.pdf" | jq -e '.pages == 1'
           test -s "$RUNNER_TEMP/invoice.pdf"
           "$invoices" invoice pay "$year-001" --on "$year-01-15" | jq -e '.status == "paid"'

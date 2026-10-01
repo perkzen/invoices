@@ -62,7 +62,8 @@ status 1, worded so that an agent knows what to do next. `skills/invoices/SKILL.
 the agent-facing manual, written the way [herdr](https://github.com/herdrdev/herdr)
 writes its skill: check the binary exists, learn the syntax from `--help`, read state
 from the JSON, and confirm with the user before the irreversible steps — issuing,
-cancelling, deleting.
+cancelling, deleting — and before `unissue`, which is only for an invoice the client
+never received.
 
 The running app does not watch the store for changes made by another process; if it is
 open while the tool writes, relaunch it to see them.

@@ -7,7 +7,9 @@ What the app does, in more detail than the [README](../README.md) has room for.
 - **Invoices** — drafts with line items, quantity, price and discount per line, and live
   totals; the list is searchable and can be narrowed to drafts, open, paid or cancelled
 - **Issuing** — assigns the next sequential number of the year (`2026-001`) and locks the
-  invoice; only drafts can be edited or deleted
+  invoice; only drafts can be edited or deleted. The year's latest invoice, if unpaid and
+  never sent, can be returned to draft from the status menu; it gives its number back and
+  gets the same one when issued again
 - **PDF export** — an A4 invoice carrying the fields Slovenian law requires, previewed
   live in the editor as you type; drafts are watermarked
 - **Send by email** — a toolbar button on an issued invoice, and an offer the moment

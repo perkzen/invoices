@@ -131,6 +131,7 @@ struct InvoiceRecord: Encodable {
     var serviceDateEnd: String?
     var dueDate: String
     var paidDate: String?
+    var returnedToDraftDate: String?
     var isOverdue: Bool
     var currencyCode: String
     var placeOfIssue: String
@@ -239,6 +240,7 @@ extension InvoiceRecord {
         serviceDateEnd = Day.string(invoice.serviceDateEnd)
         dueDate = Day.string(invoice.dueDate)
         paidDate = Day.string(invoice.paidDate)
+        returnedToDraftDate = Day.string(invoice.returnedToDraftDate)
         isOverdue = invoice.isOverdue
         currencyCode = invoice.currencyCode
         placeOfIssue = invoice.placeOfIssue

@@ -24,6 +24,9 @@ final class Invoice {
     var serviceDateEnd: Date?
     var dueDate: Date = Date()
     var paidDate: Date?
+    /// When the invoice was last taken back from issued to draft — see
+    /// `Ledger.returnToDraft`. Kept as the trace that it once had a number.
+    var returnedToDraftDate: Date?
 
     var currencyCode: String = "EUR"
     var placeOfIssue: String = ""

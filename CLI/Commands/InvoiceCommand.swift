@@ -12,11 +12,12 @@ struct InvoiceCommand: ParsableCommand {
                 exactly one draft exists. Only a draft can be edited or deleted. Issuing gives \
                 a draft the next number of the year and fixes its content; from then on it is \
                 marked paid or cancelled, never changed — a mistake in an issued invoice is \
-                corrected by cancelling it and drafting a new one. Issuing cannot be undone.
+                corrected by cancelling it and drafting a new one. The one way back is \
+                `unissue`, for the year's latest invoice that was never sent.
                 """,
             subcommands: [
                 List.self, Show.self, Create.self, Update.self, Line.self,
-                Issue.self, Pay.self, Unpay.self, Cancel.self, Delete.self, PDF.self,
+                Issue.self, Unissue.self, Pay.self, Unpay.self, Cancel.self, Delete.self, PDF.self,
             ],
             defaultSubcommand: List.self
         )
@@ -75,7 +76,7 @@ struct InvoiceCommand: ParsableCommand {
         guard invoice.status.isEditable else {
             throw ToolError(
                 "Invoice \(invoice.number) is \(invoice.status.rawValue); its content is fixed and cannot be \(verb). "
-                    + "Cancel it and draft a new one, or mark it paid."
+                    + "Cancel it and draft a new one, or, if it never reached the client and is the year's latest, unissue it."
             )
         }
     }
@@ -264,7 +265,7 @@ struct InvoiceCommand: ParsableCommand {
         static var configuration: CommandConfiguration {
             CommandConfiguration(
                 commandName: "issue",
-                abstract: "Issue a draft: assign the next number of its issue date's year and lock it. Cannot be undone."
+                abstract: "Issue a draft: assign the next number of its issue date's year and lock it."
             )
         }
 
@@ -274,6 +275,38 @@ struct InvoiceCommand: ParsableCommand {
         @MainActor func execute(_ book: Book) throws {
             let invoice = try book.invoice(self.invoice)
             try book.ledger.issue(invoice)
+            try book.save()
+            Output.print(InvoiceRecord(invoice))
+        }
+    }
+
+    struct Unissue: LedgerCommand {
+        static var configuration: CommandConfiguration {
+            CommandConfiguration(
+                commandName: "unissue",
+                abstract: "Return an invoice issued by mistake to draft. Only the year's latest, unpaid invoice.",
+                discussion: """
+                    For an invoice that never reached the client: it gives its number back, \
+                    and issuing it again assigns the same one. An invoice the client already \
+                    has is cancelled instead.
+                    """
+            )
+        }
+
+        @OptionGroup var store: StoreOptions
+        @Argument(help: "Number or id.") var invoice: String
+
+        @MainActor func execute(_ book: Book) throws {
+            let invoice = try book.invoice(self.invoice)
+            do {
+                try book.ledger.returnToDraft(invoice)
+            } catch .notIssued {
+                let what = invoice.number.isEmpty ? "The draft" : invoice.number
+                let hint = invoice.status == .paid ? " Mark it unpaid first." : ""
+                throw ToolError("Only an issued, unpaid invoice can return to draft; \(what) is \(invoice.status.rawValue).\(hint)")
+            } catch .notLatest {
+                throw ToolError("\(invoice.number) is not the latest invoice of \(invoice.year); returning it would break the sequence. Cancel it instead.")
+            }
             try book.save()
             Output.print(InvoiceRecord(invoice))
         }

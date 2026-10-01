@@ -1,6 +1,6 @@
 ---
 name: invoices
-description: "Work with the user's invoices and clients in the Invoices macOS app through the `invoices` command-line tool: look invoices and clients up, draft and edit invoices, issue them, mark them paid, cancel them, render the PDF, and report a year's totals. Use when the user asks about their invoices, clients, revenue or outstanding payments, or wants an invoice made or changed. Requires the `invoices` binary on PATH."
+description: "Work with the user's invoices and clients in the Invoices macOS app through the `invoices` command-line tool: look invoices and clients up, draft and edit invoices, issue them, return one issued by mistake to draft, mark them paid, cancel them, render the PDF, and report a year's totals. Use when the user asks about their invoices, clients, revenue or outstanding payments, or wants an invoice made or changed. Requires the `invoices` binary on PATH."
 ---
 
 # Invoices
@@ -50,10 +50,14 @@ from the JSON rather than predicting them.
 - **A draft is the only invoice that can be edited or deleted.** Once issued, an
   invoice's content is fixed. A mistake in an issued invoice is corrected by cancelling
   it and drafting a new one — never by editing.
-- **Issuing cannot be undone.** It assigns the next number in the year's unbroken
+- **Issuing is meant to be final.** It assigns the next number in the year's unbroken
   sequence (`2026-003`) and locks the invoice. Show the user the draft (`invoice show`)
   and get their go-ahead before `invoice issue` or `invoice create --issue`, unless they
   already asked for it to be issued.
+- **`invoice unissue` is the one way back**, for an invoice issued by mistake: only the
+  year's latest, unpaid one, and only if it never reached the client — ask the user
+  that before running it. It gives its number back; issuing again assigns the same one.
+  An invoice the client already has is cancelled instead.
 - **An issued invoice is cancelled, never deleted.** It keeps its number and stays in
   the year overview, uncounted. Cancelling and deleting are also worth confirming.
 - **Paid means money arrived.** `invoice pay` takes the day it arrived (`--on`);

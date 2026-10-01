@@ -18,6 +18,11 @@ An invoice not yet issued — unnumbered, editable, and the only kind that may b
 Giving a draft the next number in the year's unbroken sequence and locking it.
 _Avoid_: sending, publishing
 
+**Return to draft**:
+Taking back the year's latest invoice, issued by mistake and never sent: it gives its
+number back, becomes an editable draft, and keeps the date it happened as a trace.
+_Avoid_: unlocking, editing an issued invoice
+
 **Cancellation**:
 Voiding an issued invoice. It keeps its number, stays in the year overview, and is not
 counted.

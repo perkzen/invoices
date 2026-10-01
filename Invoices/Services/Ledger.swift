@@ -166,6 +166,42 @@ struct Ledger {
         invoice.paidDate = nil
     }
 
+    enum ReturnProblem: Error, Equatable {
+        case notIssued
+        case notLatest
+
+        var message: String {
+            switch self {
+            case .notIssued: String(localized: "Only an issued, unpaid invoice can return to draft")
+            case .notLatest: String(localized: "Only the year's latest invoice can return to draft")
+            }
+        }
+    }
+
+    /// Why `invoice` cannot go back to being a draft, or nil when it can.
+    func returnProblem(for invoice: Invoice) -> ReturnProblem? {
+        guard invoice.status == .issued else { return .notIssued }
+        let latest = InvoiceNumbering.nextSequence(for: invoice.year, in: context) - 1
+        return invoice.sequence == latest ? nil : .notLatest
+    }
+
+    /// The way back from issuing by mistake, for an invoice that never left
+    /// the Mac. Only the year's latest number may give its number back, so
+    /// the sequence stays unbroken and issuing again hands out the same one.
+    /// The reference goes with the number when it was the one filled in at
+    /// issue. The date it happened stays on the invoice for good.
+    func returnToDraft(_ invoice: Invoice) throws(ReturnProblem) {
+        if let problem = returnProblem(for: invoice) { throw problem }
+        if invoice.paymentReference == InvoiceNumbering.defaultReference(number: invoice.number) {
+            invoice.paymentReference = ""
+        }
+        invoice.number = ""
+        invoice.year = 0
+        invoice.sequence = 0
+        invoice.status = .draft
+        invoice.returnedToDraftDate = Date()
+    }
+
     // MARK: Recording history
 
     /// What an import has to know about the book as it stands: the numbers

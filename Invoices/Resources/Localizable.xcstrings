@@ -1510,6 +1510,16 @@
         }
       }
     },
+    "Keep issued": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obdrži izdan račun"
+          }
+        }
+      }
+    },
     "Language": {
       "localizations": {
         "sl": {
@@ -1878,6 +1888,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Izdati je mogoče le osnutek"
+          }
+        }
+      }
+    },
+    "Only an issued, unpaid invoice can return to draft": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V osnutek je mogoče vrniti le izdan, neplačan račun"
+          }
+        }
+      }
+    },
+    "Only for an invoice the client has not received. It gives back number %@, and issuing it again assigns the same one. An invoice already sent should be cancelled instead.": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le za račun, ki ga stranka še ni prejela. Številka %@ se sprosti, ob ponovni izdaji pa račun dobi isto. Že poslan račun raje storniraj."
+          }
+        }
+      }
+    },
+    "Only the year's latest invoice can return to draft": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V osnutek je mogoče vrniti le zadnji račun v letu"
           }
         }
       }
@@ -2264,6 +2304,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Obvezno"
+          }
+        }
+      }
+    },
+    "Return this invoice to draft?": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vrneš ta račun v osnutek?"
+          }
+        }
+      }
+    },
+    "Return to draft": {
+      "localizations": {
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vrni v osnutek"
           }
         }
       }

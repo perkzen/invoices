@@ -232,6 +232,62 @@ struct LedgerTests {
         #expect(draft.status == .draft)
     }
 
+    // MARK: Returning to draft
+
+    @Test func `the latest invoice returns to draft and is issued under the same number`() throws {
+        let ledger = try makeLedger()
+        try ledger.issue(readyDraft(in: ledger, issuedOn: date(2026, 9, 14)))
+        let invoice = readyDraft(in: ledger, issuedOn: date(2026, 10, 1))
+        try ledger.issue(invoice)
+        try ledger.returnToDraft(invoice)
+
+        #expect(invoice.status == .draft)
+        #expect(invoice.number.isEmpty)
+        #expect(invoice.paymentReference.isEmpty)
+        #expect(invoice.returnedToDraftDate != nil)
+        #expect(ledger.addLine(to: invoice) != nil)
+
+        try ledger.issue(invoice)
+        #expect(invoice.number == "2026-002")
+        #expect(invoice.paymentReference == "SI00 2026-002")
+    }
+
+    @Test func `returning to draft keeps a reference typed by hand`() throws {
+        let ledger = try makeLedger()
+        let invoice = readyDraft(in: ledger)
+        invoice.paymentReference = "SI12 4444"
+        try ledger.issue(invoice)
+        try ledger.returnToDraft(invoice)
+        #expect(invoice.paymentReference == "SI12 4444")
+    }
+
+    @Test func `only the year's latest invoice may return to draft`() throws {
+        let ledger = try makeLedger()
+        let earlier = readyDraft(in: ledger, issuedOn: date(2026, 9, 14))
+        try ledger.issue(earlier)
+        let later = readyDraft(in: ledger, issuedOn: date(2026, 10, 1))
+        try ledger.issue(later)
+        ledger.cancel(later)
+
+        #expect(throws: Ledger.ReturnProblem.notLatest) { try ledger.returnToDraft(earlier) }
+        #expect(earlier.number == "2026-001")
+    }
+
+    @Test func `a paid, cancelled or draft invoice does not return to draft`() throws {
+        let ledger = try makeLedger()
+        #expect(ledger.returnProblem(for: ledger.newDraft()) == .notIssued)
+
+        let paid = readyDraft(in: ledger)
+        try ledger.issue(paid)
+        ledger.markPaid(paid)
+        #expect(throws: Ledger.ReturnProblem.notIssued) { try ledger.returnToDraft(paid) }
+
+        let cancelled = readyDraft(in: ledger)
+        try ledger.issue(cancelled)
+        ledger.cancel(cancelled)
+        #expect(ledger.returnProblem(for: cancelled) == .notIssued)
+    }
+
     // MARK: Deleting
 
     @Test func `a draft may be deleted, an issued invoice may not`() throws {
