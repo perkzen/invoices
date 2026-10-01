@@ -1,0 +1,49 @@
+CLI/Commands/InvoiceCommand.swift
+  s_f82991f0fa9647::t_5b4b87952f26a5 15-16,20,79,268,283-309
+Tests/InvoicesTests/LedgerTests.swift
+  s_f82991f0fa9647::t_0bd45849e7b61e 235-290
+skills/invoices/SKILL.md
+  s_f82991f0fa9647::t_abf17e6c616aef 53,57-60
+.github/workflows/ci.yml
+  s_f82991f0fa9647::t_1b0081163eae99 73-74
+Invoices/Models/Invoice.swift
+  s_f82991f0fa9647::t_d845cfed4ef989 27-29
+Invoices/Services/Ledger.swift
+  s_f82991f0fa9647::t_d845cfed4ef989 169-204
+CLI/Output.swift
+  s_f82991f0fa9647::t_5b4b87952f26a5 134,243
+Invoices/Features/Invoices/InvoiceDetailView.swift
+  s_f82991f0fa9647::t_3d072e12b14779 16,54-55,58-59,76,159-163
+CONTEXT.md
+  s_f82991f0fa9647::t_abf17e6c616aef 21-25
+Invoices/Resources/Localizable.xcstrings
+  s_f82991f0fa9647::t_76be58c44e2e45 1513-1522,1895-1924,2311-2326
+docs/features.md
+  s_f82991f0fa9647::t_abf17e6c616aef 10-12
+docs/cli.md
+  s_7d6e898819b44c::t_ce418d45955a43 65-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "7dcfd17d6beb260b3ddf4ca56965030fab8297e3",
+  "prompts": {},
+  "sessions": {
+    "s_7d6e898819b44c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3c17e686-852c-45f9-bfd0-4abcfef3c5a4",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    },
+    "s_f82991f0fa9647": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4371de42-f7d7-4df6-a1bb-134f7345f7c2",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "perkzen <perko.domen@gmail.com>"
+    }
+  }
+}
