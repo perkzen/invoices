@@ -193,6 +193,7 @@ struct InvoicePDFPage: View {
 
     private var table: some View {
         VStack(spacing: 0) {
+            dottedRule
             tableRow(
                 index: DocumentText.string("No."),
                 description: DocumentText.string("Description of goods or services"),
@@ -204,7 +205,7 @@ struct InvoicePDFPage: View {
                 amount: DocumentText.string("Amount"),
                 isHeader: true
             )
-            Rectangle().fill(.black).frame(height: 0.8)
+            dottedRule
             ForEach(lines) { line in
                 tableRow(
                     index: String(line.index),
@@ -217,7 +218,22 @@ struct InvoicePDFPage: View {
                     amount: amount(printed.columnAmount(of: line)),
                     isHeader: false
                 )
-                Rectangle().fill(.black.opacity(0.08)).frame(height: 0.5)
+                dottedRule
+            }
+        }
+    }
+
+    private var dottedRule: some View {
+        Line()
+            .stroke(.black, style: StrokeStyle(lineWidth: 0.6, dash: [1, 1.5]))
+            .frame(height: 1)
+    }
+
+    private struct Line: Shape {
+        func path(in rect: CGRect) -> Path {
+            Path { path in
+                path.move(to: CGPoint(x: rect.minX, y: rect.midY))
+                path.addLine(to: CGPoint(x: rect.maxX, y: rect.midY))
             }
         }
     }
@@ -226,28 +242,29 @@ struct InvoicePDFPage: View {
         index: String, description: String, quantity: String, unit: String, price: String,
         discount: String, vat: String, amount: String, isHeader: Bool
     ) -> some View {
-        HStack(alignment: .top, spacing: 6) {
-            Text(index).frame(width: 34, alignment: .center)
+        HStack(alignment: .center, spacing: 6) {
+            Text(index).frame(width: 34)
             // Bounded height keeps the fixed lines-per-page maths honest.
             Text(description)
                 .lineLimit(InvoicePDF.maxDescriptionLinesForLayout)
                 // Without this SwiftUI squeezes the first rows to one line
                 // when the page is near full, giving ragged row heights.
                 .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, alignment: isHeader ? .center : .leading)
-            Text(quantity).frame(width: 56, alignment: isHeader ? .center : .trailing)
+                .frame(maxWidth: .infinity)
+            Text(quantity).frame(width: 56)
             if printed.showsUnit {
-                Text(unit).frame(width: 40, alignment: isHeader ? .center : .leading)
+                Text(unit).frame(width: 40)
             }
-            Text(price).frame(width: 70, alignment: isHeader ? .center : .trailing)
+            Text(price).frame(width: 70)
             if printed.showsDiscount {
-                Text(discount).frame(width: 50, alignment: isHeader ? .center : .trailing)
+                Text(discount).frame(width: 50)
             }
             if printed.chargesVat {
-                Text(vat).frame(width: 46, alignment: isHeader ? .center : .trailing)
+                Text(vat).frame(width: 46)
             }
-            Text(amount).frame(width: 76, alignment: isHeader ? .center : .trailing)
+            Text(amount).frame(width: 76)
         }
+        .multilineTextAlignment(.center)
         .fontWeight(isHeader ? .bold : .regular)
         .monospacedDigit()
         .padding(.vertical, 5)
@@ -269,11 +286,11 @@ struct InvoicePDFPage: View {
         .frame(maxWidth: .infinity, alignment: .trailing)
     }
 
-    /// The amount sits in the Amount column, directly under the line values.
+    /// The amount sits in the Amount column, centred under the line values.
     private func totalRow(_ label: String.LocalizationValue, _ value: Decimal, bold: Bool) -> some View {
         HStack(spacing: 6) {
             Text(verbatim: DocumentText.string(label))
-            Text(amount(value)).frame(width: 76, alignment: .trailing)
+            Text(amount(value)).frame(width: 76)
         }
         .fontWeight(bold ? .bold : .regular)
         .monospacedDigit()
